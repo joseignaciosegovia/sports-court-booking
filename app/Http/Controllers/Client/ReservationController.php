@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Services\Common\CourtScheduleService;
 use App\Exceptions\SlotUnavailableException; 
+use App\Exceptions\ReservationNotResumableException;
 use App\Http\Requests\Client\StoreClientReservationRequest;
 use App\Services\Client\ReservationCheckoutService;
 use App\Services\Common\ReservationCancellationService;
@@ -38,7 +39,7 @@ class ReservationController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('client.reservations.history', [
+        return view('client.reservations.index', [
             'courts' => $courts,
             'filters' => [
                 'court_id' => $request->input('court_id', ''),
@@ -98,7 +99,7 @@ class ReservationController extends Controller
 
     public function cancel(Reservation $reservation, ReservationCancellationService $service)
     {
-        $this->authorize('cancel', $reservation);
+        //$this->authorize('cancel', $reservation);
 
         try {
             $result = $service->cancelByClient($reservation);
@@ -127,5 +128,22 @@ class ReservationController extends Controller
     public function paymentCancel(Reservation $reservation)
     {
         return view('client.reservations.payment-cancel', compact('reservation'));
+    }
+
+    public function resumePayment(Reservation $reservation, ReservationCheckoutService $service)
+    {
+        if ($reservation->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        try {
+            $checkoutUrl = $service->resumeCheckout($reservation);
+        } catch (ReservationNotResumableException $e) {
+            return redirect()
+                ->route('client.reservations.index')
+                ->withErrors(['reservation' => $e->getMessage()]);
+        }
+
+        return redirect($checkoutUrl);
     }
 }

@@ -90,4 +90,37 @@ class ReservationCheckoutService
             throw $e;
         }
     }
+
+    /**
+     * Recupera la URL de pago de una reserva pendiente para que el cliente
+     * pueda retomar el checkout si lo abandonó a mitad.
+     *
+     * @throws \App\Exceptions\ReservationNotResumableException
+     */
+    public function resumeCheckout(Reservation $reservation): string
+    {
+        if ($reservation->payment_status !== 'pending'
+            || !$reservation->expires_at
+            || $reservation->expires_at->isPast()) {
+            throw new \App\Exceptions\ReservationNotResumableException();
+        }
+
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        try {
+            $session = Session::retrieve($reservation->stripe_session_id);
+        } catch (ApiErrorException $e) {
+            Log::error('Error recuperando sesión de Stripe: ' . $e->getMessage(), [
+                'reservation_id' => $reservation->id,
+            ]);
+            throw new \App\Exceptions\ReservationNotResumableException();
+        }
+
+        // Por si el webhook ya la marcó como pagada justo en este instante (carrera improbable)
+        if ($session->status !== 'open') {
+            throw new \App\Exceptions\ReservationNotResumableException();
+        }
+
+        return $session->url;
+    }
 }

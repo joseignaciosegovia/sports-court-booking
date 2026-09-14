@@ -15,7 +15,7 @@
                         <small class="text-muted">No se ha completado el pago de tu reserva</small>
                     </div>
                 </div>
-
+                <br>
                 <div class="alert alert-danger d-flex align-items-center gap-2">
                     <i class="ti ti-alert-circle" aria-hidden="true"></i>
                     <span>Has cancelado el proceso de pago. Tu reserva no está confirmada.</span>
@@ -38,8 +38,8 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ route('client.reservations.create') }}" class="btn btn-primary">
-                        Intentar de nuevo
+                    <a href="{{ route('client.reservations.payment.resume', $reservation) }}" class="btn btn-primary">
+                        Intentar el pago de nuevo
                     </a>
                     <a href="{{ route('client.dashboard') }}" class="btn btn-outline-secondary ms-2">
                         Volver al inicio

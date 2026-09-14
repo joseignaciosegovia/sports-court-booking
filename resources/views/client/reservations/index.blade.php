@@ -115,7 +115,7 @@
                                         {!! \App\Helpers\SortHelper::icon('status', $sortColumns) !!}
                                     </a>
                                 </th>
-                                <th>Cancelar reserva</th>
+                                <th>Editar reserva</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -147,11 +147,19 @@
                                 <td>
                                     {{-- Si la fecha de la reserva no se ha pasado y la reserva se pagó o está pendiente de pagarse, permitimos que se pueda cancelar --}}
                                     @if(in_array($reservation->payment_status, ['paid', 'pending']) && $reservation->start_time->isFuture())
-                                        <form method="POST" action="{{ route('client.reservations.cancel', $reservation) }}" onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva? Si faltan menos de 12 horas, no habrá devolución.');" style="display: inline;">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="btn btn-danger">Cancelar</button>
-                                        </form>
+                                        <div class="d-flex gap-2">
+                                            {{-- Si la reserva está en estado pendiente y no ha expirado, se permite continuar el pago --}}
+                                            @if($reservation->payment_status === 'pending' && $reservation->expires_at && $reservation->expires_at->isFuture())
+                                                <a href="{{ route('client.reservations.payment.resume', $reservation) }}" class="btn btn-success">
+                                                    Continuar pago
+                                                </a>
+                                            @endif
+                                            <form method="POST" action="{{ route('client.reservations.cancel', $reservation) }}" onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva? Si faltan menos de 12 horas, no habrá devolución.');" style="display: inline;">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-danger">Cancelar</button>
+                                            </form>
+                                        </div>
                                     @elseif(in_array($reservation->payment_status, ['canceled', 'refunded']))
                                         @switch($reservation->canceled_by)
                                             @case('client')

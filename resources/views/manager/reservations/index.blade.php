@@ -135,7 +135,7 @@
                                     <td>{{ $reservation->information }}</td>
                                     <td>
                                         @if(empty($reservation->user_id))
-                                            <span class="type-badge badge-secondary"><span class="dot"></span>Confirmada</span>
+                                            <span class="type-badge green"><span class="dot"></span>Pagada (Gestión)</span>
                                         @else
                                             @switch($reservation->payment_status)
                                                 @case('paid')

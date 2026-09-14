@@ -72,6 +72,9 @@ Route::middleware(['auth', 'verified', 'role:client'])->group(function () {
     Route::get('/reservas/{reservation}/pago/cancelado', [ReservationController::class, 'paymentCancel'])
         ->name('client.reservations.payment.cancel');
 
+    Route::get('/reservas/{reservation}/pago/continuar', [ReservationController::class, 'resumePayment'])
+        ->name('client.reservations.payment.resume');
+
     // Historial de reservas
     Route::get('/reservas/historial', [ReservationController::class, 'index'])
         ->name('client.reservations.index');
