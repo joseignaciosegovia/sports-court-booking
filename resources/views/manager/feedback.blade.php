@@ -1,8 +1,8 @@
 @extends('layouts.staff')
 
-@section('title', 'Sugerencias de clientes · Moral de Calatrava')
+@section('title', 'Feedback de clientes · Moral de Calatrava')
 
-@section('titleHeader', 'Gestión de sugerencias · Moral de Calatrava')
+@section('titleHeader', 'Gestión del feedback · Moral de Calatrava')
 
 @push('scriptsCabecera')
     @vite('resources/css/table.css')
@@ -52,7 +52,7 @@
                 </div>
             </form>
 
-            @if($suggestions->isEmpty())
+            @if($feedback->isEmpty())
                 <p class="text-muted mb-0">No hay sugerencias/incidencias que coincidan con los filtros.</p>
             @else
             <div class="table-responsive">
@@ -92,23 +92,23 @@
                     </thead>
                     <tbody>
                         {{-- Recorremos y mostramos las incidencias --}} 
-                        @foreach($suggestions as $index => $suggestion)
+                        @foreach($feedback as $index => $item)
                         <tr>
-                            <th>{{ $suggestions->firstItem() + $index }}</th>
-                            @if($suggestion->type == "suggestion")
+                            <th>{{ $feedback->firstItem() + $index }}</th>
+                            @if($item->type == "suggestion")
                                 <td><span class="type-badge blue"><span class="dot"></span>Sugerencia</span></td>
                             @else
                                 <td><span class="type-badge red"><span class="dot"></span>Incidencia</span></td>
                             @endif
-                            <td>{{ $suggestion->created_at->timezone('Europe/Madrid')->format('Y-m-d') }} · {{ $suggestion->created_at->timezone('Europe/Madrid')->format('H:i') }}</td>
-                            <td>{{ $suggestion->user->name }}</td>
+                            <td>{{ $item->created_at->timezone('Europe/Madrid')->format('Y-m-d') }} · {{ $item->created_at->timezone('Europe/Madrid')->format('H:i') }}</td>
+                            <td>{{ $item->user->name }}</td>
                             <!-- Ajustamos el ancho de la última columna al contenido con style -->
-                            <td style="width: 1%; white-space: nowrap;">{{ $suggestion->content }}</td>
+                            <td style="width: 1%; white-space: nowrap;">{{ $item->content }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                {{ $suggestions->links() }}
+                {{ $feedback->links() }}
             </div>
             @endif
         </div>

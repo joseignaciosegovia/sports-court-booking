@@ -55,9 +55,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Court::class);
     }
 
-    public function suggestionsIncidents()
+    public function feedback()
     {
-        return $this->hasMany(SuggestionIncident::class, 'user_id');
+        return $this->hasMany(Feedback::class, 'user_id');
     }
 
     // --- Helpers de rol ---

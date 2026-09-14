@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->count();
         
         // Número de sugerencias/incidencias del cliente
-        $suggestionsCount = $user->suggestionsIncidents()->count();
+        $feedbackCount  = $user->feedback()->count();
         
         // Pistas disponibles
         $courtsCount = Court::count();
@@ -40,7 +40,7 @@ class DashboardController extends Controller
             'nextReservation' => $nextReservation,
             'nextReservationCourt' => $nextReservationCourt,
             'reservationsThisMonth' => $reservationsThisMonth,
-            'suggestionsCount' => $suggestionsCount,
+            'feedbackCount ' => $feedbackCount ,
             'courtsCount' => $courtsCount,
             'locationsCount' => $locationsCount,
             'openingTime' => config('schedules.opening_time'),

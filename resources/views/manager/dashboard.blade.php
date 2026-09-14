@@ -103,16 +103,16 @@
             <div>
                 <div class="dash-section-header">
                     <span><i class="ti ti-mail" aria-hidden="true"></i> Sugerencias e incidencias</span>
-                    <a href="{{ route('manager.suggestions.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                    <a href="{{ route('manager.feedback.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                 </div>
                 <div class="dash-grid-2">
                     <div class="dash-card dash-card-accent dash-card-accent-pink">
                         <div class="lbl"><i class="ti ti-mail" aria-hidden="true"></i> Sugerencias totales</div>
-                        <div class="val {{ $suggestionsCount === 0 ? 'val-zero' : '' }}">{{ $suggestionsCount }}</div>
+                        <div class="val {{ $feedbackCount === 0 ? 'val-zero' : '' }}">{{ $feedbackCount }}</div>
                     </div>
                     <div class="dash-card">
                         <div class="lbl"><i class="ti ti-mail" aria-hidden="true"></i> Sugerencias este mes</div>
-                        <div class="val {{ $suggestionsThisMonth === 0 ? 'val-zero' : '' }}">{{ $suggestionsThisMonth }}</div>
+                        <div class="val {{ $feedbackThisMonth === 0 ? 'val-zero' : '' }}">{{ $feedbackThisMonth }}</div>
                     </div>
                 </div>
             </div>

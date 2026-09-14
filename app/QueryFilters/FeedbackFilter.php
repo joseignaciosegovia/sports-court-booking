@@ -2,7 +2,7 @@
 
 namespace App\QueryFilters;
 
-class SuggestionFilter extends QueryFilter
+class FeedbackFilter extends QueryFilter
 {
     protected function filterableFields(): array
     {
@@ -11,11 +11,11 @@ class SuggestionFilter extends QueryFilter
 
     protected function type($value): void
     {
-        $this->builder->where('suggestions_incidents.type', $value);
+        $this->builder->where('feedback.type', $value);
     }
 
     protected function date($value): void
     {
-        $this->builder->whereDate('suggestions_incidents.created_at', $value);
+        $this->builder->whereDate('feedback.created_at', $value);
     }
 }

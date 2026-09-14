@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Manager;
 use App\Http\Controllers\Controller;
 use App\Models\Court;
 use App\Models\Reservation;
-use App\Models\SuggestionIncident;
+use App\Models\Feedback;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,8 +28,8 @@ class DashboardController extends Controller
             ->whereIn('payment_status', ['canceled', 'refunded'])
             ->count();
         
-        $suggestionsCount = SuggestionIncident::count();
-        $suggestionsThisMonth = SuggestionIncident::whereMonth('created_at', now()->month)
+        $feedbackCount = Feedback::count();
+        $feedbackThisMonth = Feedback::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->count();
 
@@ -40,8 +40,8 @@ class DashboardController extends Controller
             'facilitiesCount' => $facilitiesCount,
             'openingTime' => config('schedules.opening_time'),
             'closingTime' => config('schedules.closing_time'),
-            'suggestionsCount' => $suggestionsCount,
-            'suggestionsThisMonth' => $suggestionsThisMonth,
+            'feedbackCount' => $feedbackCount,
+            'feedbackThisMonth' => $feedbackThisMonth,
         ];
 
         // Solo el admin necesita las estadísticas de usuarios por rol

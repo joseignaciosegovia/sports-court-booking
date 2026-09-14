@@ -6,14 +6,14 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
-class SuggestionIncidentSeeder extends Seeder
+class FeedbackSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('suggestions_incidents')->insert([
+        DB::table('feedback')->insert([
             'content' => 'Podríais añadir información de las pistas',
             'type' => 'suggestion',
             'user_id' => 1,
@@ -21,7 +21,7 @@ class SuggestionIncidentSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        DB::table('suggestions_incidents')->insert([
+        DB::table('feedback')->insert([
             'content' => 'La página va lenta',
             'type' => 'incident',
             'user_id' => 1,

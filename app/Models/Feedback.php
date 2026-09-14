@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Concerns\Filterable;
 use App\Models\Concerns\Sortable;
 
-class SuggestionIncident extends Model
+class Feedback extends Model
 {
     use HasFactory, Filterable, Sortable;
 
-    protected $table = 'suggestions_incidents';
+    protected $table = 'feedback';
 
     protected $fillable = [
         'content',

@@ -27,7 +27,7 @@
                 <div>
                     <div class="dash-section-header">
                         <span><i class="ti ti-calendar" aria-hidden="true"></i> Reservas</span>
-                        <a href="/reservas/historial">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <a href="{{ route('client.feedback.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     {{-- SECCIÓN: RESERVAS --}}
                     <div class="dash-grid-2">
@@ -74,7 +74,7 @@
                 <div>
                     <div class="dash-section-header">
                         <span><i class="ti ti-soccer-field" aria-hidden="true"></i> Pistas e instalaciones</span>
-                        <a href="/reservas">Reservar pista <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <a href="{{ route('client.reservations.create') }}">Reservar pista <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div class="dash-grid-2">
                         {{-- Tarjeta: pistas disponibles --}}
@@ -104,12 +104,12 @@
                 <div>
                     <div class="dash-section-header">
                         <span><i class="ti ti-mail" aria-hidden="true"></i> Sugerencias e Incidencias</span>
-                        <a href="/sugerencias">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <a href="{{ route('client.feedback.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div class="dash-grid">
                         <div class="dash-card dash-card-accent dash-card-accent-amber">
                             <div class="lbl"><i class="ti ti-send" aria-hidden="true"></i> Incidencias enviadas</div>
-                            <div class="val {{ $suggestionsCount === 0 ? 'val-zero' : '' }}">{{ $suggestionsCount }}</div>
+                            <div class="val {{ $feedbackCount  === 0 ? 'val-zero' : '' }}">{{ $feedbackCount  }}</div>
                         </div>
                     </div>
                 </div>

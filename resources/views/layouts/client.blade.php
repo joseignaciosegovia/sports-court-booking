@@ -51,7 +51,7 @@
                     Nueva reserva
                 </a>
             <div class="nav-section">Soporte</div>
-                <a class="nav-item {{ request()->routeIs('client.suggestions.*') ? 'active' : '' }}" href="{{ route('client.suggestions.index') }}">
+                <a class="nav-item {{ request()->routeIs('client.feedback.*') ? 'active' : '' }}" href="{{ route('client.feedback.index') }}">
                     <i class="ti ti-mail" aria-hidden="true"></i>
                     Buzón de incidencias
                 </a>

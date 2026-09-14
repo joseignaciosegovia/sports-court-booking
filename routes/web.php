@@ -6,9 +6,10 @@ use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Client\DashboardController;
 use App\Http\Controllers\Common\ProfileController;
 use App\Http\Controllers\Client\ReservationController;
-use App\Http\Controllers\Client\SuggestionController;
+use App\Http\Controllers\Client\FeedbackController;
 use App\Http\Controllers\Admin\ManagerController;
 use App\Http\Controllers\Common\StripeWebhookController;
+use App\Models\Feedback;
 use Livewire\Volt\Volt;
 
 
@@ -76,11 +77,11 @@ Route::middleware(['auth', 'verified', 'role:client'])->group(function () {
         ->name('client.reservations.index');
 
     // Sugerencias e incidencias
-    Route::get('/comentarios', [SuggestionController::class, 'index'])
-        ->name('client.suggestions.index');
+    Route::get('/comentarios', [FeedbackController::class, 'index'])
+        ->name('client.feedback.index');
 
-    Route::post('/comentarios', [SuggestionController::class, 'store'])
-        ->name('client.suggestions.store');
+    Route::post('/comentarios', [FeedbackController::class, 'store'])
+        ->name('client.feedback.store');
 });
 
 // ─────────────────────────────────────────────
@@ -144,8 +145,8 @@ Route::middleware(['auth', 'role:manager,admin'])
             ->name('reservations.cancellations');
 
         // Sugerencias
-        Route::get('comentarios', [\App\Http\Controllers\Manager\SuggestionController::class, 'index'])
-            ->name('suggestions.index');
+        Route::get('comentarios', [\App\Http\Controllers\Manager\FeedbackController::class, 'index'])
+            ->name('feedback.index');
     });
 
 // ─────────────────────────────────────────────
