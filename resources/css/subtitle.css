@@ -1,0 +1,26 @@
+/* --- SECCIÓN DE SUBTÍTULO --- */
+.seccionSubtitulo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(90deg, #eef2ff 0%, #f8f9fa 100%);
+    border-left: 4px solid #0d6efd;
+    border-radius: 0.5rem;
+}
+/* Icono del subtítulo */
+.seccionSubtitulo i {
+    font-size: 1.75rem;
+    color: #0d6efd;
+}
+/* Texto del subtítulo */
+.seccionSubtitulo h1, .seccionSubtitulo h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+/* Texto secundario del subtítulo */
+.seccionSubtitulo small {
+    font-size: 0.82rem;
+}

@@ -1,0 +1,82 @@
+/* =========================================================
+   WELCOME.CSS
+   Barra de bienvenida
+   ========================================================= */
+
+.welcome-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #1B3A6B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #B5D4F4;
+    flex-shrink: 0;
+    border: 2px solid #185FA5;
+}
+
+.welcome-text {
+    flex: 1;
+}
+
+.welcome-text h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    color: #111;
+    font-family: inherit;
+}
+
+.welcome-text p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+/* ---------------------------------------------------------
+   BADGES
+   --------------------------------------------------------- */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.badge-green {
+    background: #E1F5EE;
+    color: #0F6E56;
+}
+
+.badge-blue {
+    background: #E6F1FB;
+    color: #185FA5;
+}
+
+.badge-amber {
+    background: #FAEEDA;
+    color: #854F0B;
+}
+
+.badge-secondary {
+    background: #E9ECEF;
+    color: #495057;
+}

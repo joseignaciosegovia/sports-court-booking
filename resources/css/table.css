@@ -1,0 +1,47 @@
+/*--- TABLA ---*/
+
+
+/*--- La columna con el número ocupa menos ancho ---*/
+.col-num{ 
+    font-variant-numeric: tabular-nums; 
+    width: 50px; 
+}
+
+/* --- CELDAS --- */
+/* Celdas especiales (con colores) --- */
+.type-badge{
+    display: inline-flex; 
+    align-items: center; 
+    gap: 6px;
+    font-size: 12px; 
+    font-weight: 600; 
+    padding: 4px 10px; 
+    border-radius: 999px;
+}
+.type-badge.blue{ 
+    background: #e7edfc; 
+    color: #2946a3; 
+}
+.type-badge.red{ 
+    background: #fdeceb; 
+    color: #b3341c; 
+}
+.type-badge.green{
+  background: #e4f5ea;
+  color: #1f7a4c;
+}
+.type-badge.grey{
+  background: #eef0f3;
+  color: #565f6f;
+}
+.type-badge.purple{
+  background: #f2ebfb;
+  color: #6b3fa0;
+}
+/*--- Punto de las celdas con colores ---*/
+.type-badge .dot{ 
+    width: 6px;
+    height: 6px;
+    border-radius: 50%; 
+    background:currentColor; 
+}

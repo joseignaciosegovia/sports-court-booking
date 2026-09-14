@@ -1,0 +1,35 @@
+/* --- CABECERA --- */
+
+#cabecera {
+    background-color: #1B3A6B;
+}
+
+#cabecera img {
+    height: 45px;
+    width: auto;
+}
+
+.cabeceraTitulo { 
+    font-size: 20px; 
+    font-weight: 600; 
+}
+
+#cabecera a {
+    color: white;
+}
+
+.cabeceraSubtitulo { 
+    font-size: 15px; 
+    color: rgba(255,255,255,0.5); 
+}
+
+#cabecera .btn-intranet {
+    color: #1B3A6B;
+    background-color: white;
+    border: 1px solid grey;
+    font-weight: bold;
+}
+
+#cabecera .btn-intranet:hover { 
+    background: #e8eef7; 
+}

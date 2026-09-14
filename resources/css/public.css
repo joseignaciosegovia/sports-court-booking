@@ -1,0 +1,61 @@
+/* --- CUERPO --- */
+
+/* Sección que incluye todo el cuerpo en las páginas que no tienen div layout (las de acceso y la de verificar usuario) */
+.acceso, .verificar {
+    flex: 1; /* La sección se extiende hasta ocupar el alto de la página */
+}
+
+body {
+    background-color: #e0e0e0;
+}
+
+.main { 
+    padding: 1.25rem; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1rem; 
+    min-width: 0;
+}
+/* Sección principal de la página, después de la bienvenida */
+.card {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* --- COLUMNAS --- */
+/* Columna izquierda */
+#informacionPrincipal {
+    background-color: #1B3A6B;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+/* Sección con los datos de las pistas */
+.datosPistas { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px; 
+    margin-bottom: 1.5rem; 
+}
+/* Subsección con datos de las pistas */
+.datosPistasSeccion { 
+    background: rgba(255,255,255,0.08); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 9px; 
+    padding: 12px; 
+}
+/* Título */
+.datosPistasTitulo { 
+    font-size: 20px; 
+    font-weight: 600; 
+}
+/* Subtítulo */
+.datosPistasSubtitulo { 
+    font-size: 15px; 
+    color: rgba(255,255,255,0.55); 
+    margin-top: 2px; 
+}
+
+h1 {
+    font-family: Arial; 
+    margin-left: auto;
+}

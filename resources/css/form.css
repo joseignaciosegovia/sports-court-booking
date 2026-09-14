@@ -1,0 +1,27 @@
+/* --- FORMULARIOS --- */
+
+/* --- INPUTS Y SU PLACEHOLDER */
+input[type=text]::placeholder { 
+   color: #94B9DF;
+}
+input[type=email]::placeholder { 
+   color: #94B9DF;
+}
+input[type=password]::placeholder { 
+   color: #94B9DF;
+}
+input[type=tel]::placeholder { 
+   color: #94B9DF;
+}
+input[type=file] {
+    color: #94B9DF;
+}
+textarea{
+    width:100%; min-height:96px; resize: vertical;
+    border:1px solid #e2e6ee; border-radius: 10px;
+    padding: 12px 14px; font-family:inherit; font-size:14px; color:var(--text);
+    background:#fbfcfe;
+}
+label{
+    display:block; font-size:13px; font-weight:600; color:#374155; margin-bottom:8px;
+}

@@ -1,0 +1,33 @@
+/* --- ESTRUCTURA GENERAL DE LAS PÁGINAS --- */
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Contenedor que incluye sidebar + contenido */
+.layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    width: 100%;
+    flex: 1 0 auto;
+}
+
+/* Contenido principal */
+.main {
+    padding: 1.5rem 2rem;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}

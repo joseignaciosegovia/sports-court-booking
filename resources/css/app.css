@@ -1,0 +1,36 @@
+/* --- ESTILOS GLOBALES --- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+img {
+    max-width: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+:root {
+    --color-primary: #1B3A6B;
+    --color-primary-light: #185FA5;
+    --color-link: #2A71B2;
+    --color-background: #f1f3f5;
+    --color-dark: #1A2332;
+    --color-blue-light: #E6F1FB;
+    --color-green: #1D9E75;
+    --color-amber: #BA7517;
+    --color-pink: #F059C9;
+}

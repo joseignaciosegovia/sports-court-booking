@@ -1,0 +1,29 @@
+/* =========================================================
+   FOOTER.CSS
+   Pie de página
+   ========================================================= */
+
+footer {
+    padding: 20px;
+    background-color: #1A2332;
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-col li {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 1px;
+    margin-bottom: 0 !important;
+}
+
+.footer-col strong {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-col a {
+    color: #5ab4f0;
+    font-size: 15px;
+}
