@@ -6,6 +6,7 @@
 
 @push('scriptsCabecera')
     @vite('resources/css/table.css')
+    @vite('resources/js/countdown-timer.js')
 @endpush
 
 @section('client-content')
@@ -133,6 +134,12 @@
                                             @break;
                                         @case('pending')
                                             <span class="type-badge blue"><span class="dot"></span>Pendiente</span>
+                                            @if($reservation->expires_at)
+                                                <div class="countdown-timer" data-expires="{{ $reservation->expires_at->toIso8601String() }}">
+                                                    <i class="ti ti-clock" aria-hidden="true"></i>
+                                                    <span class="countdown-text">Calculando...</span>
+                                                </div>
+                                            @endif
                                             @break
                                         @case('refunded')
                                             <span class="type-badge purple"><span class="dot"></span>Reembolsada</span>

@@ -45,3 +45,27 @@
     border-radius: 50%; 
     background:currentColor; 
 }
+
+/*--- CONTADOR DE TIEMPO DISPONIBLE PARA PAGAR RESERVAS PENDIENTES ---*/
+.countdown-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    color: #b45309; /* ámbar oscuro, tono de aviso suave */
+}
+
+.countdown-timer i {
+    font-size: 0.85rem;
+}
+
+.countdown-timer.countdown-urgent {
+    color: #dc2626; /* rojo, para menos de 1 minuto */
+    font-weight: 600;
+}
+
+.countdown-timer.countdown-expired {
+    color: #dc2626;
+    font-weight: 600;
+}

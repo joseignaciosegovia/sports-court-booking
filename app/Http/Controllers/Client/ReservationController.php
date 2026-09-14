@@ -99,7 +99,7 @@ class ReservationController extends Controller
 
     public function cancel(Reservation $reservation, ReservationCancellationService $service)
     {
-        //$this->authorize('cancel', $reservation);
+        $this->authorize('cancel', $reservation);
 
         try {
             $result = $service->cancelByClient($reservation);
