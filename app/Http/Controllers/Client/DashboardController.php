@@ -40,7 +40,7 @@ class DashboardController extends Controller
             'nextReservation' => $nextReservation,
             'nextReservationCourt' => $nextReservationCourt,
             'reservationsThisMonth' => $reservationsThisMonth,
-            'feedbackCount ' => $feedbackCount ,
+            'feedbackCount' => $feedbackCount ,
             'courtsCount' => $courtsCount,
             'locationsCount' => $locationsCount,
             'openingTime' => config('schedules.opening_time'),

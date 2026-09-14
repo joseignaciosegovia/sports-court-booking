@@ -27,7 +27,7 @@
                 <div>
                     <div class="dash-section-header">
                         <span><i class="ti ti-calendar" aria-hidden="true"></i> Reservas</span>
-                        <a href="{{ route('client.feedback.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <a href="{{ route('client.reservations.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     {{-- SECCIÓN: RESERVAS --}}
                     <div class="dash-grid-2">
