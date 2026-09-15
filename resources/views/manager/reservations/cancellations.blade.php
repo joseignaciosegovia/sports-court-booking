@@ -30,8 +30,8 @@
                     <small class="text-muted">Historial de reservas canceladas</small>
                 </div>
             </div>
-            <form method="GET" class="row g-2 mb-4">
-                {{-- Estado de pago --}}
+            {{-- Filtros --}}
+            <x-filters.filter-bar :action="route('manager.reservations.cancellations')" :active-filters="$filters">
                 <div class="col-md-2">
                     <select name="court_id" class="form-select">
                         <option value="">Todas las pistas</option>
@@ -42,7 +42,6 @@
                         @endforeach
                     </select>
                 </div>
-                {{-- Estados de devolución --}}
                 <div class="col-md-2">
                     <select name="status" class="form-select">
                         <option value="">Todos los estados</option>
@@ -50,23 +49,18 @@
                         <option value="canceled" @selected($filters['status'] === 'canceled')>Sin devolución</option>
                     </select>
                 </div>
-                {{-- Quién canceló la reserva --}}
-                <div class="col-md-2">
-                    <select name="canceled_by" class="form-select">
-                        <option value="">Cancelada por cualquiera</option>
-                        <option value="manager" @selected($filters['canceled_by'] === 'manager')>Gestión</option>
-                        <option value="client" @selected($filters['canceled_by'] === 'client')>Cliente</option>
-                        <option value="system" @selected($filters['canceled_by'] === 'system')>Expiración automática</option>
-                    </select>
-                </div>
-                {{-- Fecha concreta --}}
-                <div class="col-md-2">
-                    <input type="date" name="date" value="{{ $filters['date'] }}" class="form-control">
-                </div>
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-                </div>
-            </form>
+                {{-- resto de selects específicos de esta vista --}}
+
+                <x-slot:chips>
+                    @if($filters['court_id'])
+                        <span class="filter-chip">
+                            Pista: {{ $courts->find($filters['court_id'])->name ?? '' }}
+                            <a href="{{ request()->fullUrlWithoutQuery('court_id') }}"><i class="ti ti-x"></i></a>
+                        </span>
+                    @endif
+                    {{-- resto de chips --}}
+                </x-slot:chips>
+            </x-filters.filter-bar>
 
             @if($cancellations->isEmpty())
                 <p class="text-muted mb-0">No hay reservas que coincidan con los filtros.</p>
@@ -134,7 +128,7 @@
                             <td>{{ $cancellation->court->name }}</td>
                             <td>{{ $cancellation->start_time->format('Y-m-d') }} · {{ $cancellation->start_time->format('H:i') }}</td>
                             <td>{{ $cancellation->user->email ?? 'Gestión' }}</td>
-                            <td>{{ $cancellation->information }}</td>
+                            <td class="text-truncate-cell" title="{{ $cancellation->information }}">{{ $cancellation->information }}</td>
                             <td>
                                 {{-- Si la reserva la canceló el gestor, añadimos la razón --}}
                                 @if($cancellation->canceled_by === 'manager') Gestión - {{ $cancellation->cancellation_reason }}
@@ -146,23 +140,22 @@
                             <td>{{ $cancellation->canceled_at?->format('d/m/Y H:i') ?? '-' }}</td>
                             <td>
                                 @if(empty($cancellation->user_id) || $cancellation->payment_status !== 'refunded')
-                                    <span class="type-badge grey"><span class="dot"></span>Sin devolución</span>
+                                    <span class="type-badge grey"><i class="ti ti-ban" aria-hidden="true"></i>Sin devolución</span>
                                 @else
-                                <span class="type-badge green"><span class="dot"></span>Reembolsada</span>
+                                    <span class="type-badge green"><i class="ti ti-check" aria-hidden="true"></i>Reembolsada</span>
                                 @endif
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                {{ $cancellations->links() }}
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <a href="{{ route('manager.reservations.index') }}" class="btn btn-outline-secondary">Volver atrás</a>
+                    {{ $cancellations->links() }}
+                </div>
             </div>
             @endif
         </div>
-    </div>
-
-    <div class="mt-2 text-start">
-        <a href="{{ route('manager.reservations.index') }}" class="btn btn-secondary">Volver atrás</a>
     </div>
 </main>
 @endsection

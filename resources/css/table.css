@@ -11,6 +11,62 @@
     --bs-table-hover-color: inherit;
 }
 
+/* Cabecera */
+.table thead th {
+    background-color: #f8f9fb;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/*--- Striping y hover con tinte azulado ---*/
+.table-striped {
+    --bs-table-striped-bg: #f4f7fc;
+}
+
+.table-hover > tbody > tr:hover > * {
+    --bs-table-hover-bg: #e6eefb;
+    --bs-table-hover-color: inherit;
+}
+
+/*--- Cabecera de tabla más diferenciada ---*/
+.table thead th {
+    background-color: #f8f9fb;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/*--- Filtros agrupados visualmente ---*/
+.filters-card {
+    background: #f8f9fb;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+/*--- Chips de filtros activos ---*/
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e7edfc;
+    color: #2946a3;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.filter-chip i {
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/*--- Truncado de textos largos sin romper el layout ---*/
+.text-truncate-cell {
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* --- CELDAS --- */
 /* Celdas especiales (con colores) --- */
 .type-badge{

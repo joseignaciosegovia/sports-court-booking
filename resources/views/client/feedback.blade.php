@@ -83,7 +83,7 @@
                         <input type="date" name="date" value="{{ $filters['date'] }}" class="form-control">
                     </div>
                     {{-- Botón para filtrar --}}
-                    <div class="col-md-1">
+                    <div class="w-auto y px-4">
                         <button type="submit" class="btn btn-primary w-100">Filtrar</button>
                     </div>
                 </form>
