@@ -177,7 +177,6 @@
     </div>
 </div>
 
-
 {{-- Modal para crear reserva rápida --}}
 <div class="modal fade" id="quickCreateModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -194,6 +193,29 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" id="quick-create-confirm" class="btn btn-success">Crear reserva</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Modal de confirmación de acción (reprogramar / guardar cambios) --}}
+<div class="modal fade" id="actionSuccessModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    ¡Operación completada!
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="action-success-message" class="mb-0"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    Aceptar
+                </button>
             </div>
         </div>
     </div>

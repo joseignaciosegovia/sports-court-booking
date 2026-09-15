@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const createModal =
         new bootstrap.Modal(createModalEl);
 
+    const actionSuccessModalEl =
+    document.getElementById('actionSuccessModal');
+
+    const actionSuccessModal =
+        new bootstrap.Modal(actionSuccessModalEl);
+
     // Variables
 
     let pendingSelection = null;
@@ -180,6 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     return res.json();
+                })
+                .then(data => {
+                    showActionSuccess(data.message);
                 })
                 .catch(err => {
                     alert(err.message || 'No se pudo actualizar la reserva.');
@@ -417,6 +426,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Cerramos el modal
                     infoModal.hide();
+
+                    // Mostramos confirmación
+                    showActionSuccess('Reserva actualizada correctamente.');
                 })
                 .catch(err => {
                     showModalError(
@@ -639,6 +651,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         errorBox.textContent = message;
         errorBox.classList.remove('d-none');
+    }
+
+    function showActionSuccess(message) {
+
+        document.getElementById('action-success-message').textContent =
+            message || 'La operación se ha realizado correctamente.';
+
+        actionSuccessModal.show();
     }
 
     function getPaymentStatusText(status) {
