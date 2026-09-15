@@ -1,10 +1,14 @@
 /*--- TABLA ---*/
 
+/*--- Ajuste de contraste: filas alternas y hover con tinte azulado ---*/
+/*--- para que no se confundan entre sí ni con el badge gris ---*/
+.table-striped {
+    --bs-table-striped-bg: #f4f7fc;
+}
 
-/*--- La columna con el número ocupa menos ancho ---*/
-.col-num{ 
-    font-variant-numeric: tabular-nums; 
-    width: 50px; 
+.table-hover > tbody > tr:hover > * {
+    --bs-table-hover-bg: #e6eefb;
+    --bs-table-hover-color: inherit;
 }
 
 /* --- CELDAS --- */
@@ -17,6 +21,7 @@
     font-weight: 600; 
     padding: 4px 10px; 
     border-radius: 999px;
+    border: 1px solid #dcdfe4;
 }
 .type-badge.blue{ 
     background: #e7edfc; 

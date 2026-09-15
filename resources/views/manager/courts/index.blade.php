@@ -4,6 +4,10 @@
 
 @section('titleHeader', 'Gestión de pistas · Moral de Calatrava')
 
+@push('styles')
+    @vite('resources/css/table.css')
+@endpush
+
 @section('manager-content')
 <main class="main">
     {{-- BIENVENIDA --}}
@@ -59,12 +63,12 @@
                             <td>{{ $court->name }}</td>
                             <td>{{ $court->location }}</td>
                             <td><a class="btn btn-primary form-floating nav-item" href="{{ route('manager.reservations.index', ['court_id' => $court->id]) }}">
-                                    <i class="ti ti-calendar-stats" aria-hidden="true"></i>
+                                    <i class="ti ti-calendar" aria-hidden="true"></i>
                                     Consultar reservas
                                 </a>
                             </td>
                             <td><a class="btn btn-outline-primary form-floating nav-item" href="{{ route('manager.courts.calendar', $court) }}">Calendario</a></td>
-                            <td><a href="{{ route('manager.reservations.create', ['court_id' => $court->id]) }}" class="btn btn-success">Añadir reserva</a></td>
+                            <td><a href="{{ route('manager.reservations.create', ['court_id' => $court->id]) }}" class="btn btn-success"><i class="ti ti-plus" aria-hidden="true"></i> Añadir reserva</a></td>
                             <td><a class="btn btn-warning form-floating nav-item" href="{{ route('manager.courts.edit', $court) }}">Editar</a></td>
                         </tr>
                             @endforeach
