@@ -111,12 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('modal-date').value =
                         data.date ?? '';
 
-                    document.getElementById('modal-start-time').value =
-                        data.start_time ?? '';
-
-                    document.getElementById('modal-end-time').value =
-                        data.end_time ?? '';
-
                     document.getElementById('modal-information').value =
                         data.information ?? '';
 
@@ -127,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('modal-information').dataset.internal =
                         data.is_internal ? '1' : '0';
 
-                    configurarHorariosModal();
+                    configurarHorariosModal(data.start_time, data.end_time);
 
                     // Guardamos los valores originales
                     originalReservationData = {
@@ -530,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
     }
 
-    function configurarHorariosModal() {
+    function configurarHorariosModal(reservationStart, reservationEnd) {
 
         const startSelect = document.getElementById('modal-start-time');
         const endSelect = document.getElementById('modal-end-time');
@@ -540,15 +534,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const openingTime = config.openingTime;
         const closingTime = config.closingTime;
 
-        // Guardamos los valores actuales
-        const currentStart = startSelect.value;
-        const currentEnd = endSelect.value;
-
         // Limpiamos opciones
         startSelect.innerHTML = '';
         endSelect.innerHTML = '';
-
-        // Utilidades
 
         function toMinutes(time) {
             const [hours, minutes] = time.split(':').map(Number);
@@ -558,7 +546,6 @@ document.addEventListener('DOMContentLoaded', function () {
         function toTime(minutes) {
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
-
             return String(hours).padStart(2, '0') + ':' +
                 String(mins).padStart(2, '0');
         }
@@ -566,24 +553,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const openingMinutes = toMinutes(openingTime);
         const closingMinutes = toMinutes(closingTime);
 
-        // Si es una reserva del cliente
-
+        // Reserva de cliente
         if (!isInternal) {
 
             const lastStart = closingMinutes - 60;
-
-            // Hora de fin no es modificable directamente
             endSelect.disabled = false;
 
-            // Solo horas redondas para el inicio
             for (let minutes = openingMinutes; minutes <= lastStart; minutes += 60) {
                 const time = toTime(minutes);
                 startSelect.appendChild(new Option(time, time));
             }
 
-            // Cambiamos hora de inicio
             startSelect.onchange = function () {
-
                 const startMinutes = toMinutes(this.value);
                 const endValue = toTime(startMinutes + 60);
 
@@ -592,14 +573,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 endSelect.value = endValue;
             };
 
-            // Restauramos inicio original
-            if (currentStart) {
-                startSelect.value = currentStart;
+            // Seleccionamos la hora de inicio REAL de la reserva
+            if (reservationStart) {
+                startSelect.value = reservationStart;
             }
 
-            // Calculamos fin
+            // Calculamos el fin a partir del inicio ya seleccionado
             if (startSelect.value) {
-
                 const startMinutes = toMinutes(startSelect.value);
                 const endValue = toTime(startMinutes + 60);
 
@@ -611,29 +591,19 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Reserva interna (hecha por gestión)
-
-        /*
-        * Las reservas internas pueden utilizar cualquier minuto
-        * entre apertura y cierre.
-        */
-
+        // Reserva interna
         for (let minutes = openingMinutes; minutes <= closingMinutes; minutes++) {
-
             const time = toTime(minutes);
-
             startSelect.appendChild(new Option(time, time));
             endSelect.appendChild(new Option(time, time));
         }
 
-        // Restaurar valores originales
-
-        if (currentStart) {
-            startSelect.value = currentStart;
+        if (reservationStart) {
+            startSelect.value = reservationStart;
         }
 
-        if (currentEnd) {
-            endSelect.value = currentEnd;
+        if (reservationEnd) {
+            endSelect.value = reservationEnd;
         }
     }
 
