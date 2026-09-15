@@ -4,7 +4,7 @@
 
 @section('titleHeader', 'Página inicial · Moral de Calatrava')
 
-@push('scriptsCabecera')
+@push('styles')
     @vite('resources/css/dashboard.css')
 @endpush
 

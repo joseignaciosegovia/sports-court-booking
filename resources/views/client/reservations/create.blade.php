@@ -4,9 +4,11 @@
 
 @section('titleHeader', 'Reservas · Moral de Calatrava')
 
-@push('scriptsCabecera')
-    @vite('resources/css/calendar.css')
-    @vite(['resources/js/app.js'])
+@push('styles')
+    @vite([
+        'resources/css/calendar.css',
+        'resources/js/app.js'
+    ])
 @endpush
 
 @section('client-content')
@@ -77,7 +79,13 @@
                         </div>
                     </div>
 
-                    <div id="calendar"></div>
+                    {{-- El contenido será accesible desde un JavaScript --}}
+                    <div
+                        id="calendar"
+                        data-opening-time="{{ $openingTime }}"
+                        data-closing-time="{{ $closingTime }}"
+                        data-events-url-template="{{ route('client.reservations.schedule', ['court' => '__COURT_ID__']) }}"
+                    ></div>
 
                     <form id="reservation-form" method="POST" action="{{ route('client.reservations.store') }}" class="mt-3">
                         @csrf
@@ -96,114 +104,10 @@
                 </div>
             </div>
         </div>
+        
     </main>
 @endsection
 
-@push('scriptsPie')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendarSection = document.getElementById('calendar-section');
-            const calendarEl = document.getElementById('calendar');
-            const selectedCourtName = document.getElementById('selected-court-name');
-            const summaryBox = document.getElementById('selection-summary');
-            const summaryText = document.getElementById('selection-text');
-            const summaryPrice = document.getElementById('selection-price');
-            const formCourtId = document.getElementById('form-court-id');
-            const formStartTime = document.getElementById('form-start-time');
-
-            let calendar = null;
-
-            function initCalendar(courtId, courtPrice) {
-                if (calendar) {
-                    calendar.destroy();
-                }
-
-                calendar = new FullCalendar.Calendar(calendarEl, {
-                    plugins: [
-                        FullCalendar.timeGridPlugin,
-                        FullCalendar.dayGridPlugin,
-                        FullCalendar.interactionPlugin,
-                    ],
-                    initialView: 'timeGridWeek',
-                    locale: FullCalendar.esLocale,
-                    initialView: 'timeGridWeek',
-                    slotMinTime: '{{ $openingTime }}:00',
-                    slotMaxTime: '{{ $closingTime }}:00',
-                    slotDuration: '01:00:00',
-                    hiddenDays: [6, 0],
-                    height: 'auto',
-                    allDaySlot: false,
-                    selectable: true,
-                    selectOverlap: false,
-                    events: `/reservas/horarios/${courtId}`,
-
-                    // Formato de la columna que indica la hora
-                    slotLabelFormat:{
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                        meridiem: 'short',
-                    },
-
-                    headerToolbar: {
-                        left: "prev,next,today",
-                        center: "title",
-                        right: "timeGridWeek,timeGridDay"
-                    }, 
-
-                    // Pinchamos en una franja del calendario
-                    select: function (info) {
-                        const now = new Date();
-
-                        if (info.start < now) {
-                            calendar.unselect(); // quita el resaltado azul de la selección inválida
-                            summaryBox.classList.add('d-none');
-                            return; // no seguimos, no se rellena el formulario
-                        }
-                        formCourtId.value = courtId;
-                        formStartTime.value = info.startStr;
-
-                        summaryText.textContent = info.start.toLocaleString('es-ES', {
-                            dateStyle: 'medium',
-                            timeStyle: 'short',
-                        });
-
-                        summaryPrice.textContent = new Intl.NumberFormat('es-ES', {
-                            style: 'currency',
-                            currency: 'EUR',
-                        }).format(courtPrice);
-                        
-                        summaryBox.classList.remove('d-none');
-                    },
-                });
-
-                calendar.render();
-
-                window.debugCalendar = calendar;
-            }
-
-            document.querySelectorAll('.court-link').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-
-                    const courtId = this.dataset.courtId;
-                    const courtName = this.dataset.courtName;
-                    const courtPrice = this.dataset.courtPrice;
-
-                    // resalta visualmente la pista elegida
-                    document.querySelectorAll('.court-link').forEach(l => l.classList.remove('fw-bold', 'text-primary'));
-                    this.classList.add('fw-bold', 'text-primary');
-
-                    selectedCourtName.textContent = courtName;
-                    summaryBox.classList.add('d-none');
-                    calendarSection.classList.remove('d-none');
-
-                    initCalendar(courtId, courtPrice);
-
-                    // scroll suave hasta el calendario, útil sobre todo en móvil
-                    calendarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-            });
-        });
-    </script>
+@push('scripts')
+    @vite('resources/js/court-reservation-calendar.js')
 @endpush

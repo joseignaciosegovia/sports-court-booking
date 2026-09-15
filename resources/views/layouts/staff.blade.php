@@ -9,11 +9,13 @@
     Gestión de pistas · Moral de Calatrava
 @endsection
 
-@push('scriptsCabecera')
-    @vite('resources/css/navbar.css')
-    @vite('resources/css/subtitle.css')
-    @vite('resources/css/welcome.css')
-    @vite('resources/css/responsive.css')
+@push('styles')
+    @vite([
+        'resources/css/navbar.css',
+        'resources/css/subtitle.css',
+        'resources/css/welcome.css',
+        'resources/css/responsive.css'
+    ])
 @endpush
 
 @section('content')

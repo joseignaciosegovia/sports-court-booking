@@ -4,9 +4,11 @@
 
 @section('titleHeader', 'Reservas · Moral de Calatrava')
 
-@push('scriptsCabecera')
-    @vite('resources/css/table.css')
-    @vite('resources/js/countdown-timer.js')
+@push('styles')
+    @vite([
+        'resources/css/table.css',
+        'resources/js/countdown-timer.js'
+    ])
 @endpush
 
 @section('client-content')

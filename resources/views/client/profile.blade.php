@@ -4,7 +4,7 @@
 
 @section('titleHeader', 'Perfil de usuario · Moral de Calatrava')
 
-@push('scriptsCabecera')
+@push('styles')
     @vite('resources/css/form.css')
 @endpush
 

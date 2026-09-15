@@ -1,10 +1,12 @@
 @extends('layouts.app')
 
-@push('scriptsCabecera')
-    @vite('resources/css/public.css')
-    @vite('resources/css/form.css')
-    @vite('resources/css/responsive.css')
-    @vite('resources/css/calendar.css')
+@push('styles')
+    @vite([
+        'resources/css/public.css',
+        'resources/css/form.css',
+        'resources/css/responsive.css',
+        'resources/css/calendar.css'
+    ])
 @endpush
 
 @section('content')
@@ -148,7 +150,10 @@
 {{-- Bloque del calendario, oculto hasta que se elija una pista --}}
 <div class="card shadow-sm border-0">
     <div class="p-3 py-4">
-        <div id="calendar-section" class="mt-4 d-none">
+        <div id="calendar-section" class="mt-4 d-none"
+            data-opening-time="{{ $openingTime }}"
+            data-closing-time="{{ $closingTime }}"
+            data-schedule-url-template="{{ route('public.courts.schedule', ['court' => 'COURT_ID']) }}">
             <h2 class="d-flex justify-content-center mb-3">
                 Horarios de la pista <span id="selected-court-name" class="ms-2 fw-bold"></span>
             </h2>
@@ -160,78 +165,9 @@
 
 @endsection
 
-@push('scriptsPie')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendarSection = document.getElementById('calendar-section');
-            const calendarEl = document.getElementById('calendar');
-            const selectedCourtName = document.getElementById('selected-court-name');
-
-            let calendar = null;
-
-            function initCalendar(courtId) {
-                // Si ya había un calendario (porque habíamos pinchado previamente en una pista) lo destruimos para crear el nuevo
-                if (calendar) {
-                    calendar.destroy();
-                }
-
-                calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'timeGridWeek',
-                    locale: 'es',
-                    initialView: 'timeGridWeek',
-                    slotMinTime: '{{ $openingTime }}:00',
-                    slotMaxTime: '{{ $closingTime }}:00',
-                    slotDuration: '01:00:00',
-                    hiddenDays: [6, 0],
-                    height: 'auto',
-                    allDaySlot: false,
-                    selectable: true,
-                    selectOverlap: false,
-                    // Accedemos a la ruta que invocará (en web.php) el controlador que devolverá los horarios ocupados de esta pista
-                    events: `/horarios/${courtId}`,
-
-                // Formato de la columna que indica la hora
-                slotLabelFormat:{
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                    meridiem: 'short',
-                },
-
-                headerToolbar: {
-                    left: "prev,next,today",
-                    center: "title",
-                    right: "timeGridWeek,timeGridDay"
-                }, 
-                });
-
-                calendar.render();
-            }
-
-            // Si pinchamos en una pista (dentro de los acordeones)
-            document.querySelectorAll('.court-link').forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-
-                    const courtId = this.dataset.courtId;
-                    const courtName = this.dataset.courtName;
-
-                    // Resalta visualmente la pista elegida
-                    document.querySelectorAll('.court-link').forEach(l => l.classList.remove('fw-bold', 'text-primary'));
-                    this.classList.add('fw-bold', 'text-primary');
-
-                    selectedCourtName.textContent = courtName;
-                    calendarSection.classList.remove('d-none');
-
-                    initCalendar(courtId);
-
-                    // Scroll suave hasta el calendario, útil sobre todo en móvil
-                    calendarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                });
-            });
-        });
-    </script>
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/es.global.min.js"></script>
+    @vite('resources/js/public-courts-calendar.js')
 @endpush
 

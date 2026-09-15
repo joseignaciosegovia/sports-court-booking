@@ -4,9 +4,11 @@
 
 @section('titleHeader', 'Feedback · Moral de Calatrava')
 
-@push('scriptsCabecera')
-    @vite('resources/css/form.css')
-    @vite('resources/css/table.css')
+@push('styles')
+    @vite([
+        'resources/css/form.css',
+        'resources/css/table.css'
+    ])
 @endpush
 
 @section('client-content')

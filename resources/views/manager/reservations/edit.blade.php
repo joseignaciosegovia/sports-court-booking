@@ -27,7 +27,9 @@
                 </div>
             </div>
         
-            <form method="POST" action="{{ route('manager.reservations.update', $reservation) }}" name="editarReserva" enctype="multipart/form-data" id="form-update-reservations">
+            <form method="POST" action="{{ route('manager.reservations.update', $reservation) }}" name="editarReserva" enctype="multipart/form-data" id="form-update-reservations"
+                data-is-client-reservation="{{ $reservation->user_id ? '1' : '0' }}">
+
                 @csrf
                 @method('PUT')
                 <div class="p-3 py-5">
@@ -110,35 +112,6 @@
 </main>
 @endsection
 
-@push('scriptsPie')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const isClientReservation = {{ $reservation->user_id ? 'true' : 'false' }};
-
-        if (!isClientReservation) {
-            return;
-        }
-
-        const startSelect = document.getElementById('start_time_only');
-        const endSelect = document.getElementById('end_time_only');
-        const endHidden = document.getElementById('end_time_only_hidden');
-
-        function recalcularFin() {
-            if (!startSelect.value) return;
-
-            const [hour] = startSelect.value.split(':').map(Number);
-            const endValue = String(hour + 1).padStart(2, '0') + ':00';
-
-            endSelect.innerHTML = '';
-            endSelect.appendChild(new Option(endValue, endValue));
-            endSelect.value = endValue;
-
-            endHidden.value = endValue;
-        }
-
-        startSelect.addEventListener('change', recalcularFin);
-
-        recalcularFin();
-    });
-</script>
+@push('scripts')
+    @vite('resources/js/reservation-edit.js')
 @endpush

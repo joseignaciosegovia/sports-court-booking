@@ -4,7 +4,7 @@
 
 @section('titleHeader', 'Gestión de reservas · Moral de Calatrava')
 
-@push('scriptsCabecera')
+@push('styles')
     @vite('resources/css/table.css')
 @endpush
 

@@ -18,16 +18,18 @@
         {{-- Iconos --}}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
         {{-- Hoja de estilos comunes a todas las vistas --}}
-        @vite('resources/css/app.css')
-        @vite('resources/css/body.css')
-        @vite('resources/css/header.css')
-        @vite('resources/css/footer.css')
+        @vite([
+            'resources/css/app.css',
+            'resources/css/body.css',
+            'resources/css/header.css',
+            'resources/css/footer.css',
+        ])
+        {{-- Hoja de estilos de cada vista --}}
+        @stack('styles')
         {{-- Estilos de Livewire --}}
         @livewireStyles
         {{-- Animanate CSS --}}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-        {{-- Cada página añadirá los scripts que necesite --}}
-        @stack('scriptsCabecera')
     </head>
     <body>
         <header>
@@ -52,9 +54,7 @@
                     {{-- Botón de menú móvil --}}
                     @hasSection('menu')
                         <div class="col-auto">
-                            <button id="btnMenu" onclick="desplegarMenu()">
-                                <i class="ti ti-menu-2"></i>
-                            </button>
+                            <button id="btnMenu"><i class="ti ti-menu-2"></i></button>
                         </div>
                     @endif
                 </div>
@@ -97,17 +97,6 @@
                     </div>
                 </div>
             </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const modalElement = document.getElementById('successModal');
-
-                    if (modalElement) {
-                        const modal = new bootstrap.Modal(modalElement);
-                        modal.show();
-                    }
-                });
-            </script>
         @endif
         {{-- Pie de página --}}
         <footer>
@@ -139,16 +128,11 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         {{-- Bootstrap --}}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-        {{-- Scripts del pie --}}
-        @stack('scriptsPie')
+        {{-- JavaScript común a todas las vistas --}}
+        @vite('resources/js/layout.js')
+        {{-- JavaScript específico de cada vista --}}
+        @stack('scripts')
         {{-- Scripts de Livewire --}}
         @livewireScripts
-        <script>
-            // Alterna la visibilidad de la barra de navegación en dispositivos móviles
-            function desplegarMenu() {
-                document.querySelector('.sidebar').classList.toggle('abierta');
-                document.getElementById('overlay').classList.toggle('visible');
-            }
-        </script>
     </body>
 </html>

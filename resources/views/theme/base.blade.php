@@ -21,7 +21,7 @@
         <!-- Animanate CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
         <!-- Cada página añadirá los scripts que necesite -->
-        @yield('scriptsCabecera')
+        @yield('styles')
     </head>
     <body>
         <header>
@@ -82,7 +82,7 @@
         <!-- Bootstrap -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
         <!-- Cada página añadirá los scripts que necesite -->
-        @yield('scriptsPie')
+        @yield('scripts')
         <script>
             // Cada vez que se invoque esta función, se alternará la visibilidad de la barra de navegación y del resto de la página
             function desplegarMenu() {
