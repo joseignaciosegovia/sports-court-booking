@@ -32,6 +32,7 @@
             </div>
             {{-- Filtros --}}
             <x-filters.filter-bar :action="route('manager.reservations.cancellations')" :active-filters="$filters">
+                {{-- Pista --}}
                 <div class="col-md-2">
                     <select name="court_id" class="form-select">
                         <option value="">Todas las pistas</option>
@@ -42,6 +43,7 @@
                         @endforeach
                     </select>
                 </div>
+                {{-- Reembolsada o sin devolución --}}
                 <div class="col-md-2">
                     <select name="status" class="form-select">
                         <option value="">Todos los estados</option>
@@ -49,16 +51,49 @@
                         <option value="canceled" @selected($filters['status'] === 'canceled')>Sin devolución</option>
                     </select>
                 </div>
-                {{-- resto de selects específicos de esta vista --}}
-
+                {{-- Autoría de la cancelación --}}
+                <div class="col-md-2">
+                    <select name="canceled_by" class="form-select">
+                        <option value="">Cancelada por cualquiera</option>
+                        <option value="manager" @selected($filters['canceled_by'] === 'manager')>Gestión</option>
+                        <option value="client" @selected($filters['canceled_by'] === 'client')>Cliente</option>
+                        <option value="system" @selected($filters['canceled_by'] === 'system')>Expiración automática</option>
+                    </select>
+                </div>
+                {{-- Fecha concreta --}}
+                <div class="col-md-2">
+                    <input type="date" name="date" value="{{ $filters['date'] }}" class="form-control">
+                </div>
+                {{-- CHIPS DE FILTROS --}}
                 <x-slot:chips>
+                    {{-- Chip de pista --}}
                     @if($filters['court_id'])
-                        <span class="filter-chip">
-                            Pista: {{ $courts->find($filters['court_id'])->name ?? '' }}
-                            <a href="{{ request()->fullUrlWithoutQuery('court_id') }}"><i class="ti ti-x"></i></a>
-                        </span>
+                        <x-filters.filter-chip
+                            :label="'Pista: ' . ($courts->find($filters['court_id'])->name ?? '')"
+                            :remove-url="request()->fullUrlWithoutQuery('court_id')"
+                        />
                     @endif
-                    {{-- resto de chips --}}
+                    {{-- Chip de estado (reembolsada o sin devolución) --}}
+                    @if($filters['status'])
+                        <x-filters.filter-chip
+                            :label="'Estado: ' . ($filters['status'] === 'refunded' ? 'Reembolsada' : 'Sin devolución')"
+                            :remove-url="request()->fullUrlWithoutQuery('status')"
+                        />
+                    @endif
+                    {{-- Chip de autoría de la cancelación --}}
+                    @if($filters['canceled_by'])
+                        <x-filters.filter-chip
+                            :label="'Razón de la cancelación: ' . \App\Enums\CanceledBy::tryFrom($filters['canceled_by'])->label()"
+                            :remove-url="request()->fullUrlWithoutQuery('canceled_by')"
+                        />
+                    @endif
+                    {{-- Chip de fecha concreta --}}
+                    @if($filters['date'])
+                        <x-filters.filter-chip
+                            :label="'Fecha: ' . ($filters['date'] ?? '')"
+                            :remove-url="request()->fullUrlWithoutQuery('date')"
+                        />
+                    @endif
                 </x-slot:chips>
             </x-filters.filter-bar>
 
@@ -129,21 +164,22 @@
                             <td>{{ $cancellation->start_time->format('Y-m-d') }} · {{ $cancellation->start_time->format('H:i') }}</td>
                             <td>{{ $cancellation->user->email ?? 'Gestión' }}</td>
                             <td class="text-truncate-cell" title="{{ $cancellation->information }}">{{ $cancellation->information }}</td>
+                            {{-- Cancelada por --}}
                             <td>
                                 {{-- Si la reserva la canceló el gestor, añadimos la razón --}}
-                                @if($cancellation->canceled_by === 'manager') Gestión - {{ $cancellation->cancellation_reason }}
-                                @elseif($cancellation->canceled_by === 'client') Cliente
-                                @elseif($cancellation->canceled_by === 'system') Expiración automática
+                                @if($cancellation->canceled_by === \App\Enums\CanceledBy::Manager) 
+                                    Gestión - {{ $cancellation->cancellation_reason }}
+                                @elseif($cancellation->canceled_by) 
+                                    {{ $cancellation->canceled_by->label() }}
                                 @else -
                                 @endif
                             </td>
-                            <td>{{ $cancellation->canceled_at?->format('d/m/Y H:i') ?? '-' }}</td>
+                            <td>{{ $cancellation->canceled_at?->format('Y-m-d H:i') ?? '-' }}</td>
                             <td>
-                                @if(empty($cancellation->user_id) || $cancellation->payment_status !== 'refunded')
-                                    <span class="type-badge grey"><i class="ti ti-ban" aria-hidden="true"></i>Sin devolución</span>
-                                @else
-                                    <span class="type-badge green"><i class="ti ti-check" aria-hidden="true"></i>Reembolsada</span>
-                                @endif
+                                <span class="type-badge {{ $cancellation->payment_status->badgeColor() }}">
+                                    <i class="{{ $cancellation->payment_status->badgeIcon() }}" aria-hidden="true"></i>
+                                    {{ $cancellation->payment_status->label() }}
+                                </span>
                             </td>
                         </tr>
                         @endforeach

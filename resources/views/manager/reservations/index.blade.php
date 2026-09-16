@@ -1,3 +1,7 @@
+@php
+    use App\Enums\PaymentStatus;
+@endphp
+
 @extends('layouts.staff')
 
 @section('title', 'Todas las reservas · Moral de Calatrava')
@@ -32,7 +36,9 @@
             </div>
         </div>
         <div class="card-body">
-            <form method="GET" class="row g-2 mb-4">
+            {{-- Filtros --}}
+            <x-filters.filter-bar :action="route('manager.reservations.index')" :active-filters="$filters">
+                {{-- Pista --}}
                 <div class="col-md-2">
                     <select name="court_id" class="form-select">
                         <option value="">Todas las pistas</option>
@@ -47,10 +53,18 @@
                 <div class="col-md-2">
                     <select name="status" class="form-select">
                         <option value="">Todos los estados</option>
-                        <option value="paid" @selected($filters['status'] === 'paid')>Pagada</option>
-                        <option value="pending" @selected($filters['status'] === 'pending')>Pendiente</option>
-                        <option value="canceled" @selected($filters['status'] === 'canceled')>Cancelada</option>
-                        <option value="refunded" @selected($filters['status'] === 'refunded')>Reembolsada</option>
+                        <option value="{{ PaymentStatus::Paid->value }}" @selected($filters['status'] === PaymentStatus::Paid->value)>
+                            {{ PaymentStatus::Paid->label() }}
+                        </option>
+                        <option value="{{ PaymentStatus::Pending->value }}" @selected($filters['status'] === PaymentStatus::Pending->value)>
+                            {{ PaymentStatus::Pending->label() }}
+                        </option>
+                        <option value="{{ PaymentStatus::Canceled->value }}" @selected($filters['status'] === PaymentStatus::Canceled->value)>
+                            {{ PaymentStatus::Canceled->label() }}
+                        </option>
+                        <option value="{{ PaymentStatus::Refunded->value }}" @selected($filters['status'] === PaymentStatus::Refunded->value)>
+                            {{ PaymentStatus::Refunded->label() }}
+                        </option>
                     </select>
                 </div>
                 {{-- Fecha concreta --}}
@@ -63,21 +77,72 @@
                         <option value="">
                             Todas las fechas
                         </option>
-
                         <option value="past" @selected($filters['date_range'] === 'past')>
                             Fechas pasadas
                         </option>
-
                         <option value="future" @selected($filters['date_range'] === 'future')>
                             Fechas futuras
                         </option>
                     </select>
                 </div>
-                {{-- Botón para filtrar --}}
-                <div class="w-auto y px-4">
-                    <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-                </div>
-            </form>
+
+                {{-- CHIPS DE FILTROS --}}
+                <x-slot:chips>
+                    {{-- Chip de pista --}}
+                    @if(!empty($filters['court_id']))
+                        @php
+                            $selectedCourt = $courts->find($filters['court_id']);
+                        @endphp
+
+                        @if($selectedCourt)
+                            <x-filters.filter-chip
+                                :label="'Pista: ' . $selectedCourt->name"
+                                :remove-url="request()->fullUrlWithoutQuery('court_id')"
+                            />
+                        @endif
+                    @endif
+                
+                    {{-- Chip de estado de pago --}}
+                    @if(!empty($filters['status']))
+                        @php
+                            $status = PaymentStatus::tryFrom($filters['status']);
+                        @endphp
+
+                        @if($status)
+                            <x-filters.filter-chip
+                                :label="'Estado: ' . $status->label()"
+                                :remove-url="request()->fullUrlWithoutQuery('status')"
+                            />
+                        @endif
+                    @endif
+
+                    {{-- Chip de fecha concreta --}}
+                    @if(!empty($filters['date']))
+                        <x-filters.filter-chip
+                            :label="'Fecha: ' . \Carbon\Carbon::parse($filters['date'])->format('Y-m-d')"
+                            :remove-url="request()->fullUrlWithoutQuery('date')"
+                        />
+                    @endif
+
+                    {{-- Chip de rango de fechas --}}
+                    @if(!empty($filters['date_range']))
+                        @php
+                            $dateRangeLabels = [
+                                'past' => 'Fechas pasadas',
+                                'future' => 'Fechas futuras',
+                            ];
+                        @endphp
+
+                        @if(isset($dateRangeLabels[$filters['date_range']]))
+                            <x-filters.filter-chip
+                                :label="$dateRangeLabels[$filters['date_range']]"
+                                :remove-url="request()->fullUrlWithoutQuery('date_range')"
+                            />
+                        @endif
+                    @endif
+                    
+                </x-slot:chips>
+            </x-filters.filter-bar>
 
             @if($reservations->isEmpty())
                 <p class="text-muted mb-0">No hay reservas que coincidan con los filtros.</p>
@@ -135,28 +200,19 @@
                                     <td>{{ $reservation->information }}</td>
                                     <td>
                                         @if(empty($reservation->user_id))
-                                            <span class="type-badge green"><span class="dot"></span>Pagada (Gestión)</span>
+                                            <span class="type-badge {{ $reservation->payment_status->badgeColor() }}">
+                                                <i class="{{ $reservation->payment_status->badgeIcon() }}" aria-hidden="true"></i>
+                                                {{ $reservation->payment_status->label() }} (Gestión)
+                                            </span>
                                         @else
-                                            @switch($reservation->payment_status)
-                                                @case('paid')
-                                                    <span class="type-badge green"><span class="dot"></span>Pagada</span>
-                                                    @break;
-                                                @case('pending')
-                                                    <span class="type-badge blue"><span class="dot"></span>Pendiente</span>
-                                                    @break
-                                                @case('refunded')
-                                                    <span class="type-badge purple"><span class="dot"></span>Reembolsada</span>
-                                                    @break
-                                                @case('canceled')
-                                                    <span class="type-badge red"><span class="dot"></span>Cancelada</span>
-                                                    @break
-                                                @default
-                                                    <span class="badge-secondary"><span class="dot"></span>{{ ucfirst($reservation->payment_status) }}</span>
-                                            @endswitch
+                                            <span class="type-badge {{ $reservation->payment_status->badgeColor() }}">
+                                                <i class="{{ $reservation->payment_status->badgeIcon() }}" aria-hidden="true"></i>
+                                                {{ $reservation->payment_status->label() }}
+                                            </span>
                                         @endif
                                     </td>
                                     <td>
-                                        @if(in_array($reservation->payment_status, ['canceled', 'refunded']))
+                                        @if($reservation->payment_status->isCanceled())
                                             <span class="text-muted">Reserva cancelada</span>
                                         @elseif($reservation->start_time->isFuture())
                                             <a href="{{ route('manager.reservations.edit', $reservation) }}" class="btn btn-sm btn-warning">Editar</a>

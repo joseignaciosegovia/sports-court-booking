@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Concerns\Filterable;
 use App\Models\Concerns\Sortable;
+use App\Enums\PaymentStatus;
+use App\Enums\CanceledBy;
 
 class Reservation extends Model
 {
@@ -34,6 +36,8 @@ class Reservation extends Model
         'expires_at' => 'datetime',
         'canceled_at' => 'datetime',
         'refunded_at' => 'datetime',
+        'payment_status' => PaymentStatus::class,
+        'canceled_by' => CanceledBy::class,
     ];
 
     public function court()

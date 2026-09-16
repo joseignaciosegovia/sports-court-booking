@@ -33,24 +33,58 @@
             </div>
         </div>
         <div class="card-body">
-            <form method="GET" class="row g-2 mb-4">
+            <x-filters.filter-bar :action="route('manager.feedback.index')" :active-filters="$filters">
                 {{-- Tipo --}}
                 <div class="col-md-2">
                     <select name="type" class="form-select">
                         <option value="">Todas los tipos</option>
-                        <option value="suggestion" @selected($filters['type'] == 'suggestion')>Sugerencia</option>
-                        <option value="incident" @selected($filters['type'] == 'incident')>Incidencia</option>
+                        <option value="{{ \App\Enums\FeedbackType::Suggestion->value }}" @selected($filters['type'] === \App\Enums\FeedbackType::Suggestion->value)>
+                            {{ \App\Enums\FeedbackType::Suggestion->label() }}
+                        </option>
+                        <option value="{{ \App\Enums\FeedbackType::Incident->value }}" @selected($filters['type'] === \App\Enums\FeedbackType::Incident->value)>
+                            {{ \App\Enums\FeedbackType::Incident->label() }}
+                        </option>
                     </select>
                 </div>
                 {{-- Fecha concreta --}}
                 <div class="col-md-2">
                     <input type="date" name="date" value="{{ $filters['date'] }}" class="form-control">
                 </div>
-                {{-- Botón para filtrar --}}
-                <div class="w-auto y px-4">
-                    <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-                </div>
-            </form>
+                {{-- CHIPS DE FILTROS --}}
+                <x-slot:chips>
+                    {{-- Chip de tipo --}}
+                    @if(!empty($filters['type']))
+                        @php
+                            $feedbackType = \App\Enums\FeedbackType::tryFrom($filters['type']);
+                        @endphp
+
+                        @if($feedbackType)
+                            <x-filters.filter-chip
+                                :label="'Tipo: ' . $feedbackType->label()"
+                                :remove-url="request()->fullUrlWithoutQuery('type')"
+                            />
+                        @endif
+                    @endif
+
+                    {{-- Chip de fecha concreta --}}
+                    @if(!empty($filters['date']))
+                        @php
+                            try {
+                                $formattedDate = \Carbon\Carbon::parse($filters['date'])->format('Y-m-d');
+                            } catch (\Exception $e) {
+                                $formattedDate = null;
+                            }
+                        @endphp
+
+                        @if($formattedDate)
+                            <x-filters.filter-chip
+                                :label="'Fecha: ' . $formattedDate"
+                                :remove-url="request()->fullUrlWithoutQuery('date')"
+                            />
+                        @endif
+                    @endif
+                </x-slot:chips>
+            </x-filters.filter-bar>
 
             @if($feedback->isEmpty())
                 <p class="text-muted mb-0">No hay sugerencias/incidencias que coincidan con los filtros.</p>
@@ -95,14 +129,19 @@
                         @foreach($feedback as $index => $item)
                         <tr>
                             <th>{{ $feedback->firstItem() + $index }}</th>
-                            @if($item->type == "suggestion")
-                                <td><span class="type-badge blue"><span class="dot"></span>Sugerencia</span></td>
-                            @else
-                                <td><span class="type-badge red"><span class="dot"></span>Incidencia</span></td>
-                            @endif
+                            {{-- Tipo --}}
+                            <td>
+                                <span class="type-badge {{ $item->type->badgeColor() }}">
+                                    <i class="{{ $item->type->badgeIcon() }}" aria-hidden="true"></i>
+                                    {{ $item->type->label() }}
+                                </span>
+                            </td>
+                            {{-- Fecha --}}
                             <td>{{ $item->created_at->timezone('Europe/Madrid')->format('Y-m-d') }} · {{ $item->created_at->timezone('Europe/Madrid')->format('H:i') }}</td>
+                            {{-- Usuario --}}
                             <td>{{ $item->user->name }}</td>
                             <!-- Ajustamos el ancho de la última columna al contenido con style -->
+                            {{-- Contenido --}}
                             <td style="width: 1%; white-space: nowrap;">{{ $item->content }}</td>
                         </tr>
                         @endforeach

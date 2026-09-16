@@ -1,3 +1,7 @@
+@php
+    use App\Enums\PaymentStatus;
+@endphp
+
 @extends('layouts.client')
 
 @section('title', 'Historial de reservas · Moral de Calatrava')
@@ -50,10 +54,10 @@
                     <div class="col-md-2">
                         <select name="status" class="form-select">
                             <option value="">Todos los estados</option>
-                            <option value="paid" @selected($filters['status'] === 'paid')>Pagada</option>
-                            <option value="pending" @selected($filters['status'] === 'pending')>Pendiente</option>
-                            <option value="canceled" @selected($filters['status'] === 'canceled')>Cancelada</option>
-                            <option value="refunded" @selected($filters['status'] === 'refunded')>Reembolsada</option>
+                            <option value="{{ PaymentStatus::Paid->value }}" @selected($filters['status'] === PaymentStatus::Paid->value)>{{ PaymentStatus::Paid->label() }}</option>
+                            <option value="{{ PaymentStatus::Pending->value }}" @selected($filters['status'] === PaymentStatus::Pending->value)>{{ PaymentStatus::Pending->label() }}</option>
+                            <option value="{{ PaymentStatus::Canceled->value }}" @selected($filters['status'] === PaymentStatus::Canceled->value)>{{ PaymentStatus::Canceled->label() }}</option>
+                            <option value="{{ PaymentStatus::Refunded->value }}" @selected($filters['status'] === PaymentStatus::Refunded->value)>{{ PaymentStatus::Refunded->label() }}</option>
                         </select>
                     </div>
                     {{-- Fecha concreta --}}
@@ -125,63 +129,53 @@
                             {{-- Recorremos las reservas --}}
                             @foreach($reservations as $index => $reservation)
                             <tr>
+                                
                                 <th>{{ $reservations->firstItem() + $index }}</th>
+                                {{-- Pista --}}
                                 <td>{{ $reservation->court->name }}</td>
+                                {{-- Fecha --}}
                                 <td>{{ $reservation->start_time->format('Y-m-d') }} · {{ $reservation->start_time->format('H:i') }} - {{ $reservation->end_time->format('H:i') }}</td>
+                                {{-- Precio --}}
                                 <td>{{ $reservation->court->reservation_price }}</td>
+                                {{-- Estado de pago --}}
                                 <td>
-                                    @switch($reservation->payment_status)
-                                        @case('paid')
-                                            <span class="type-badge green"><span class="dot"></span>Pagada</span>
-                                            @break;
-                                        @case('pending')
-                                            <span class="type-badge blue"><span class="dot"></span>Pendiente</span>
-                                            @if($reservation->expires_at)
-                                                <div class="countdown-timer" data-expires="{{ $reservation->expires_at->toIso8601String() }}">
-                                                    <i class="ti ti-clock" aria-hidden="true"></i>
-                                                    <span class="countdown-text">Calculando...</span>
-                                                </div>
-                                            @endif
-                                            @break
-                                        @case('refunded')
-                                            <span class="type-badge purple"><span class="dot"></span>Reembolsada</span>
-                                            @break
-                                        @case('canceled')
-                                            <span class="type-badge red"><span class="dot"></span>Cancelada</span>
-                                            @break
-                                        @default
-                                            <span class="badge-secondary"><span class="dot"></span>{{ ucfirst($reservation->payment_status) }}</span>
-                                    @endswitch
+                                    <span class="type-badge {{ $reservation->payment_status->badgeColor() }}">
+                                        <i class="{{ $reservation->payment_status->badgeIcon() }}"></i>
+                                        {{ $reservation->payment_status->label() }}
+                                    </span>
+                                    @if($reservation->payment_status === PaymentStatus::Pending)
+                                        @if($reservation->expires_at)
+                                            <div class="countdown-timer" data-expires="{{ $reservation->expires_at->toIso8601String() }}">
+                                                <span class="countdown-text">Calculando...</span>
+                                            </div>
+                                        @endif
+                                    @endif
                                 </td>
+                                {{-- Acciones --}}
                                 <td>
                                     {{-- Si la fecha de la reserva no se ha pasado y la reserva se pagó o está pendiente de pagarse, permitimos que se pueda cancelar --}}
-                                    @if(in_array($reservation->payment_status, ['paid', 'pending']) && $reservation->start_time->isFuture())
+                                    @if(in_array($reservation->payment_status, [PaymentStatus::Paid, PaymentStatus::Pending,], true) && $reservation->start_time->isFuture())
                                         <div class="d-flex gap-2">
                                             {{-- Si la reserva está en estado pendiente y no ha expirado, se permite continuar el pago --}}
-                                            @if($reservation->payment_status === 'pending' && $reservation->expires_at && $reservation->expires_at->isFuture())
+                                            {{-- Continuar pago --}}
+                                            @if($reservation->payment_status->isPayable() && $reservation->expires_at && $reservation->expires_at->isFuture())
                                                 <a href="{{ route('client.reservations.payment.resume', $reservation) }}" class="btn btn-success">
                                                     Continuar pago
                                                 </a>
                                             @endif
+                                            {{-- Cancelar reserva --}}
                                             <form method="POST" action="{{ route('client.reservations.cancel', $reservation) }}" onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva? Si faltan menos de 12 horas, no habrá devolución.');" style="display: inline;">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit" class="btn btn-danger">Cancelar</button>
                                             </form>
                                         </div>
-                                    @elseif(in_array($reservation->payment_status, ['canceled', 'refunded']))
-                                        @switch($reservation->canceled_by)
-                                            @case('client')
-                                                <span class="text-muted">Cancelada por el usuario</span>
-                                                @break;
-                                            @case('manager')
-                                                <span class="text-muted">Cancelada por la gestión</span>
-                                                @break
-                                            @case('system')
-                                                <span class="text-muted">No se pagó a tiempo</span>
-                                                @break
-                                            @default
-                                        @endswitch
+                                    @elseif(in_array($reservation->payment_status, [PaymentStatus::Canceled, PaymentStatus::Refunded,], true))
+                                        @if($reservation->canceled_by)
+                                            <span class="text-muted">
+                                                {{ $reservation->canceled_by->label() }}
+                                            </span>
+                                        @endif
                                     @else
                                         <span class="text-muted">Fecha pasada</span>
                                     @endif

@@ -31,7 +31,7 @@ class RoleMiddleware
             return redirect()->guest(route('login'));
         }
 
-        if (!in_array(Auth::user()->role, $roles)) {
+        if (!in_array(Auth::user()->role->value, $roles)) {
             abort(403);
         }
 

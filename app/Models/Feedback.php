@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Concerns\Filterable;
 use App\Models\Concerns\Sortable;
+use \App\Enums\FeedbackType;
 
 class Feedback extends Model
 {
@@ -22,6 +23,10 @@ class Feedback extends Model
     public const TYPES = [
         'suggestion',
         'incident',
+    ];
+
+    protected $casts = [
+        'type' => FeedbackType::class,
     ];
 
     public function user()

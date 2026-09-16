@@ -4,6 +4,10 @@
 
 @section('titleHeader', 'Administración de gestores · Moral de Calatrava')
 
+@push('styles')
+    @vite('resources/css/table.css')
+@endpush
+
 @section('manager-content')
 <main class="main">
     {{-- BIENVENIDA --}}
@@ -28,20 +32,36 @@
             </div>
             <hr class="mt-0 mb-4" style="border-color: #dee2e6;">
                 {{-- Filtros --}}
-                <form method="GET" class="row g-2 mb-4">
-                    {{-- Tipos --}}
+                <x-filters.filter-bar :action="route('admin.managers.index')" :active-filters="$filters">
+                    {{-- Rol --}}
                     <div class="col-md-2">
                         <select name="role" class="form-select">
                             <option value="">Todos los roles</option>
-                            <option value="manager" @selected($filters['role'] === 'manager')>Gestor</option>
-                            <option value="admin" @selected($filters['role'] === 'admin')>Administrador</option>
+                            <option value="{{ \App\Enums\UserRole::Manager->value }}" @selected($filters['role'] === \App\Enums\UserRole::Manager->value)>
+                                {{ \App\Enums\UserRole::Manager->label() }}
+                            </option>
+                            <option value="{{ \App\Enums\UserRole::Admin->value }}" @selected($filters['role'] === \App\Enums\UserRole::Admin->value)>
+                                {{ \App\Enums\UserRole::Admin->label() }}
+                            </option>
                         </select>
                     </div>
-                    {{-- Botón para filtrar --}}
-                    <div class="w-auto y px-4">
-                        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-                    </div>
-                </form>
+                    {{-- CHIPS DE FILTROS --}}
+                    <x-slot:chips>
+                        {{-- Chip de rol --}}
+                        @if(!empty($filters['role']))
+                            @php
+                                $role = \App\Enums\UserRole::tryFrom($filters['role']);
+                            @endphp
+
+                            @if($role)
+                                <x-filters.filter-chip
+                                    :label="'Rol: ' . $role->label()"
+                                    :remove-url="request()->fullUrlWithoutQuery('role')"
+                                />
+                            @endif
+                        @endif
+                    </x-slot:chips>
+                </x-filters.filter-bar>
 
             @if($managers->isEmpty())
                 <p class="text-muted mb-0">No hay gestores/administradores que coincidan con los filtros.</p>
@@ -94,17 +114,19 @@
                         @foreach($managers as $index => $manager)
                         <tr>
                             <th>{{ $managers->firstItem() + $index }}</th>
+                            {{-- Email --}}
                             <td>{{ $manager->email }}</td>
+                            {{-- Nombre --}}
                             <td>{{ $manager->name }}</td>
+                            {{-- DNI --}}
                             <td>{{ $manager->dni }}</td>
+                            {{-- Teléfono --}}
                             <td>{{ $manager->phone ?? '-' }}</td>
+                            {{-- Rol --}}
                             <td>
-                                {{-- Si el gestor es también administrador lo indicamos --}} 
-                                @if($manager->role == 'admin')
-                                    {{ "Administrador" }}
-                                @else
-                                    {{ "Gestor" }}
-                                @endif
+                                <span class="type-badge {{ $manager->role->badgeColor() }}">
+                                    {{ $manager->role->label() }}
+                                </span>
                             </td>
                             <td><a href="{{ route('admin.managers.edit', $manager) }}" class="btn btn-warning btn-sm">Editar</a></td>
                         </tr>
