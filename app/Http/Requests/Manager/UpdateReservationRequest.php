@@ -19,7 +19,7 @@ class UpdateReservationRequest extends FormRequest
         ];
 
         if (!$reservation->user_id) {
-            $rules['information'] = 'nullable|string|max:500';
+            $rules['information'] = 'required|string|max:500';
         }
 
         return $rules;

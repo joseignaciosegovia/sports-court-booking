@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
 use App\Models\Court;
-use Illuminate\Http\Request;
 use App\Http\Requests\Manager\StoreCourtRequest;
 use App\Http\Requests\Manager\UpdateCourtRequest;
 use App\Helpers\SortHelper;
@@ -12,7 +11,7 @@ use App\QueryFilters\CourtFilter;
 
 class CourtController extends Controller
 {
-    public function index(Request $request, CourtFilter $filters)
+    public function index(CourtFilter $filters)
     {
         $sortColumns = [
             'name' => 'courts.name',

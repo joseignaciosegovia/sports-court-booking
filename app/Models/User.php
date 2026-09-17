@@ -42,11 +42,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // --- Relaciones ---
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function reservations()
     {
         return $this->hasMany(Reservation::class, 'user_id');
@@ -66,17 +61,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isClient(): bool
     {
-        return $this->role === 'client';
+        return $this->role === UserRole::Client;
     }
 
     public function isManagerOrAdmin(): bool
     {
-        return in_array($this->role, ['manager', 'admin']);
+        return in_array($this->role, [UserRole::Manager, UserRole::Admin]);
     }
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === UserRole::Admin;
     }
 
     public function deleteProfilePhoto(): void

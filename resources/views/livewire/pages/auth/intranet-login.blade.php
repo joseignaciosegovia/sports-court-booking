@@ -1,10 +1,10 @@
 <?php
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Enums\UserRole;
 
 new #[Layout('layouts.app')] class extends Component
 {
@@ -27,7 +27,7 @@ new #[Layout('layouts.app')] class extends Component
 
         $user = Auth::user();
 
-        if (! in_array($user->role, ['manager', 'admin'])) {
+        if (! in_array($user->role, [UserRole::Manager, UserRole::Admin])) {
             Auth::logout();
 
             throw ValidationException::withMessages([

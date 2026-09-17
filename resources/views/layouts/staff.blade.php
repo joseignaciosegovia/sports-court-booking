@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     <span>{{ $authUser->name }}</span>
-                    <small>{{ $authUser->role === 'admin' ? 'Admin activo' : 'Mánager activo' }}</small>
+                    <small>{{ $authUser->isAdmin() ? 'Administrador activo' : 'Mánager activo' }}</small>
                 </div>
             </div>
             <div class="nav-section">General</div>
@@ -45,12 +45,12 @@
                     Inicio
                 </a>
                 <a class="nav-item {{ request()->routeIs('manager.profile.*') || request()->routeIs('admin.profile.*') ? 'active' : '' }}"
-                   href="{{ $authUser->role === 'admin' ? route('admin.profile.edit') : route('manager.profile.edit') }}">
+                   href="{{ $authUser->isAdmin() ? route('admin.profile.edit') : route('manager.profile.edit') }}">
                     <i class="ti ti-user" aria-hidden="true"></i>
                     Datos personales
                 </a>
 
-            @if($authUser->role === 'admin')
+            @if($authUser->isAdmin())
                 <div class="nav-section">Administración</div>
                     <a class="nav-item {{ request()->routeIs('admin.managers.*') ? 'active' : '' }}" href="{{ route('admin.managers.index') }}">
                         <i class="ti ti-user-cog" aria-hidden="true"></i>

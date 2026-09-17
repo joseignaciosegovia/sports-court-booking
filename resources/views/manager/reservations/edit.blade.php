@@ -27,8 +27,9 @@
                 </div>
             </div>
         
-            <form method="POST" action="{{ route('manager.reservations.update', $reservation) }}" name="editarReserva" enctype="multipart/form-data" id="form-update-reservations"
-                data-is-client-reservation="{{ $reservation->user_id ? '1' : '0' }}">
+            <form method="POST" action="{{ route('manager.reservations.update', $reservation) }}" 
+                class="needs-validation" name="editarReserva" enctype="multipart/form-data" id="form-update-reservations"
+                data-is-client-reservation="{{ $reservation->user_id ? '1' : '0' }}" novalidate>
 
                 @csrf
                 @method('PUT')
@@ -36,7 +37,7 @@
                     <div class="row mt-3">
                         <div class="col-12 col-sm-6 mt-3 mt-sm-0">
                             <label for="information" class="labels">Información</label>
-                            <input type="text" class="form-control" id="information" name="information" placeholder="Ej.: Partido de fútbol" value="{{ old('information', $reservation->information) }}" 
+                            <input type="text" class="form-control @error('information') is-invalid @enderror" id="information" name="information" placeholder="Ej.: Partido de fútbol" value="{{ old('information', $reservation->information) }}" required  
                                 @if($reservation->user_id)
                                     disabled 
                                 @endif
@@ -44,19 +45,23 @@
                             @if($reservation->user_id)
                                 <small class="text-muted">Este campo no se puede editar porque la reserva pertenece a un cliente.</small>
                             @endif
-                            @error('information') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <div class="invalid-feedback">
+                                {{ $errors->first('information') ?: 'Introduce la información de la reserva.' }}
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6">
                             <label for="date" class="labels">Fecha</label>
-                            <input type="date" class="form-control" id="date" name="date" placeholder="{{ now() }}" value="{{ old('start_time', $reservation->start_time->format('Y-m-d')) }}" required>
-                            @error('date') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="date" class="form-control @error('date') is-invalid @enderror" id="date" name="date" placeholder="{{ now() }}" value="{{ old('start_time', $reservation->start_time->format('Y-m-d')) }}" required>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('date') ?: 'Introduce una fecha válida.' }}
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12 col-sm-6">
                             <label for="start_time_only" class="labels">Hora de inicio</label>
                             @if($reservation->user_id)
-                                <select class="form-select" id="start_time_only" name="start_time_only" required>
+                                <select class="form-select @error('start_time_only') is-invalid @enderror" id="start_time_only" name="start_time_only" required>
                                     @php
                                         $current = old('start_time_only', $reservation->start_time->format('H:i'));
                                     @endphp
@@ -71,12 +76,14 @@
                                     value="{{ old('start_time_only', $reservation->start_time->format('H:i')) }}"
                                     min="{{ $openingTime }}" max="{{ $closingTime }}" required>
                             @endif
-                            @error('start_time_only') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <div class="invalid-feedback">
+                                {{ $errors->first('start_time_only') ?: 'Introduce una hora de inicio válida.' }}
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 mt-3 mt-sm-0">
                             <label for="end_time_only" class="labels">Hora de fin</label>
                             @if($reservation->user_id)
-                                <select class="form-select" id="end_time_only" name="end_time_only" disabled>
+                                <select class="form-select @error('end_time_only') is-invalid @enderror" id="end_time_only" name="end_time_only" disabled>
                                     {{-- Se rellena por JS a partir de start_time_only --}}
                                 </select>
                                 {{-- Campo oculto para que el valor SÍ viaje en el POST, ya que "disabled" no se envía --}}
@@ -88,7 +95,9 @@
                                     value="{{ old('end_time_only', $reservation->end_time->format('H:i')) }}"
                                     min="{{ $openingTime }}" max="{{ $closingTime }}" required>
                             @endif
-                            @error('end_time_only') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <div class="invalid-feedback">
+                                {{ $errors->first('end_time_only') ?: 'Introduce una hora de fin válida.' }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -114,4 +123,5 @@
 
 @push('scripts')
     @vite('resources/js/reservation-edit.js')
+    @vite('resources/js/validation.js')
 @endpush

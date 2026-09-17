@@ -140,7 +140,7 @@
                             <td>{{ $item->created_at->timezone('Europe/Madrid')->format('Y-m-d') }} · {{ $item->created_at->timezone('Europe/Madrid')->format('H:i') }}</td>
                             {{-- Usuario --}}
                             <td>{{ $item->user->name }}</td>
-                            <!-- Ajustamos el ancho de la última columna al contenido con style -->
+                            {{-- Ajustamos el ancho de la última columna al contenido con style --}}
                             {{-- Contenido --}}
                             <td style="width: 1%; white-space: nowrap;">{{ $item->content }}</td>
                         </tr>

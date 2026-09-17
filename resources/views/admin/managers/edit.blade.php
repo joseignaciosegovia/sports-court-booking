@@ -27,54 +27,69 @@
                 </div>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('admin.managers.update', $manager) }}" enctype="multipart/form-data" id="form-update">
+                <form method="POST" action="{{ route('admin.managers.update', $manager) }}" class="needs-validation" enctype="multipart/form-data" id="form-update" novalidate>
                     @csrf
                     @method('PUT')
 
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="name" class="form-label">Nombre</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $manager->name) }}" autocomplete="name" required>
-                            @error('name') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $manager->name) }}" autocomplete="name" required>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('name') ?: 'Introduce tu nombre completo.' }}
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="dni" class="form-label">DNI</label>
-                            <input type="text" name="dni" id="dni" class="form-control" value="{{ old('dni', $manager->dni) }}" required>
-                            @error('dni') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="text" name="dni" id="dni" class="form-control @error('dni') is-invalid @enderror" value="{{ old('dni', $manager->dni) }}" required>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('dni') ?: 'El DNI debe tener 8 dígitos seguidos de una letra válida.' }}
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $manager->email) }}" autocomplete="name" required>
-                            @error('email') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $manager->email) }}" autocomplete="name" required>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('email') ?: 'Introduce un correo electrónico válido.' }}
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" name="password" id="password" class="form-control" placeholder="Mínimo 8 caracteres">
+                            <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Mínimo 8 caracteres">
                             <small class="text-muted">La contraseña debe tener al menos 8 caracteres</small>
-                            @error('password') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <div class="invalid-feedback">
+                                {{ $errors->first('password') ?: 'La contraseña debe tener al menos 8 caracteres.' }}
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="password_confirmation" class="form-label">Confirmar contraseña</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Repite la contraseña">
+                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Repite la contraseña">
+                            <div class="invalid-feedback">
+                                {{ $errors->first('password_confirmation') ?: 'Las contraseñas no coinciden.' }}
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="phone" class="form-label">Teléfono (opcional)</label>
-                            <input type="text" name="phone" id="phone" class="form-control" value="{{ old('phone', $manager->phone) }}" autocomplete="name">
-                            @error('phone') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $manager->phone) }}" autocomplete="name">
+                            <div class="invalid-feedback">
+                                {{ $errors->first('phone') ?: 'El teléfono debe tener 9 dígitos.' }}
+                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="role" class="form-label">Rol</label>
-                            <select name="role" id="role" class="form-select" required>
-                                <option value="manager" @selected(old('role', $manager->role) === 'manager')>Gestor</option>
-                                <option value="admin" @selected(old('role', $manager->role) === 'admin')>Administrador</option>
+                            <select name="role" id="role" class="form-select @error('role') is-invalid @enderror" required>
+                                <option value="manager" @selected(old('role', $manager->role) === App\Enums\UserRole::Manager)>Gestor</option>
+                                <option value="admin" @selected(old('role', $manager->role) === App\Enums\UserRole::Admin)>Administrador</option>
                             </select>
-                            @error('role') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <div class="invalid-feedback">
+                                {{ $errors->first('role') ?: 'El rol debe ser "gestor" o "administrador"' }}
+                            </div>
                         </div>
 
                         <div class="col-md-6">
@@ -85,8 +100,10 @@
                                     <span class="text-muted">Foto actual</span>
                                 @endif
                             </div>
-                            <input type="file" name="photo" id="photo" class="form-control">
-                            @error('photo') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="file" name="photo" id="photo" class="form-control" @error('photo') is-invalid @enderro>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('photo') ?: 'La imagen no es válida o supera el tamaño máximo permitido.' }}
+                            </div>
                         </div>
                         <br>
                         <div>
@@ -122,3 +139,7 @@
 </main>
 </div>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/validation.js')
+@endpush

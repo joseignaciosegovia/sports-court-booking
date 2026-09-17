@@ -202,13 +202,6 @@ class ReservationController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-            $a = [
-                'court_id' => $request->input('court_id', ''),
-                'status' => $request->input('status', ''),
-                'date' => $request->input('date', ''),
-                'canceled_by' => $request->input('canceled_by', ''),
-            ];
-
         return view('manager.reservations.cancellations', [
             'courts' => $courts,
             'cancellations' => $cancellations,

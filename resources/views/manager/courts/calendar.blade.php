@@ -226,4 +226,5 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/es.global.min.js"></script>
     @vite('resources/js/calendar-manager.js')
+    @vite('resources/js/validation.js')
 @endpush

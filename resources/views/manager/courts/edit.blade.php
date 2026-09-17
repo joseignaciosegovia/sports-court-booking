@@ -26,20 +26,24 @@
                     <small class="text-muted">Modifica los datos de la pista {{ $court->name }}</small>
                 </div>
             </div>
-            <form method="POST" action="{{ route('manager.courts.update', $court) }}" name="editarPista" enctype="multipart/form-data" id="form-update-court">
+            <form method="POST" action="{{ route('manager.courts.update', $court) }}" class="needs-validation" name="editarPista" enctype="multipart/form-data" id="form-update-court" novalidate>
                 @csrf
                 @method('PUT')
                 <div class="p-3 py-5">
                     <div class="row mt-3">
                         <div class="col-12 col-sm-6">
                             <label for="name" class="labels">Nombre</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la pista" value="{{ old('name', $court->name) }}" required>
-                            @error('name') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Nombre de la pista" value="{{ old('name', $court->name) }}" required>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('name') ?: 'Introduce el nombre de la pista.' }}
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 mt-3 mt-sm-0">
                             <label for="reservation_price" class="labels">Precio de Reserva</label>
-                            <input type="number" class="form-control" id="reservation_price" name="reservation_price" placeholder="0,00" step="0.01" value="{{ old('reservation_price', $court->reservation_price) }}" required>
-                            @error('reservation_price') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <input type="number" class="form-control @error('reservation_price') is-invalid @enderror" id="reservation_price" name="reservation_price" placeholder="0,00" step="0.01" value="{{ old('reservation_price', $court->reservation_price) }}" required>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('reservation_price') ?: 'El precio debe ser un número.' }}
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -74,3 +78,7 @@
     </div>
 </main>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/validation.js')
+@endpush

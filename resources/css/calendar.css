@@ -3,6 +3,48 @@
 #leyenda span {
     margin-right: 15px;
 }
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .9rem;
+    color: #495057;
+}
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+.legend-disponible { 
+    background-color: #4EB272; 
+} 
+.legend-ocupada { 
+    background-color: #dc3545; 
+}
+
+/* Acordeón */
+.accordion-button {
+    font-weight: 600;
+}
+.court-link {
+    color: #333;
+    font-weight: 500;
+    padding: .35rem .25rem;
+    border-radius: 4px;
+}
+.court-link:hover {
+    background-color: #edf4ff;
+}
+.court-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #0d6efd; /* o el azul de tu marca */
+    flex-shrink: 0;
+}
+
 /* Cuadrado coloreado indicando el color dentro de la leyenda del calendario */
 .color {
     display: inline-block;
@@ -18,10 +60,6 @@
 /* Pintamos de blanco el fondo de la columna que indica las horas */
 .fc .fc-timegrid-axis {
     background-color: #ffffff !important;
-}
-/* Ponemos el ratón encima de las pistas */
-.accordion-body:hover {
-    background-color: #E0E0E0;
 }
 
 /* Scroll lateral a las tablas */

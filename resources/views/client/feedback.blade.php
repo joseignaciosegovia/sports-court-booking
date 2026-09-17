@@ -13,7 +13,7 @@
 
 @section('client-content')
     <main class="main">
-        <!-- BIENVENIDA -->
+        {{-- BIENVENIDA --}}
         <div class="welcome-bar">
             <div class="welcome-avatar">{{ $authUser->initials }}</div>
             <div class="welcome-text">
@@ -25,7 +25,7 @@
             </span>
         </div>
         <div class="card shadow-sm border-0">
-            <form method="POST" action="{{ route('client.feedback.store') }}" name="feedback" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('client.feedback.store') }}" class="needs-validation" name="feedback" enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="p-3 py-4">
                     <div class="seccionSubtitulo">
@@ -40,8 +40,10 @@
                     <div>
                         <div>
                             <label for="content" class="labels">Sugerencia o incidencia</label>
-                            <textarea class="form-control" id="content" name="content" placeholder="Describe el problema o tu propuesta con el máximo detalle posible" required></textarea>
-                            @error('content') <div class="text-danger small">{{ $message }}</div> @enderror
+                            <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" placeholder="Describe el problema o tu propuesta con el máximo detalle posible" required></textarea>
+                            <div class="invalid-feedback">
+                                {{ $errors->first('content') ?: 'Introduce el texto de la sugerencia/incidencia.' }}
+                            </div>
                             <br>
                             
                             <label for="type" class="labels">¿Es una sugerencia o una incidencia?</label>
@@ -183,3 +185,7 @@
     </div>
     </main>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/validation.js')
+@endpush

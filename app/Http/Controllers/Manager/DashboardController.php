@@ -7,8 +7,8 @@ use App\Models\Court;
 use App\Models\Reservation;
 use App\Models\Feedback;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Enums\UserRole;
 
 class DashboardController extends Controller
 {
@@ -45,7 +45,7 @@ class DashboardController extends Controller
         ];
 
         // Solo el admin necesita las estadísticas de usuarios por rol
-        if ($user->role === 'admin') {
+        if ($user->isAdmin()) {
             $data['clientsCount'] = User::where('role', 'client')->count();
             $data['managersCount'] = User::where('role', 'manager')->count();
             $data['adminsCount'] = User::where('role', 'admin')->count();

@@ -13,7 +13,7 @@ class StoreManagerReservationRequest extends FormRequest
             'date' => 'required|date',
             'start_time_only' => 'required|date_format:H:i',
             'end_time_only' => 'required|date_format:H:i|after:start_time_only',
-            'information' => 'nullable|string|max:500',
+            'information' => 'required|string|max:500',
         ];
     }
 }

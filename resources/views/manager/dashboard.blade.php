@@ -25,7 +25,7 @@
     {{-- SECCIÓN TARJETAS --}}
     <div class="card shadow-sm border-0">
         <div class="p-3 py-4">
-            @if($authUser->role === 'admin')
+            @if($authUser->isAdmin())
             {{-- Tarjetas de usuarios por rol --}}
             <div class="dash-section-header">
                 <span><i class="ti ti-user" aria-hidden="true"></i> Roles</span>

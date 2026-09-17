@@ -26,18 +26,22 @@
                     <small class="text-muted">Introduce los datos de la nueva pista</small>
                 </div>
             </div>
-            <form method="POST" name="añadirPista" action="{{ route('manager.courts.store') }}" enctype="multipart/form-data">
+            <form method="POST" name="añadirPista" action="{{ route('manager.courts.store') }}" class="needs-validation" enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="row mt-2">
                     <div class="col-12 col-sm-6">
                         <label for="name" class="labels">Nombre</label>
-                        <input type="text" id="name" class="form-control" name="name" value="" placeholder="Nombre de la pista" required>
-                        @error('name') <div class="text-danger small">{{ $message }}</div> @enderror
+                        <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="" placeholder="Nombre de la pista" required>
+                        <div class="invalid-feedback">
+                            {{ $errors->first('name') ?: 'Introduce el nombre de la pista.' }}
+                        </div>
                     </div>
                     <div class="col-12 col-sm-6 mt-3 mt-sm-0">
                         <label for="reservation_price" class="labels">Precio de Reserva</label>
-                        <input type="number" class="form-control" id="reservation_price" name="reservation_price" value="" placeholder="0,00" step="0.01" required>
-                        @error('reservation_price') <div class="text-danger small">{{ $message }}</div> @enderror
+                        <input type="number" class="form-control @error('reservation_price') is-invalid @enderror" id="reservation_price" name="reservation_price" value="" placeholder="0,00" step="0.01" required>
+                        <div class="invalid-feedback">
+                            {{ $errors->first('reservation_price') ?: 'El precio debe ser un número.' }}
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -62,3 +66,7 @@
     </div>
 </main>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/validation.js')
+@endpush
