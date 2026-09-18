@@ -29,7 +29,7 @@ class DashboardController extends Controller
             ->whereMonth('start_time', now()->month)
             ->count();
         
-        // Número de sugerencias/incidencias del cliente
+        // Número de comentarios realizados por el cliente
         $feedbackCount  = $user->feedback()->count();
         
         // Pistas disponibles

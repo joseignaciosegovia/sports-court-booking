@@ -27,8 +27,8 @@
             <div class="seccionSubtitulo">
                 <i class="ti ti-history" aria-hidden="true"></i>
                 <div>
-                    <h2>Historial de sugerencias/incidencias</h2>
-                    <small class="text-muted">Consulta todas las sugerencias/incidencias enviadas por los clientes</small>
+                    <h2>Historial de comentarios de los clientes</h2>
+                    <small class="text-muted">Consulta todos los comentarios (sugerencias e incidencias) enviados por los clientes</small>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
                 {{-- Tipo --}}
                 <div class="col-md-2">
                     <select name="type" class="form-select">
-                        <option value="">Todas los tipos</option>
+                        <option value="">Todos los tipos</option>
                         <option value="{{ \App\Enums\FeedbackType::Suggestion->value }}" @selected($filters['type'] === \App\Enums\FeedbackType::Suggestion->value)>
                             {{ \App\Enums\FeedbackType::Suggestion->label() }}
                         </option>
@@ -87,7 +87,7 @@
             </x-filters.filter-bar>
 
             @if($feedback->isEmpty())
-                <p class="text-muted mb-0">No hay sugerencias/incidencias que coincidan con los filtros.</p>
+                <p class="text-muted mb-0">No hay comentarios que coincidan con los filtros.</p>
             @else
             <div class="table-responsive">
                 <table class="table table-striped table-hover text-nowrap">
@@ -125,7 +125,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Recorremos y mostramos las incidencias --}} 
+                        {{-- Recorremos y mostramos los comentarios --}} 
                         @foreach($feedback as $index => $item)
                         <tr>
                             <th>{{ $feedback->firstItem() + $index }}</th>

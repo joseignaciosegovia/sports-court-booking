@@ -80,7 +80,7 @@ Route::middleware(['auth', 'verified', 'role:client'])
         Route::get('/reservas/historial', [ReservationController::class, 'index'])
             ->name('reservations.index');
 
-        // Sugerencias e incidencias
+        // Comentarios
         Route::resource('comentarios', FeedbackController::class)
             ->only(['index', 'create', 'store'])
             ->names('feedback');
@@ -146,7 +146,7 @@ Route::middleware(['auth', 'role:manager,admin'])
         Route::get('reservas/cancelaciones', [\App\Http\Controllers\Manager\ReservationController::class, 'cancellations'])
             ->name('reservations.cancellations');
 
-        // Sugerencias
+        // Comentarios
         Route::get('comentarios', [\App\Http\Controllers\Manager\FeedbackController::class, 'index'])
             ->name('feedback.index');
     });

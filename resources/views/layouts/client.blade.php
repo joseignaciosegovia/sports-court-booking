@@ -55,11 +55,11 @@
             <div class="nav-section">Soporte</div>
                 <a class="nav-item {{ request()->routeIs('client.feedback.index') ? 'active' : '' }}" href="{{ route('client.feedback.index') }}">
                     <i class="ti ti-mail" aria-hidden="true"></i>
-                    Historial de incidencias/sugerencias
+                    Historial de comentarios
                 </a>
                 <a class="nav-item {{ request()->routeIs('client.feedback.create') ? 'active' : '' }}" href="{{ route('client.feedback.create') }}">
                     <i class="ti ti-send" aria-hidden="true"></i>
-                    Nueva incidencia/sugerencia
+                    Nuevo comentario
                 </a>
 
             <form method="POST" action="{{ route('logout') }}" style="margin-top: auto;">

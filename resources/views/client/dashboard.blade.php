@@ -100,15 +100,15 @@
                     </div>
                 </div>
                 <hr class="mt-0 mb-4" style="border-color: #dee2e6;">
-                {{-- SECCIÓN: INCIDENCIAS --}}
+                {{-- SECCIÓN: COMENTARIOS --}}
                 <div>
                     <div class="dash-section-header">
-                        <span><i class="ti ti-mail" aria-hidden="true"></i> Sugerencias e Incidencias</span>
-                        <a href="{{ route('client.feedback.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <span><i class="ti ti-mail" aria-hidden="true"></i> Comentarios</span>
+                        <a href="{{ route('client.feedback.index') }}">Ver todos <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div class="dash-grid">
                         <div class="dash-card dash-card-accent dash-card-accent-amber">
-                            <div class="lbl"><i class="ti ti-send" aria-hidden="true"></i> Incidencias enviadas</div>
+                            <div class="lbl"><i class="ti ti-send" aria-hidden="true"></i> Comentarios enviados</div>
                             <div class="val {{ $feedbackCount  === 0 ? 'val-zero' : '' }}">{{ $feedbackCount  }}</div>
                         </div>
                     </div>

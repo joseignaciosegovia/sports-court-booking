@@ -31,18 +31,18 @@
                     <div class="seccionSubtitulo">
                         <i class="ti ti-mail"></i>
                         <div>
-                            <h2>Enviar sugerencias e incidencias</h2>
-                            <small class="text-muted">Realiza una sugerencia o envía una incidencia</small>
+                            <h2>Enviar comentario</h2>
+                            <small class="text-muted">Envía un comentario (sugerencia o incidencia)</small>
                         </div>
                     </div>
                     <hr class="mt-0 mb-4" style="border-color: #dee2e6;">
 
                     <div>
                         <div>
-                            <label for="content" class="labels">Sugerencia o incidencia</label>
+                            <label for="content" class="labels">Comentario</label>
                             <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" placeholder="Describe el problema o tu propuesta con el máximo detalle posible" required></textarea>
                             <div class="invalid-feedback">
-                                {{ $errors->first('content') ?: 'Introduce el texto de la sugerencia/incidencia.' }}
+                                {{ $errors->first('content') ?: 'Introduce el texto del comentario.' }}
                             </div>
                             <br>
                             

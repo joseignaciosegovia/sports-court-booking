@@ -67,6 +67,6 @@ class FeedbackController extends Controller
 
         return redirect()
             ->route('client.feedback.index')
-            ->with('success', 'Sugerencia/incidencia enviada correctamente.');
+            ->with('success', 'Comentario enviado correctamente.');
     }
 }

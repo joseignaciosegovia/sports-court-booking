@@ -29,8 +29,8 @@
                 <div class="seccionSubtitulo">
                     <i class="ti ti-history" aria-hidden="true"></i>
                     <div>
-                        <h2>Historial de sugerencias/incidencias</h2>
-                        <small class="text-muted">Consulta todas las sugerencias/incidencias enviadas anteriormente</small>
+                        <h2>Historial de comentarios</h2>
+                        <small class="text-muted">Consulta todos los comentarios enviados anteriormente</small>
                     </div>
                 </div>
                 <hr class="mt-0 mb-4" style="border-color: #dee2e6;">
@@ -89,7 +89,7 @@
                 </x-filters.filter-bar>
 
             @if($feedback->isEmpty())
-                <p class="text-muted mb-0">No hay sugerencias/incidencias que coincidan con los filtros.</p>
+                <p class="text-muted mb-0">No hay comentarios que coincidan con los filtros.</p>
             @else
                 <div class="table-responsive">
                     <table class="table table-striped table-hover text-nowrap">
@@ -120,7 +120,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- Recorremos las incidencias --}}
+                            {{-- Recorremos los comentarios --}}
                             @foreach($feedback as $index => $item)
                             <tr>
                                 <th class="col-num">{{ $feedback->firstItem() + $index }}</th>

@@ -79,7 +79,7 @@
             <div class="nav-section">Consultas</div>
                 <a class="nav-item {{ request()->routeIs('manager.feedback.index') ? 'active' : '' }}" href="{{ route('manager.feedback.index') }}">
                     <i class="ti ti-mail" aria-hidden="true"></i>
-                    Buzón de incidencias de los clientes
+                    Comentarios de los clientes
                 </a>
 
             <form method="POST" action="{{ route('logout') }}" style="margin-top: auto;">
