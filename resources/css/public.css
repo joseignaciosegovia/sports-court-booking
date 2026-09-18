@@ -1,10 +1,5 @@
 /* --- CUERPO --- */
 
-/* Sección que incluye todo el cuerpo en las páginas que no tienen div layout (las de acceso y la de verificar usuario) */
-.acceso, .verificar {
-    flex: 1; /* La sección se extiende hasta ocupar el alto de la página */
-}
-
 body {
     background-color: #e0e0e0;
 }

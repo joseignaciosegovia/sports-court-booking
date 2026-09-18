@@ -160,6 +160,7 @@
                             <p>No hay pistas disponibles en esta instalación</p>
                         @endforelse
                     </div>
+                </div>
                     @php
                         $counter++;
                     @endphp
@@ -170,7 +171,6 @@
             </div>
         </div>
     </div>
-</div>
 {{-- Bloque del calendario, oculto hasta que se elija una pista --}}
 <div class="card shadow-sm border-0">
     <div class="p-3 py-4">

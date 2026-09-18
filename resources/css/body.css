@@ -12,12 +12,19 @@ body {
     margin: 0;
 }
 
+#page-content {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
 /* Contenedor que incluye sidebar + contenido */
 .layout {
     display: grid;
     grid-template-columns: 260px minmax(0, 1fr);
     width: 100%;
-    flex: 1 0 auto;
+    flex: 1;
 }
 
 /* Contenido principal */
@@ -30,4 +37,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+}
+
+/* Cuerpo de las vistas de login */
+.login-wrapper {
+    background-color: #e0e0e0;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
 }

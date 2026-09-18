@@ -41,43 +41,53 @@ new #[Layout('layouts.app')] class extends Component
     }
 }; ?>
 
-<div class="container my-5" style="max-width: 480px;">
-    <h1 class="h3 mb-4 text-center">Iniciar sesión en la intranet</h1>
-    <form wire:submit="login">
-        {{-- Email --}}
-        <div class="mb-3">
-            <label for="email" class="form-label">{{ __('Email') }}</label>
-            <input wire:model="email" id="email" type="email" name="email"
-                   class="form-control @error('email') is-invalid @enderror"
-                   required autofocus autocomplete="username">
-            @error('email')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+<div class="login-wrapper">
+    <div class="card card-login border-0" style="max-width: 480px; width: 100%;">
+        <div class="card-body p-4">
+            <h1 class="h3 mb-4 text-center">Iniciar sesión en la intranet</h1>
+            <hr>
+            <form wire:submit="login">
+                {{-- Email --}}
+                <div class="mb-3">
+                    <label for="email" class="form-label">{{ __('Email') }}</label>
+                    <input wire:model="email" id="email" type="email" name="email" placeholder="correo@ejemplo.com"
+                        class="form-control @error('email') is-invalid @enderror"
+                        required autofocus autocomplete="username">
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        {{-- Contraseña --}}
-        <div class="mb-3">
-            <label for="password" class="form-label">{{ __('Contraseña') }}</label>
-            <input wire:model="password" id="password" type="password" name="password"
-                   class="form-control @error('password') is-invalid @enderror"
-                   required autocomplete="current-password">
-            @error('password')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+                {{-- Contraseña --}}
+                <div class="mb-3">
+                    <label for="password" class="form-label">{{ __('Contraseña') }}</label>
+                    <input wire:model="password" id="password" type="password" name="password" placeholder="Contraseña"
+                        class="form-control @error('password') is-invalid @enderror"
+                        required autocomplete="current-password">
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        {{-- ¿Olvidaste tu contraseña? --}}
-        
-        <div class="d-flex justify-content-between align-items-center">
-            @if (Route::has('password.request'))
-                <a class="small text-decoration-underline" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('¿Olvidaste tu contraseña?') }}
-                </a>
-            @endif
-
-            <button type="submit" class="btn btn-primary">
-                {{ __('Iniciar sesión') }}
-            </button>
+               {{-- Recordarme y "Olvidaste tu contraseña" --}}
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input wire:model="form.remember" id="remember" type="checkbox" name="remember" class="form-check-input">
+                        <label for="remember" class="form-check-label">{{ __('Recordar cuenta') }}</label>
+                    </div>
+                    @if (Route::has('password.request'))
+                        <a class="small text-decoration-underline" href="{{ route('password.request') }}" wire:navigate>
+                            {{ __('¿Olvidaste tu contraseña?') }}
+                        </a>
+                    @endif
+                </div>
+                {{-- Botón de inicio de sesión --}}
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Iniciar sesión') }}
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>

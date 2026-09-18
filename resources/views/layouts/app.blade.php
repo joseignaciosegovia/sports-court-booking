@@ -65,7 +65,9 @@
         {{-- Contenido de la página --}}
         @yield('menu')
         {{-- El segundo parámetro es en formato Volt para livewire/pages/auth --}}
-        @yield('content', $slot ?? '')
+        <div id="page-content">
+            @yield('content', $slot ?? '')
+        </div>
         {{-- Se invocará un modal cada vez que recibamos success desde un controlador, que será cuando queramos invocar un modal informando de la operación realizada --}}
         @if (session('success'))
             <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
