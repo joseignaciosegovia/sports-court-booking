@@ -29,7 +29,7 @@ class FeedbackController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('client.feedback', [
+        return view('client.feedback.index', [
             'types' => $types,
             'filters' => [
                 'type' => $request->input('type', ''),
@@ -38,6 +38,16 @@ class FeedbackController extends Controller
             'feedback' => $feedback,
             'sorts' => SortHelper::getSorts($sortColumns),
             'sortColumns' => $sortColumns,
+        ]);
+    }
+
+    public function create()
+    {
+        $user = Auth::user();
+
+        return view('client.feedback.create', [
+            'authUser' => $user,
+            'todayLong' => now()->translatedFormat('l, j \d\e F \d\e Y'),
         ]);
     }
 

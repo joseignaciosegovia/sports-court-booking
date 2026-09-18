@@ -40,51 +40,50 @@ Volt::route('/intranet/login', 'pages.auth.intranet-login')
 // ZONA PRIVADA DEL CLIENT
 // ─────────────────────────────────────────────
 
-Route::middleware(['auth', 'verified', 'role:client'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:client'])
+    ->name('client.')
+    ->group(function () {
+        // Inicio
+        Route::get('/panelControl', [DashboardController::class, 'index'])
+            ->name('dashboard');
 
-    // Inicio
-    Route::get('/panelControl', [DashboardController::class, 'index'])
-        ->name('client.dashboard');
+        // Perfil
+        Route::get('/perfil', [ProfileController::class, 'edit'])
+            ->name('profile.edit');
 
-    // Perfil
-    Route::get('/perfil', [ProfileController::class, 'edit'])
-        ->name('client.profile.edit');
+        Route::put('/perfil', [ProfileController::class, 'update'])
+            ->name('profile.update');
 
-    Route::put('/perfil', [ProfileController::class, 'update'])
-        ->name('client.profile.update');
+        // Reservas
+        Route::get('/reservas', [ReservationController::class, 'create'])
+            ->name('reservations.create');
+        
+        Route::get('/reservas/horarios/{court}', [ReservationController::class, 'schedule'])
+            ->name('reservations.schedule');
 
-    // Reservas
-    Route::get('/reservas', [ReservationController::class, 'create'])
-        ->name('client.reservations.create');
-    
-    Route::get('/reservas/horarios/{court}', [ReservationController::class, 'schedule'])
-        ->name('client.reservations.schedule');
+        Route::post('/reservas', [ReservationController::class, 'store'])
+            ->name('reservations.store');
 
-    Route::post('/reservas', [ReservationController::class, 'store'])
-        ->name('client.reservations.store');
+        Route::patch('/reservas/{reservation}/cancelar', [ReservationController::class, 'cancel'])
+            ->name('reservations.cancel');
+        
+        Route::get('/reservas/{reservation}/pago/exito', [ReservationController::class, 'paymentSuccess'])
+            ->name('reservations.payment.success');
 
-    Route::patch('/reservas/{reservation}/cancelar', [ReservationController::class, 'cancel'])
-        ->name('client.reservations.cancel');
-    
-    Route::get('/reservas/{reservation}/pago/exito', [ReservationController::class, 'paymentSuccess'])
-        ->name('client.reservations.payment.success');
+        Route::get('/reservas/{reservation}/pago/cancelado', [ReservationController::class, 'paymentCancel'])
+            ->name('reservations.payment.cancel');
 
-    Route::get('/reservas/{reservation}/pago/cancelado', [ReservationController::class, 'paymentCancel'])
-        ->name('client.reservations.payment.cancel');
+        Route::get('/reservas/{reservation}/pago/continuar', [ReservationController::class, 'resumePayment'])
+            ->name('reservations.payment.resume');
 
-    Route::get('/reservas/{reservation}/pago/continuar', [ReservationController::class, 'resumePayment'])
-        ->name('client.reservations.payment.resume');
+        // Historial de reservas
+        Route::get('/reservas/historial', [ReservationController::class, 'index'])
+            ->name('reservations.index');
 
-    // Historial de reservas
-    Route::get('/reservas/historial', [ReservationController::class, 'index'])
-        ->name('client.reservations.index');
-
-    // Sugerencias e incidencias
-    Route::get('/comentarios', [FeedbackController::class, 'index'])
-        ->name('client.feedback.index');
-
-    Route::post('/comentarios', [FeedbackController::class, 'store'])
-        ->name('client.feedback.store');
+        // Sugerencias e incidencias
+        Route::resource('comentarios', FeedbackController::class)
+            ->only(['index', 'create', 'store'])
+            ->names('feedback');
 });
 
 // ─────────────────────────────────────────────

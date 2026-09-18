@@ -53,9 +53,13 @@
                     Nueva reserva
                 </a>
             <div class="nav-section">Soporte</div>
-                <a class="nav-item {{ request()->routeIs('client.feedback.*') ? 'active' : '' }}" href="{{ route('client.feedback.index') }}">
+                <a class="nav-item {{ request()->routeIs('client.feedback.index') ? 'active' : '' }}" href="{{ route('client.feedback.index') }}">
                     <i class="ti ti-mail" aria-hidden="true"></i>
-                    Buzón de incidencias
+                    Historial de incidencias/sugerencias
+                </a>
+                <a class="nav-item {{ request()->routeIs('client.feedback.create') ? 'active' : '' }}" href="{{ route('client.feedback.create') }}">
+                    <i class="ti ti-send" aria-hidden="true"></i>
+                    Nueva incidencia/sugerencia
                 </a>
 
             <form method="POST" action="{{ route('logout') }}" style="margin-top: auto;">
