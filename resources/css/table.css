@@ -12,11 +12,6 @@
 }
 
 /* Cabecera */
-.table thead th {
-    background-color: #f8f9fb;
-    border-bottom: 2px solid #dee2e6;
-}
-
 /*--- Striping y hover con tinte azulado ---*/
 .table-striped {
     --bs-table-striped-bg: #f4f7fc;

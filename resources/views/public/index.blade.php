@@ -149,9 +149,10 @@
                         {{-- Recorremos las pistas de la instalación --}}
                         @forelse($courtsFacility as $court)
                             <div class="accordion-body py-1">
-                                <a class="nav-link court-link ms-3 my-1 d-flex align-items-center gap-2"
+                                <a href="#" class="nav-link court-link ms-3 my-1 d-flex align-items-center gap-2"
                                     data-court-id="{{ $court->id }}"
-                                    data-court-name="{{ $court->name }}">
+                                    data-court-name="{{ $court->name }}"
+                                >
                                     <span class="court-dot" aria-hidden="true"></span>
                                     {{ $court->name }}
                                 </a>

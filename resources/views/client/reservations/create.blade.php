@@ -5,10 +5,7 @@
 @section('titleHeader', 'Reservas · Moral de Calatrava')
 
 @push('styles')
-    @vite([
-        'resources/css/calendar.css',
-        'resources/js/app.js'
-    ])
+    @vite('resources/css/calendar.css')
 @endpush
 
 @section('client-content')
@@ -34,26 +31,32 @@
                     </div>
                 </div>
 
-                <div class="accordion accordion-flush" id="elegirPista">
+                <div class="accordion accordion-flush py-3" id="elegirPista">
                     @forelse ($courtsByFacility as $facility => $courtsFacility)
+                        @php
+                            $isFirst = $loop->first;
+                        @endphp
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button
-                                    class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
+                                    class="accordion-button collapsed {{ $isFirst ? '' : 'collapsed' }}"
+                                    type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapse{{ $loop->index }}"
-                                    aria-expanded="false"
+                                    aria-expanded="{{ $isFirst ? 'true' : 'false' }}"
                                     aria-controls="flush-collapse{{ $loop->index }}"
                                 >
                                     {{ $facility }}
                                 </button>
                             </h2>
 
-                            <div id="flush-collapse{{ $loop->index }}" class="accordion-collapse collapse" data-bs-parent="#elegirPista">
+                            <div id="flush-collapse{{ $loop->index }}" class="accordion-collapse collapse {{ $isFirst ? 'show' : '' }}" data-bs-parent="#elegirPista">
                                 @forelse ($courtsFacility as $court)
                                     <div class="accordion-body">
-                                        <a href="#" class="nav-link ms-3 my-1 court-link" data-court-id="{{ $court->id }}" data-court-name="{{ $court->name }}" data-court-price="{{ $court->reservation_price }}">
+                                        <a href="#" class="nav-link court-link ms-3 my-1 d-flex align-items-center gap-2" 
+                                            data-court-id="{{ $court->id }}" 
+                                            data-court-name="{{ $court->name }}" data-court-price="{{ $court->reservation_price }}"
+                                        >
+                                            <span class="court-dot" aria-hidden="true"></span>
                                             {{ $court->name }}
                                         </a>
                                     </div>
@@ -109,5 +112,6 @@
 @endsection
 
 @push('scripts')
+    @vite('resources/js/app.js')
     @vite('resources/js/court-reservation-calendar.js')
 @endpush

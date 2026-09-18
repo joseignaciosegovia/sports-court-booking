@@ -41,7 +41,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #0d6efd; /* o el azul de tu marca */
+    background-color: #0d6efd;
     flex-shrink: 0;
 }
 
