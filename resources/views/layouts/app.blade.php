@@ -34,13 +34,13 @@
     <body>
         <header>
             <div class="container-fluid" id="cabecera">
-                <div class="row d-flex align-items-center py-2">
+                <div class="cabecera-grid">
                     {{-- Logo --}}
-                    <div class="col-auto">
+                    <div class="cabecera-logo">
                         <a href="{{ route('home') }}"><img src="{{ asset('images/Moral2.png') }}" alt="Logo de la página"></a>
                     </div>
                     {{-- Título --}}
-                    <div class="col col-lg-9">
+                    <div class="cabecera-texto">
                         {{-- El título contiene un enlace a la página principal --}}
                         <div class="cabeceraTitulo">
                             <a class="text-decoration-none" href="{{ route('home') }}">@yield('titleHeader', 'Reserva de pistas · Moral de Calatrava')</a>
@@ -48,15 +48,17 @@
                         <div class="cabeceraSubtitulo">Polideportivo y Ciudad Deportiva</div>
                     </div>
                     {{-- Acceso a la intranet --}}
-                    <div class="col-auto">
+                    <div class="cabecera-acciones">
                         <button class="btn btn-primary btn-intranet form-floating" onclick="window.location.href='{{ route('intranet.login') }}';">Intranet</button>
+                        {{-- Botón de menú móvil --}}
+                        @hasSection('menu')
+                            <div class="col-auto">
+                                <button id="btnMenu"><i class="ti ti-menu-2"></i></button>
+                            </div>
+                        @endif
                     </div>
-                    {{-- Botón de menú móvil --}}
-                    @hasSection('menu')
-                        <div class="col-auto">
-                            <button id="btnMenu"><i class="ti ti-menu-2"></i></button>
-                        </div>
-                    @endif
+                    
+                    
                 </div>
             </div>
         </header>

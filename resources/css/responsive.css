@@ -47,6 +47,13 @@
         padding: 4px 8px;
     }
 
+    #cabecera .cabecera-grid {
+        grid-template-columns: auto 1fr auto; /* mantenlo o cambia a auto auto si el texto se corta */
+    }
+    #cabecera .cabeceraTitulo {
+        font-size: 14px; /* reduce el tamaño en pantallas pequeñas */
+    }
+
 
     /* -----------------------------------------------------
        BOTÓN HAMBURGUESA

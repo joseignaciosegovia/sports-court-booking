@@ -16,9 +16,9 @@ body {
     gap: 1rem; 
     min-width: 0;
 }
-/* Sección principal de la página, después de la bienvenida */
-.card {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+
+.card-header {
+    background-color: white;
 }
 
 /* --- COLUMNAS --- */

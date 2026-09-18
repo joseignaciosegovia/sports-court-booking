@@ -34,3 +34,26 @@ a {
     --color-amber: #BA7517;
     --color-pink: #F059C9;
 }
+
+/* Cabecera */
+#cabecera .cabecera-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 8px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+#cabecera .cabecera-texto {
+    text-align: center;
+    min-width: 0; /* evita que el texto largo rompa el grid */
+}
+
+#cabecera .cabecera-acciones {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-self: end;
+}

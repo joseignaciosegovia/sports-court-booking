@@ -15,7 +15,7 @@
             {{-- Columna izquierda, Reservar pistas --}}
             <div class="col-12 col-md-6 pt-4" id="informacionPrincipal">
                 <div class="row px-3">
-                    <h1>Reservar pistas en Moral de Calatrava</h1>
+                    <h1 class="text-center">Reservar pistas en Moral de Calatrava</h1>
                     <hr class="mt-0 mb-4" style="border-color: #dee2e6;">
                     <p>Si te registras en nuestra web, podrás reservar horarios de las pistas deportivas de Moral de Calatrava.</p>
                     <p>Información sobre las pistas:</p>
@@ -40,14 +40,14 @@
                     </div>
                 </div>
                 {{-- Botón para dirigirse al calendario --}}
-                <div class=" px-3">
-                    <a href="#consultarPistas" class="btn btn-light btn-sm mb-3 fw-semibold">Ver horarios de pistas ↓</a>
+                <div class="text-center py-5">
+                    <a href="#consultarPistas" class="btn btn-success w-auto">Ver horarios de las pistas ↓</a>
                 </div>
             </div>
             <div class="card shadow-sm border-0 col-12 col-md">
                 <div class="card-header text-center">
                     <h2 class="d-flex justify-content-center">Registrarse</h2>
-                    <a class="btn btn-secondary my-2 text-center w-auto" href="{{ route('login') }}">Si ya tienes cuenta, inicia sesión aquí</a>
+                    <a class="my-2 text-center w-auto" href="{{ route('login') }}"><u>¿Ya tienes cuenta? Inicia sesión aquí</u></a>
                 </div>
                 <div class="card-body" id="crearCuenta">
                     <form method="POST" class="row needs-validation px-4" action="{{ route('register') }}" name="crearUsuario" novalidate>
@@ -118,7 +118,7 @@
         </div>
     </div>
     {{-- Sección con las pistas y calendarios --}}
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-sm border-0 text-center">
         <div class="p-3 py-4">
             <div id="consultarPistas" class="row column-gap-3">
                 <h2 class="mb-4">Consultar pistas y sus horarios</h2>

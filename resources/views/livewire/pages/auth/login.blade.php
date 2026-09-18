@@ -37,7 +37,7 @@ new #[Layout('layouts.app')] class extends Component
 
 <div class="container my-5" style="max-width: 480px;">
     <h1 class="h3 mb-4 text-center">Iniciar sesión</h1>
-    ¿No tienes cuenta? <a href="{{ route('home') }}">Regístrate aquí</a>
+    <p class="text-center">¿No tienes cuenta? <a href="{{ route('home') }}"><u>Regístrate aquí</u></a></p>
     
     {{-- Session Status --}}
     <x-auth-session-status class="mb-4" :status="session('status')" />
