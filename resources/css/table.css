@@ -1,5 +1,14 @@
 /*--- TABLA ---*/
 
+/* Borde de la tabla */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden; /* recorta las esquinas redondeadas al contenido */
+}
 /*--- Ajuste de contraste: filas alternas y hover con tinte azulado ---*/
 /*--- para que no se confundan entre sí ni con el badge gris ---*/
 .table-striped {
@@ -11,7 +20,16 @@
     --bs-table-hover-color: inherit;
 }
 
-/* Cabecera */
+/*--- CABECERA ---*/
+.table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #495057;
+    border-bottom: 1px solid #dee2e6;
+}
 /*--- Striping y hover con tinte azulado ---*/
 .table-striped {
     --bs-table-striped-bg: #f4f7fc;
@@ -28,6 +46,7 @@
     border-bottom: 2px solid #dee2e6;
 }
 
+/*--- FILTROS ---*/
 /*--- Filtros agrupados visualmente ---*/
 .filters-card {
     background: #f8f9fb;
@@ -60,6 +79,24 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/*--- CUERPO ---*/
+.table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f7ff;
 }
 
 /* --- CELDAS --- */
