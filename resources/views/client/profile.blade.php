@@ -33,7 +33,7 @@
                             <small class="text-muted">Modifica tus datos personales y de acceso</small>
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="row mt-2 py-2">
                         <div class="col-12 col-sm-6">
                             <label for="name" class="labels">Nombre completo</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Nombre completo" value="{{ $authUser->name }}" autocomplete="off" required>

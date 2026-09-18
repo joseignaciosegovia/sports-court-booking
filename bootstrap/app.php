@@ -27,11 +27,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->redirectUsersTo(function (Request $request) {
 
-            if ($request->user()->isClient) {
+            if ($request->user()->isClient()) {
                 return route('client.dashboard');
             }
 
-            if ($request->user()->isManagerOrAdmin) {
+            if ($request->user()->isManagerOrAdmin()) {
                 return route('manager.dashboard');
             }
 
