@@ -79,12 +79,12 @@
                             <div class="invalid-feedback">
                                 {{ $errors->first('photo') ?: 'La imagen no es válida o supera el tamaño máximo permitido.' }}
                             </div>
-                        </div>
-                        <div>
-                            <input type="checkbox" name="delete_photo" id="delete_photo" value="1">
-                            <label for="delete_photo">
-                                Eliminar foto de perfil
-                            </label>
+                            <div class="py-2">
+                                <input type="checkbox" name="delete_photo" id="delete_photo" value="1">
+                                <label for="delete_photo">
+                                    Eliminar foto de perfil
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="mt-4 d-flex justify-content-end">
