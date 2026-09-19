@@ -40,7 +40,7 @@ body {
 }
 
 /* Cuerpo de las vistas de login */
-.login-wrapper {
+.livewire-wrapper {
     background-color: #e0e0e0;
     min-height: 100%;
     display: flex;

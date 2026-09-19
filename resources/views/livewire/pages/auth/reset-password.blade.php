@@ -36,7 +36,8 @@ new #[Layout('layouts.app')] class extends Component
         $this->validate([
             'token' => ['required'],
             'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'string', Rules\Password::defaults()],
+            'password_confirmation' => ['required', 'same:password'],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
@@ -69,47 +70,55 @@ new #[Layout('layouts.app')] class extends Component
     }
 }; ?>
 
-<div class="container my-5" style="max-width: 480px;">
-    <h1 class="h3 mb-4 text-center">Restablecer contraseña</h1>
+<div class="livewire-wrapper">
+    <div class="card card-login border-0" style="max-width: 480px; width: 100%;">
+        <div class="card-body p-4">
+            <h1 class="h3 mb-4 text-center">Restablecer contraseña</h1>
 
-    <form wire:submit="resetPassword">
-        {{-- Email Address --}}
-        <div class="mb-3">
-            <label for="email" class="form-label">{{ __('Email') }}</label>
-            <input wire:model="email" id="email" type="email" name="email"
-                   class="form-control @error('email') is-invalid @enderror"
-                   required autofocus autocomplete="username">
-            @error('email')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+            <form wire:submit="resetPassword" class="needs-validation" novalidate>
+                {{-- Email Address --}}
+                <div class="mb-3">
+                    <label for="email" class="form-label">{{ __('Email') }}</label>
+                    <input wire:model="email" id="email" type="email" name="email" placeholder="correo@ejemplo.com"
+                        class="form-control @error('email') is-invalid @enderror"
+                        required autofocus autocomplete="username">
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        {{-- Password --}}
-        <div class="mb-3">
-            <label for="password" class="form-label">{{ __('Contraseña') }}</label>
-            <input wire:model="password" id="password" type="password" name="password"
-                   class="form-control @error('password') is-invalid @enderror"
-                   required autocomplete="new-password">
-            @error('password')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+                {{-- Contraseña --}}
+                <div class="mb-3">
+                    <label for="password" class="form-label">{{ __('Contraseña') }}</label>
+                    <input wire:model="password" id="password" type="password" name="password" placeholder="Mínimo 8 caracteres"
+                        class="form-control @error('password') is-invalid @enderror"
+                        required autocomplete="new-password">
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        {{-- Confirm Password --}}
-        <div class="mb-3">
-            <label for="password_confirmation" class="form-label">{{ __('Confirma la contraseña') }}</label>
-            <input wire:model="password_confirmation" id="password_confirmation" type="password" name="password_confirmation"
-                   class="form-control @error('password_confirmation') is-invalid @enderror"
-                   required autocomplete="new-password">
-            @error('password_confirmation')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+                {{-- Confirmar contraseña --}}
+                <div class="mb-3">
+                    <label for="password_confirmation" class="form-label">{{ __('Confirma la contraseña') }}</label>
+                    <input wire:model="password_confirmation" id="password_confirmation" type="password" name="password_confirmation" placeholder="Repite la contraseña"
+                        class="form-control @error('password_confirmation') is-invalid @enderror"
+                        required autocomplete="new-password">
+                    @error('password_confirmation')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        <div class="d-flex justify-content-end mt-4">
-            <button type="submit" class="btn btn-primary">
-                {{ __('Resetear Contraseña') }}
-            </button>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Resetear Contraseña') }}
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
+
+@push('scripts')
+    @vite('resources/js/validation.js')
+@endpush

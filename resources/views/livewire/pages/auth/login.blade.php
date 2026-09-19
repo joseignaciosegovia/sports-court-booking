@@ -35,7 +35,7 @@ new #[Layout('layouts.app')] class extends Component
 }; ?>
 
 
-<div class="login-wrapper">
+<div class="livewire-wrapper">
     <div class="card card-login border-0" style="max-width: 480px; width: 100%;">
         <div class="card-body p-4">
             <h1 class="h3 mb-1 text-center">Iniciar sesión</h1>
@@ -44,7 +44,7 @@ new #[Layout('layouts.app')] class extends Component
             {{-- Session Status --}}
             <x-auth-session-status class="mb-4" :status="session('status')" />
             <hr>
-            <form wire:submit="login">
+            <form wire:submit="login" class="needs-validation" novalidate>
                 {{-- Email Address --}}
                 <div class="mb-3">
                     <label for="email" class="form-label">{{ __('Email') }}</label>
@@ -89,3 +89,7 @@ new #[Layout('layouts.app')] class extends Component
         </div>
     </div>
 </div>
+
+@push('scripts')
+    @vite('resources/js/validation.js')
+@endpush
