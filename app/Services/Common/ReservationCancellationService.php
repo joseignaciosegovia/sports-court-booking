@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Refund;
 use Stripe\Stripe;
+use App\Enums\PaymentStatus;
 
 class ReservationCancellationService
 {
@@ -20,9 +21,9 @@ class ReservationCancellationService
     public function cancelByClient(Reservation $reservation): string
     {
         // Si nunca hubo pago real, no hay nada que reembolsar
-        if ($reservation->payment_status !== 'paid') {
+        if ($reservation->payment_status !== PaymentStatus::Paid) {
             $reservation->update([
-                'payment_status' => 'canceled',
+                'payment_status' => PaymentStatus::Canceled,
                 'canceled_at' => now(),
                 'canceled_by' => 'client',
             ]);
@@ -35,7 +36,7 @@ class ReservationCancellationService
         if ($eligibleForRefund) {
             $this->issueRefund($reservation);
             $reservation->update([
-                'payment_status' => 'refunded',
+                'payment_status' => PaymentStatus::Refunded,
                 'canceled_at' => now(),
                 'canceled_by' => 'client',
                 'refunded_at' => now(),
@@ -44,7 +45,7 @@ class ReservationCancellationService
             return 'refunded';
         } 
         $reservation->update([
-            'payment_status' => 'canceled',
+            'payment_status' => PaymentStatus::Canceled,
             'canceled_at' => now(),
             'canceled_by' => 'client',
         ]);
@@ -59,18 +60,18 @@ class ReservationCancellationService
     public function cancelByManager(Reservation $reservation, string $reason): bool
     {
 
-        if (!in_array($reservation->payment_status, ['paid', 'pending'])) {
+        if (!in_array($reservation->payment_status, [PaymentStatus::Paid, PaymentStatus::Pending])) {
             throw new ReservationNotCancellableException();
         }
 
-        $hadRealPayment = $reservation->payment_status === 'paid' && $reservation->user_id;
+        $hadRealPayment = $reservation->payment_status === PaymentStatus::Paid && $reservation->user_id;
 
         // Si se pagó la reserva y la realizó un cliente, se realiza el desembolso y se actualiza la reserva
         if ($hadRealPayment && !empty($reservation->user_id)) {
             $this->issueRefund($reservation);
 
             $reservation->update([
-                'payment_status' => 'refunded',
+                'payment_status' => PaymentStatus::Refunded,
                 'canceled_at' => now(),
                 'canceled_by' => 'manager',
                 'cancellation_reason' => $reason,
@@ -79,7 +80,7 @@ class ReservationCancellationService
         // Si no se pagó la reserva o la realizó un gestor, no se realiza el desembolso
         } else {
             $reservation->update([
-                'payment_status' => 'canceled',
+                'payment_status' => PaymentStatus::Canceled,
                 'canceled_at' => now(),
                 'canceled_by' => 'manager',
                 'cancellation_reason' => $reason,
@@ -97,11 +98,11 @@ class ReservationCancellationService
     public function cancelExpiredReservations(): int
     {
         return Reservation::query()
-            ->where('payment_status', 'pending')
+            ->where('payment_status', PaymentStatus::Pending)
             ->whereNotNull('expires_at')
             ->where('expires_at', '<=', now())
             ->update([
-                'payment_status' => 'canceled',
+                'payment_status' => PaymentStatus::Canceled,
                 'canceled_at' => now(),
                 'canceled_by' => 'system',
             ]);

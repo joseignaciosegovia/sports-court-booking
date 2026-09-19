@@ -10,6 +10,7 @@ use App\Models\Court;
 use Carbon\Carbon;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Enums\PaymentStatus;
 
 class ReservationCheckoutService
 {
@@ -57,7 +58,7 @@ class ReservationCheckoutService
             'start_time' => $startTime,
             'end_time' => $endTime,
             'information' => 'Reserva creada por un cliente',
-            'payment_status' => 'pending',
+            'payment_status' => PaymentStatus::Pending,
             'expires_at' => now()->addMinutes(15),
         ]);
     }
@@ -99,7 +100,7 @@ class ReservationCheckoutService
      */
     public function resumeCheckout(Reservation $reservation): string
     {
-        if ($reservation->payment_status !== 'pending'
+        if ($reservation->payment_status !== PaymentStatus::Pending
             || !$reservation->expires_at
             || $reservation->expires_at->isPast()) {
             throw new \App\Exceptions\ReservationNotResumableException();

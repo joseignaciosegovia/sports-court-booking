@@ -13,7 +13,7 @@
 
         <p><strong>Motivo:</strong> {{ $reason }}</p>
 
-        @if ($reservation->payment_status === 'refunded')
+        @if ($reservation->payment_status === App\Enums\PaymentStatus::Refunded)
             <p>Se le reembolsará el pago de la reserva en los próximos días.</p>
         @else
             <p>Como no pagó la reserva, no es necesario hacer ninguna devolución.</p>

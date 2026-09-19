@@ -3,6 +3,7 @@
 namespace App\Services\Common;
 
 use App\Models\Reservation;
+use App\Enums\PaymentStatus;
 
 class CourtScheduleService
 {
@@ -23,7 +24,7 @@ class CourtScheduleService
                 'start' => $reservation->start_time->format('Y-m-d\TH:i:s'), // $reservation es cada elemento de la colección de Reservations que cumplen las condiciones anteriores
                 'end'   => $reservation->end_time->format('Y-m-d\TH:i:s'), // Al no incluir Z ni un offset (+02:00), FullCalendar interpreta la fecha como hora local del navegador
                 'color' => '#dc3545',
-                'editable' => !in_array($reservation->payment_status, ['canceled', 'refunded']), // No se pueden editar reservas canceladas o reembolsadas
+                'editable' => !in_array($reservation->payment_status, [PaymentStatus::Canceled, PaymentStatus::Refunded]), // No se pueden editar reservas canceladas o reembolsadas
             ]);
     }
 }

@@ -8,7 +8,7 @@ use App\Models\Reservation;
 use App\Models\Feedback;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Enums\UserRole;
+use App\Enums\PaymentStatus;
 
 class DashboardController extends Controller
 {
@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $courtsCount = Court::count();
 
         $canceledReservationsCount  = Reservation::with('court', 'user')
-            ->whereIn('payment_status', ['canceled', 'refunded'])
+            ->whereIn('payment_status', [PaymentStatus::Canceled, PaymentStatus::Refunded])
             ->count();
         
         $feedbackCount = Feedback::count();

@@ -8,6 +8,7 @@ use App\Exceptions\SlotUnavailableException;
 use App\Services\Validation\ReservationRulesValidator;
 use App\Exceptions\PastDateException;
 use Carbon\Carbon;
+use App\Enums\PaymentStatus;
 
 class QuickReservationService
 {
@@ -35,7 +36,7 @@ class QuickReservationService
             'start_time' => $startTime,
             'end_time' => $endTime,
             'information' => $data['information'] ?? null,
-            'payment_status' => 'paid',
+            'payment_status' => PaymentStatus::Paid,
         ]);
     }
 }

@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <hr class="mt-0 mb-4" style="border-color: #dee2e6;">
-                @if ($reservation->payment_status === 'paid')
+                @if ($reservation->payment_status === App\Enums\PaymentStatus::Paid)
                     <div class="alert alert-success d-flex align-items-center gap-2">
                         <i class="ti ti-circle-check" aria-hidden="true"></i>
                         <span>Tu pago se ha procesado correctamente y la reserva está confirmada.</span>
@@ -61,7 +61,7 @@
 
                         <dt class="col-sm-3">Estado del pago</dt>
                         <dd class="col-sm-9">
-                            <span class="type-badge badge {{ $reservation->payment_status === 'paid' ? 'badge-green' : 'bg-warning' }}" 
+                            <span class="type-badge badge {{ $reservation->payment_status === App\Enums\PaymentStatus::Paid ? 'badge-green' : 'bg-warning' }}" 
                                 style="display: inline-flex; 
                                 align-items: center; 
                                 gap: 6px;
@@ -76,7 +76,7 @@
                                         border-radius: 50%; 
                                         background:currentColor; "
                                 ></span>
-                                {{ $reservation->payment_status === 'paid' ? 'Pagado' : 'Pendiente' }}
+                                {{ $reservation->payment_status === App\Enums\PaymentStatus::Paid ? 'Pagado' : 'Pendiente' }}
                             </span>
                         </dd>
                     </dl>

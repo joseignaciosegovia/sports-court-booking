@@ -202,6 +202,22 @@
     footer .footer-col:last-child {
         margin-bottom: 0;
     }
+
+    /* Sección de información al pinchar en un horario libre para reservarlo */
+
+    #selection-summary {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    #selection-summary .selection-info > div {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    #selection-summary .btn {
+        width: 100%;
+    }
 }
 
 

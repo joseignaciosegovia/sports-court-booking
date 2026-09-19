@@ -96,7 +96,17 @@
                         <input type="hidden" name="start_time" id="form-start-time">
 
                         <div id="selection-summary" class="alert alert-info d-none d-flex justify-content-between align-items-center">
-                            <span>Horario seleccionado: <strong id="selection-text"></strong> Precio de la reserva: <strong id="selection-price"></strong></span>
+                            <div class="selection-info">
+                                <div>
+                                    Horario seleccionado: <strong id="selection-text"></strong>
+                                </div>
+                                <div>
+                                    Precio de la reserva: <strong id="selection-price"></strong>
+                                </div>
+                                <div>
+                                    Si se cancela la reserva con menos de 12 horas de antelación, no se devolverá el dinero
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-success btn-sm">Confirmar reserva</button>
                         </div>
                     </form>

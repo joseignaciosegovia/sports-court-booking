@@ -23,6 +23,7 @@ use App\Exceptions\SlotUnavailableException;
 use App\Exceptions\PastDateException;
 use App\Exceptions\ReservationNotCancellableException;
 use App\Exceptions\RefundException;
+use App\Enums\PaymentStatus;
 
 class ReservationController extends Controller
 {
@@ -84,7 +85,7 @@ class ReservationController extends Controller
     public function edit(Reservation $reservation)
     {
 
-        if (in_array($reservation->payment_status, ['canceled', 'refunded'])) {
+        if (in_array($reservation->payment_status, [PaymentStatus::Canceled, PaymentStatus::Refunded])) {
             return redirect()
                 ->route('manager.reservations.index')
                 ->withErrors(['reservation' => 'No se puede editar una reserva cancelada o reembolsada.']);
@@ -196,7 +197,7 @@ class ReservationController extends Controller
         ];
 
         $cancellations = Reservation::with('court')
-            ->whereIn('reservations.payment_status', ['canceled', 'refunded'])
+            ->whereIn('reservations.payment_status', [PaymentStatus::Canceled, PaymentStatus::Refunded])
             ->filter($filters)
             ->sort($sortColumns, 'reservations.start_time', 'desc', Reservation::sortJoins())
             ->paginate(10)

@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Services\Validation\ReservationRuleResult;
 use App\Services\Validation\ReservationRulesValidator;
 use Carbon\Carbon;
+use App\Enums\PaymentStatus;
 
 class ReservationUpdateService
 {
@@ -16,7 +17,7 @@ class ReservationUpdateService
 
     public function update(Reservation $reservation, array $data): ReservationRuleResult
     {
-        if (in_array($reservation->payment_status, ['canceled', 'refunded'])) {
+        if (in_array($reservation->payment_status, [PaymentStatus::Canceled, PaymentStatus::Refunded])) {
             return ReservationRuleResult::failure(
                 'No se puede editar una reserva cancelada o reembolsada.',
                 'reservation'

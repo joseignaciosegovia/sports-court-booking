@@ -3,6 +3,7 @@
 namespace App\Services\Common;
 
 use App\Models\Reservation;
+use App\Enums\PaymentStatus;
 
 class StripeWebhookService
 {
@@ -23,7 +24,7 @@ class StripeWebhookService
 
         if ($reservation) {
             $reservation->update([
-                'payment_status' => 'paid',
+                'payment_status' => PaymentStatus::Paid,
                 'payment_id' => $session->payment_intent,
             ]);
         }

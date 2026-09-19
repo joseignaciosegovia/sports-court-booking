@@ -8,6 +8,7 @@ use App\Services\Validation\ReservationRuleResult;
 use App\Services\Validation\ReservationRulesValidator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use App\Enums\PaymentStatus;
 
 class ReservationRescheduleService
 {
@@ -18,7 +19,7 @@ class ReservationRescheduleService
 
     public function reschedule(Reservation $reservation, array $data): ReservationRuleResult
     {
-        if (in_array($reservation->payment_status, ['canceled', 'refunded'])) {
+        if (in_array($reservation->payment_status, [PaymentStatus::Canceled, PaymentStatus::Refunded])) {
             return ReservationRuleResult::failure(
                 'No se puede reprogramar una reserva cancelada o reembolsada.'
             );

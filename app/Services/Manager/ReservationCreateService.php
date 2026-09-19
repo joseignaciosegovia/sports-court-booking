@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use App\Services\Validation\ReservationRuleResult;
 use App\Services\Validation\ReservationRulesValidator;
 use Carbon\Carbon;
+use App\Enums\PaymentStatus;
 
 class ReservationCreateService
 {
@@ -29,7 +30,7 @@ class ReservationCreateService
             'start_time' => $startTime,
             'end_time' => $endTime,
             'information' => $data['information'] ?? null,
-            'payment_status' => 'paid', // reserva interna, sin pago real: se fuerza a "paid" para que bloquee el horario
+            'payment_status' => PaymentStatus::Paid, // reserva interna, sin pago real: se fuerza a "paid" para que bloquee el horario
         ]);
 
         return ReservationRuleResult::success();

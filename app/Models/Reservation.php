@@ -94,9 +94,9 @@ class Reservation extends Model
     public function scopeBlocking(Builder $query): Builder
     {
         return $query->where(function ($q) {
-            $q->where('payment_status', 'paid')
+            $q->where('payment_status', PaymentStatus::Paid)
                 ->orWhere(function ($q2) { // La función es necesaria para agrupar las dos condiciones dentro del OR
-                    $q2->where('payment_status', 'pending')
+                    $q2->where('payment_status', PaymentStatus::Pending)
                        ->where('expires_at', '>', now()); // Solo tenemos en cuenta reservas pagadas o no expiradas
                 });
         });
