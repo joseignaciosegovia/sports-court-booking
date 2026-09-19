@@ -38,7 +38,7 @@
                 </div>
                 <hr class="mt-0 mb-4" style="border-color: #dee2e6;">
                 {{-- Filtros --}}
-                <form method="GET" class="row g-2 mb-4">
+                <x-filters.filter-bar :action="route('client.reservations.index')" :active-filters="$filters">
                     {{-- Pista --}}
                     <div class="col-md-2">
                         <select name="court_id" class="form-select">
@@ -80,11 +80,62 @@
                             </option>
                         </select>
                     </div>
-                    {{-- Botón para filtrar --}}
-                    <div class="w-auto y px-4">
-                        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-                    </div>
-                </form>
+                    {{-- CHIPS DE FILTROS --}}
+                    <x-slot:chips>
+                        {{-- Chip de pista --}}
+                        @if(!empty($filters['court_id']))
+                            @php
+                                $selectedCourt = $courts->find($filters['court_id']);
+                            @endphp
+
+                            @if($selectedCourt)
+                                <x-filters.filter-chip
+                                    :label="'Pista: ' . $selectedCourt->name"
+                                    :remove-url="request()->fullUrlWithoutQuery('court_id')"
+                                />
+                            @endif
+                        @endif
+                    
+                        {{-- Chip de estado de pago --}}
+                        @if(!empty($filters['status']))
+                            @php
+                                $status = PaymentStatus::tryFrom($filters['status']);
+                            @endphp
+
+                            @if($status)
+                                <x-filters.filter-chip
+                                    :label="'Estado: ' . $status->label()"
+                                    :remove-url="request()->fullUrlWithoutQuery('status')"
+                                />
+                            @endif
+                        @endif
+
+                        {{-- Chip de fecha concreta --}}
+                        @if(!empty($filters['date']))
+                            <x-filters.filter-chip
+                                :label="'Fecha: ' . \Carbon\Carbon::parse($filters['date'])->format('Y-m-d')"
+                                :remove-url="request()->fullUrlWithoutQuery('date')"
+                            />
+                        @endif
+
+                        {{-- Chip de rango de fechas --}}
+                        @if(!empty($filters['date_range']))
+                            @php
+                                $dateRangeLabels = [
+                                    'past' => 'Fechas pasadas',
+                                    'future' => 'Fechas futuras',
+                                ];
+                            @endphp
+
+                            @if(isset($dateRangeLabels[$filters['date_range']]))
+                                <x-filters.filter-chip
+                                    :label="$dateRangeLabels[$filters['date_range']]"
+                                    :remove-url="request()->fullUrlWithoutQuery('date_range')"
+                                />
+                            @endif
+                        @endif
+                    </x-slot:chips>
+                </x-filters.filter-bar>
 
             @if($reservations->isEmpty())
                 <p class="text-muted mb-0">No hay reservas que coincidan con los filtros.</p>
