@@ -51,7 +51,7 @@
             <div>
                 <div class="dash-section-header">
                     <span><i class="ti ti-calendar" aria-hidden="true"></i> Reservas</span>
-                    <a href="{{ route('manager.reservations.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                    <a href="{{ route('manager.reservations.index') }}">Historial de reservas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                 </div>
                 <div class="dash-grid-2">
                     <div class="dash-card dash-card-accent dash-card-accent-amber">
@@ -103,7 +103,7 @@
             <div>
                 <div class="dash-section-header">
                     <span><i class="ti ti-mail" aria-hidden="true"></i> Comentarios</span>
-                    <a href="{{ route('manager.feedback.index') }}">Ver todos <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                    <a href="{{ route('manager.feedback.index') }}">Comentarios de los clientes <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                 </div>
                 <div class="dash-grid-2">
                     <div class="dash-card dash-card-accent dash-card-accent-pink">

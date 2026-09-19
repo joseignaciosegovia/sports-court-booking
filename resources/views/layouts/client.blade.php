@@ -44,22 +44,22 @@
                 Datos personales
             </a>
             <div class="nav-section">Reservas</div>
-                <a class="nav-item {{ request()->routeIs('client.reservations.index') ? 'active' : '' }}" href="{{ route('client.reservations.index') }}">
-                    <i class="ti ti-calendar" aria-hidden="true"></i>
-                    Historial de reservas
-                </a>
                 <a class="nav-item {{ request()->routeIs('client.reservations.create') ? 'active' : '' }}" href="{{ route('client.reservations.create') }}">
                     <i class="ti ti-plus" aria-hidden="true"></i>
                     Nueva reserva
                 </a>
-            <div class="nav-section">Soporte</div>
-                <a class="nav-item {{ request()->routeIs('client.feedback.index') ? 'active' : '' }}" href="{{ route('client.feedback.index') }}">
-                    <i class="ti ti-mail" aria-hidden="true"></i>
-                    Historial de comentarios
+                <a class="nav-item {{ request()->routeIs('client.reservations.index') ? 'active' : '' }}" href="{{ route('client.reservations.index') }}">
+                    <i class="ti ti-calendar" aria-hidden="true"></i>
+                    Historial de reservas
                 </a>
+            <div class="nav-section">Soporte</div>
                 <a class="nav-item {{ request()->routeIs('client.feedback.create') ? 'active' : '' }}" href="{{ route('client.feedback.create') }}">
                     <i class="ti ti-send" aria-hidden="true"></i>
                     Nuevo comentario
+                </a>
+                <a class="nav-item {{ request()->routeIs('client.feedback.index') ? 'active' : '' }}" href="{{ route('client.feedback.index') }}">
+                    <i class="ti ti-mail" aria-hidden="true"></i>
+                    Historial de comentarios
                 </a>
 
             <form method="POST" action="{{ route('logout') }}" style="margin-top: auto;">

@@ -27,7 +27,7 @@
                 <div>
                     <div class="dash-section-header">
                         <span><i class="ti ti-calendar" aria-hidden="true"></i> Reservas</span>
-                        <a href="{{ route('client.reservations.index') }}">Ver todas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <a href="{{ route('client.reservations.index') }}">Historial de reservas <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     {{-- SECCIÓN: RESERVAS --}}
                     <div class="dash-grid-2">
@@ -74,7 +74,7 @@
                 <div>
                     <div class="dash-section-header">
                         <span><i class="ti ti-soccer-field" aria-hidden="true"></i> Pistas e instalaciones</span>
-                        <a href="{{ route('client.reservations.create') }}">Reservar pista <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <a href="{{ route('client.reservations.create') }}">Nueva reserva <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div class="dash-grid-2">
                         {{-- Tarjeta: pistas disponibles --}}
@@ -104,7 +104,7 @@
                 <div>
                     <div class="dash-section-header">
                         <span><i class="ti ti-mail" aria-hidden="true"></i> Comentarios</span>
-                        <a href="{{ route('client.feedback.index') }}">Ver todos <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+                        <a href="{{ route('client.feedback.index') }}">Historial de comentarios <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div class="dash-grid">
                         <div class="dash-card dash-card-accent dash-card-accent-amber">

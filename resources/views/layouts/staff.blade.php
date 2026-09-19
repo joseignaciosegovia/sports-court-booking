@@ -59,6 +59,10 @@
             @endif
 
             <div class="nav-section">Reservas</div>
+            <a class="nav-item {{ request()->routeIs('manager.reservations.create') ? 'active' : '' }}" href="{{ route('manager.reservations.create') }}">
+                    <i class="ti ti-plus" aria-hidden="true"></i>
+                    Nueva reserva
+                </a>
                 <a class="nav-item {{ request()->routeIs('manager.reservations.index') ? 'active' : '' }}" href="{{ route('manager.reservations.index') }}">
                     <i class="ti ti-calendar" aria-hidden="true"></i>
                     Historial de reservas
@@ -67,14 +71,10 @@
                     <i class="ti ti-calendar-x" aria-hidden="true"></i>
                     Reservas canceladas
                 </a>
-                <a class="nav-item {{ request()->routeIs('manager.reservations.create') ? 'active' : '' }}" href="{{ route('manager.reservations.create') }}">
-                    <i class="ti ti-plus" aria-hidden="true"></i>
-                    Nueva reserva
-                </a>
             <div class="nav-section">Pistas</div>
                 <a class="nav-item {{ request()->routeIs('manager.courts.*') ? 'active' : '' }}" href="{{ route('manager.courts.index') }}">
                     <i class="ti ti-soccer-field" aria-hidden="true"></i>
-                    Pistas
+                    Administrar pistas
                 </a>
             <div class="nav-section">Consultas</div>
                 <a class="nav-item {{ request()->routeIs('manager.feedback.index') ? 'active' : '' }}" href="{{ route('manager.feedback.index') }}">
