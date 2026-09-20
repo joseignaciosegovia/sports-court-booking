@@ -22,7 +22,7 @@
             <div class="seccionSubtitulo">
                 <i class="ti ti-soccer-field"></i>
                 <div>
-                    <h2>Editar la pista {{ $court->name }}</h2>
+                    <h2>Editar la pista<span class="ms-2 fw-bold text-primary">{{ $court->name }}</span></h2>
                     <small class="text-muted">Modifica los datos de la pista {{ $court->name }}</small>
                 </div>
             </div>

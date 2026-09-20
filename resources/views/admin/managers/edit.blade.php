@@ -22,7 +22,7 @@
             <div class="seccionSubtitulo">
                 <i class="ti ti-user-cog" aria-hidden="true"></i>
                 <div>
-                    <h2>Gestor/a {{ $manager->name }}</h2>
+                    <h2>Gestor/a<span id="selected-court-name" class="ms-2 fw-bold text-primary">{{ $manager->name }}</span></h2>
                     <small class="text-muted">Modifica los datos del gestor {{ $manager->name }}</small>
                 </div>
             </div>
@@ -50,7 +50,7 @@
 
                         <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $manager->email) }}" autocomplete="name" required>
+                            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $manager->email) }}" autocomplete="email" required>
                             <div class="invalid-feedback">
                                 {{ $errors->first('email') ?: 'Introduce un correo electrónico válido.' }}
                             </div>
@@ -75,7 +75,7 @@
 
                         <div class="col-md-6">
                             <label for="phone" class="form-label">Teléfono (opcional)</label>
-                            <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $manager->phone) }}" autocomplete="name">
+                            <input type="tel" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $manager->phone) }}" autocomplete="tel">
                             <div class="invalid-feedback">
                                 {{ $errors->first('phone') ?: 'El teléfono debe tener 9 dígitos.' }}
                             </div>
@@ -100,7 +100,7 @@
                                     <span class="text-muted">Foto actual</span>
                                 @endif
                             </div>
-                            <input type="file" name="photo" id="photo" class="form-control" @error('photo') is-invalid @enderro>
+                            <input type="file" name="photo" id="photo" class="form-control" @error('photo') is-invalid @enderror>
                             <div class="invalid-feedback">
                                 {{ $errors->first('photo') ?: 'La imagen no es válida o supera el tamaño máximo permitido.' }}
                             </div>
