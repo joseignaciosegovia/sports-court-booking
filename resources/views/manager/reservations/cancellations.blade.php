@@ -161,7 +161,7 @@
                         <tr>
                             <th>{{ $cancellations->firstItem() + $index }}</th>
                             <td>{{ $cancellation->court->name }}</td>
-                            <td>{{ $cancellation->start_time->format('Y-m-d') }} · {{ $cancellation->start_time->format('H:i') }}</td>
+                            <td>{{ $cancellation->start_time->format('Y-m-d · H:i') }}</td>
                             <td>{{ $cancellation->user->email ?? 'Gestión' }}</td>
                             <td class="text-truncate-cell" title="{{ $cancellation->information }}">{{ $cancellation->information }}</td>
                             {{-- Cancelada por --}}
@@ -174,7 +174,8 @@
                                 @else -
                                 @endif
                             </td>
-                            <td>{{ $cancellation->canceled_at?->format('Y-m-d H:i') ?? '-' }}</td>
+                            {{-- Fecha de cancelación --}}
+                            <td>{{ $cancellation->canceled_at?->format('Y-m-d · H:i') ?? '-' }}</td>
                             <td>
                                 <span class="type-badge {{ $cancellation->payment_status->badgeColor() }}">
                                     <i class="{{ $cancellation->payment_status->badgeIcon() }}" aria-hidden="true"></i>

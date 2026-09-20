@@ -185,7 +185,7 @@
                                 {{-- Pista --}}
                                 <td>{{ $reservation->court->name }}</td>
                                 {{-- Fecha --}}
-                                <td>{{ $reservation->start_time->format('Y-m-d') }} · {{ $reservation->start_time->format('H:i') }} - {{ $reservation->end_time->format('H:i') }}</td>
+                                <td>{{ $reservation->start_time->format('Y-m-d · H:i') }} - {{ $reservation->end_time->format('H:i') }}</td>
                                 {{-- Precio --}}
                                 <td>{{ $reservation->court->reservation_price }}</td>
                                 {{-- Estado de pago --}}

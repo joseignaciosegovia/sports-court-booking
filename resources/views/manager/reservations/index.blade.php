@@ -195,7 +195,7 @@
                                 <tr>
                                     <th>{{ $reservations->firstItem() + $index }}</th>
                                     <td>{{ $reservation->court->name }}</td>
-                                    <td>{{ $reservation->start_time->format('Y-m-d') }} · {{ $reservation->start_time->format('H:i') }} - {{ $reservation->end_time->format('H:i') }}</td>
+                                    <td>{{ $reservation->start_time->format('Y-m-d · H:i') }} - {{ $reservation->end_time->format('H:i') }}</td>
                                     <td>{{ $reservation->user->email ?? 'Gestión' }}</td>
                                     <td>{{ $reservation->information }}</td>
                                     <td>
