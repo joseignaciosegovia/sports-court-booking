@@ -115,7 +115,7 @@
                     </div>
                     <div class="dash-card">
                         <div class="lbl"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incidencias recibidas</div>
-                            <div class="dash-card-footer">
+                        <div class="dash-card-footer">
                             <div class="val {{ $incidentsCount  === 0 ? 'val-zero' : '' }}">{{ $incidentsCount  }}</div>
                             <a href="{{ route('manager.feedback.index', ['type' => App\Enums\FeedbackType::Incident]) }}" class="dash-card-link">Ver →</a>
                         </div>

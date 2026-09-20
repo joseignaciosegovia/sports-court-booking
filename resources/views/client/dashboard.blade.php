@@ -109,11 +109,17 @@
                     <div class="dash-grid-2">
                         <div class="dash-card dash-card-accent dash-card-accent-amber">
                             <div class="lbl"><i class="ti ti-bulb" aria-hidden="true"></i> Sugerencias enviadas</div>
-                            <div class="val {{ $suggestionsCount  === 0 ? 'val-zero' : '' }}">{{ $suggestionsCount  }}</div>
+                            <div class="dash-card-footer">
+                                <div class="val {{ $suggestionsCount  === 0 ? 'val-zero' : '' }}">{{ $suggestionsCount  }}</div>
+                                <a href="{{ route('client.feedback.index', ['type' => App\Enums\FeedbackType::Suggestion]) }}" class="dash-card-link">Ver →</a>
+                            </div>
                         </div>
                         <div class="dash-card">
                             <div class="lbl"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incidencias enviadas</div>
-                            <div class="val {{ $incidentsCount  === 0 ? 'val-zero' : '' }}">{{ $incidentsCount  }}</div>
+                            <div class="dash-card-footer">
+                                <div class="val {{ $incidentsCount  === 0 ? 'val-zero' : '' }}">{{ $incidentsCount  }}</div>
+                                <a href="{{ route('client.feedback.index', ['type' => App\Enums\FeedbackType::Incident]) }}" class="dash-card-link">Ver →</a>
+                            </div>
                         </div>
                     </div>
                 </div>
