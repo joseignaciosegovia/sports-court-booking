@@ -106,10 +106,14 @@
                         <span><i class="ti ti-mail" aria-hidden="true"></i> Comentarios</span>
                         <a href="{{ route('client.feedback.index') }}">Historial de comentarios <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
                     </div>
-                    <div class="dash-grid">
+                    <div class="dash-grid-2">
                         <div class="dash-card dash-card-accent dash-card-accent-amber">
-                            <div class="lbl"><i class="ti ti-send" aria-hidden="true"></i> Comentarios enviados</div>
-                            <div class="val {{ $feedbackCount  === 0 ? 'val-zero' : '' }}">{{ $feedbackCount  }}</div>
+                            <div class="lbl"><i class="ti ti-bulb" aria-hidden="true"></i> Sugerencias enviadas</div>
+                            <div class="val {{ $suggestionsCount  === 0 ? 'val-zero' : '' }}">{{ $suggestionsCount  }}</div>
+                        </div>
+                        <div class="dash-card">
+                            <div class="lbl"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incidencias enviadas</div>
+                            <div class="val {{ $incidentsCount  === 0 ? 'val-zero' : '' }}">{{ $incidentsCount  }}</div>
                         </div>
                     </div>
                 </div>

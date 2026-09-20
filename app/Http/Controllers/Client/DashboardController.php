@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Feedback;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Court;
@@ -29,8 +30,13 @@ class DashboardController extends Controller
             ->whereMonth('start_time', now()->month)
             ->count();
         
-        // Número de comentarios realizados por el cliente
-        $feedbackCount  = $user->feedback()->count();
+        // Número de sugerencias e incidencias enviadas por el cliente
+        $suggestionsCount = Feedback::where('type', 'suggestion')
+            ->where('user_id', $user->id)
+            ->count();
+        $incidentsCount = Feedback::where('type', 'incident')
+            ->where('user_id', $user->id)
+            ->count();
         
         // Pistas disponibles
         $courtsCount = Court::count();
@@ -40,7 +46,8 @@ class DashboardController extends Controller
             'nextReservation' => $nextReservation,
             'nextReservationCourt' => $nextReservationCourt,
             'reservationsThisMonth' => $reservationsThisMonth,
-            'feedbackCount' => $feedbackCount ,
+            'suggestionsCount' => $suggestionsCount,
+            'incidentsCount' => $incidentsCount,
             'courtsCount' => $courtsCount,
             'locationsCount' => $locationsCount,
             'openingTime' => config('schedules.opening_time'),
