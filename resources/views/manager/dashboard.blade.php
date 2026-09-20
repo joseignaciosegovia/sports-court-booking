@@ -107,12 +107,18 @@
                 </div>
                 <div class="dash-grid-2">
                     <div class="dash-card dash-card-accent dash-card-accent-pink">
-                        <div class="lbl"><i class="ti ti-mail" aria-hidden="true"></i> Comentarios totales</div>
-                        <div class="val {{ $feedbackCount === 0 ? 'val-zero' : '' }}">{{ $feedbackCount }}</div>
+                        <div class="lbl"><i class="ti ti-bulb" aria-hidden="true"></i> Sugerencias recibidas</div>
+                        <div class="dash-card-footer">
+                            <div class="val {{ $suggestionsCount  === 0 ? 'val-zero' : '' }}">{{ $suggestionsCount  }}</div>
+                            <a href="{{ route('manager.feedback.index', ['type' => App\Enums\FeedbackType::Suggestion]) }}" class="dash-card-link">Ver →</a>
+                        </div>
                     </div>
                     <div class="dash-card">
-                        <div class="lbl"><i class="ti ti-mail" aria-hidden="true"></i> Comentarios este mes</div>
-                        <div class="val {{ $feedbackThisMonth === 0 ? 'val-zero' : '' }}">{{ $feedbackThisMonth }}</div>
+                        <div class="lbl"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incidencias recibidas</div>
+                            <div class="dash-card-footer">
+                            <div class="val {{ $incidentsCount  === 0 ? 'val-zero' : '' }}">{{ $incidentsCount  }}</div>
+                            <a href="{{ route('manager.feedback.index', ['type' => App\Enums\FeedbackType::Incident]) }}" class="dash-card-link">Ver →</a>
+                        </div>
                     </div>
                 </div>
             </div>

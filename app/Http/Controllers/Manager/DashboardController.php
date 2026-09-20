@@ -28,7 +28,11 @@ class DashboardController extends Controller
             ->whereIn('payment_status', [PaymentStatus::Canceled, PaymentStatus::Refunded])
             ->count();
         
-        $feedbackCount = Feedback::count();
+        // Número de sugerencias e incidencias enviadas por los usuarios
+        $suggestionsCount = Feedback::where('type', 'suggestion')
+            ->count();
+        $incidentsCount = Feedback::where('type', 'incident')
+            ->count();
         $feedbackThisMonth = Feedback::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->count();
@@ -40,7 +44,8 @@ class DashboardController extends Controller
             'facilitiesCount' => $facilitiesCount,
             'openingTime' => config('schedules.opening_time'),
             'closingTime' => config('schedules.closing_time'),
-            'feedbackCount' => $feedbackCount,
+            'suggestionsCount' => $suggestionsCount,
+            'incidentsCount' => $incidentsCount,
             'feedbackThisMonth' => $feedbackThisMonth,
         ];
 
