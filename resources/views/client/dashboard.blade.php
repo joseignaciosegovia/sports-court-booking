@@ -1,8 +1,8 @@
 @extends('layouts.client')
 
-@section('title', 'Página inicial · Moral de Calatrava')
+@section('title', 'Página principal · Moral de Calatrava')
 
-@section('titleHeader', 'Página inicial · Moral de Calatrava')
+@section('titleHeader', 'Página principal · Moral de Calatrava')
 
 @push('styles')
     @vite('resources/css/dashboard.css')
@@ -122,7 +122,5 @@
             </div>
         </div>
     </main> 
-    {{-- Cerramos la sección principal, creada en navCliente.php --}}
-        
     </div>
 @endsection

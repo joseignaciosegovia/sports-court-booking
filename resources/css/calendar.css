@@ -1,16 +1,6 @@
 /* --- CALENDARIO --- */
 /* Leyenda del calendario */
-#leyenda span {
-    margin-right: 15px;
-}
 
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: .4rem;
-    font-size: .9rem;
-    color: #495057;
-}
 .legend-dot {
     width: 12px;
     height: 12px;
@@ -23,26 +13,93 @@
 .legend-ocupada { 
     background-color: #dc3545; 
 }
+.calendar-legend {
+    width: fit-content;
+    margin-inline: auto;
+    gap: 1.5rem;
+    padding: .4rem 1.25rem;
+    background-color: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 50rem;
+}
 
-/* Acordeón */
-.accordion-button {
+.calendar-legend .legend-title {
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--bs-secondary-color);
+}
+
+.calendar-legend .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .875rem;
+}
+
+.calendar-legend .legend-dot {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+
+/*--- ACORDEÓN ---*/
+/* Contenedor con borde y esquinas redondeadas, como las cabeceras de sección */
+#elegirPista {
+    border: 1px solid var(--bs-border-color);
+    border-radius: .5rem;
+    overflow: hidden;
+    text-align: left;
+}
+
+#elegirPista .accordion-button {
     font-weight: 600;
 }
-.court-link {
-    color: #333;
-    font-weight: 500;
-    padding: .35rem .25rem;
-    border-radius: 4px;
+
+/* Quita la línea de sombra interior de la cabecera abierta */
+#elegirPista .accordion-button:not(.collapsed) {
+    box-shadow: none;
 }
-.court-link:hover {
-    background-color: #edf4ff;
+
+/* Lista de pistas: un solo bloque, más compacto */
+#elegirPista .court-list {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    padding: .5rem .75rem .75rem;
 }
-.court-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: #0d6efd;
+
+#elegirPista .court-link {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    padding: .5rem 1rem;
+    border-left: 3px solid transparent;
+    border-radius: .375rem;
+    color: var(--bs-body-color);
+    transition: background-color .15s ease, color .15s ease;
+}
+
+#elegirPista .court-link:hover,
+#elegirPista .court-link:focus-visible {
+    background-color: rgba(var(--bs-primary-rgb), .06);
+    color: var(--bs-primary);
+}
+
+/* Pista seleccionada (ver nota sobre la clase "active" en las instrucciones) */
+#elegirPista .court-link.active {
+    background-color: rgba(var(--bs-primary-rgb), .1);
+    border-left-color: var(--bs-primary);
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+#elegirPista .court-link .court-dot {
     flex-shrink: 0;
+    width: .5rem;
+    height: .5rem;
+    border-radius: 50%;
+    background-color: var(--bs-primary);
 }
 
 /* Cuadrado coloreado indicando el color dentro de la leyenda del calendario */

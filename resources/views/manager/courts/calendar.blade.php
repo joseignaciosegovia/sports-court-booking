@@ -26,11 +26,16 @@
             <div class="seccionSubtitulo">
                 <i class="ti ti-soccer-field"></i>
                 <div>
-                    <h2>Calendario de la pista {{ $court->name }}</h2>
+                    <h2>Calendario de la pista <span id="selected-court-name" class="fw-bold text-primary">{{ $court->name }}</span></h2>
                     <small class="text-muted">Consulta los horarios reservados de la pista {{ $court->name }}</small>
                 </div>
             </div>
-            <br>
+            {{-- Leyenda --}}
+            <div class="calendar-legend d-flex align-items-center mt-3 mb-3" role="group" aria-label="Leyenda del calendario">
+                <span class="legend-title">Leyenda:</span>
+                <span class="legend-item"><span class="legend-dot legend-disponible"></span>Libre</span>
+                <span class="legend-item"><span class="legend-dot legend-ocupada"></span>Ocupada</span>
+            </div>
             <div id="calendar"
                 data-court-id="{{ $court->id }}"
                 data-opening-time="{{ $openingTime }}"

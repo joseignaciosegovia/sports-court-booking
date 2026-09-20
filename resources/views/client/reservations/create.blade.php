@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="accordion accordion-flush py-3" id="elegirPista">
+                <div class="accordion accordion-flush mt-4" id="elegirPista">
                     @forelse ($courtsByFacility as $facility => $courtsFacility)
                         @php
                             $isFirst = $loop->first;
@@ -39,7 +39,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button
-                                    class="accordion-button collapsed {{ $isFirst ? '' : 'collapsed' }}"
+                                    class="accordion-button {{ $isFirst ? '' : 'collapsed' }}"
                                     type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapse{{ $loop->index }}"
                                     aria-expanded="{{ $isFirst ? 'true' : 'false' }}"
@@ -50,36 +50,41 @@
                             </h2>
 
                             <div id="flush-collapse{{ $loop->index }}" class="accordion-collapse collapse {{ $isFirst ? 'show' : '' }}" data-bs-parent="#elegirPista">
-                                @forelse ($courtsFacility as $court)
-                                    <div class="accordion-body">
-                                        <a href="#" class="nav-link court-link ms-3 my-1 d-flex align-items-center gap-2" 
+                                <div class="accordion-body court-list">
+                                    @forelse ($courtsFacility as $court)
+                                    
+                                        <a href="#" class="nav-link court-link" 
                                             data-court-id="{{ $court->id }}" 
-                                            data-court-name="{{ $court->name }}" data-court-price="{{ $court->reservation_price }}"
+                                            data-court-name="{{ $court->name }}" 
+                                            data-court-price="{{ $court->reservation_price }}"
                                         >
                                             <span class="court-dot" aria-hidden="true"></span>
                                             {{ $court->name }}
                                         </a>
-                                    </div>
-                                @empty
-                                    <div class="accordion-body">
+                                    @empty
                                         <p class="text-muted mb-0">No hay pistas disponibles en esta instalación</p>
-                                    </div>
-                                @endforelse
+                                    @endforelse
+                                </div>
                             </div>
                         </div>
                     @empty
-                        <p class="text-muted">No hay instalaciones disponibles</p>
+                        <p class="text-muted text-center my-3">No hay instalaciones disponibles</p>
                     @endforelse
-                </div>
 
                 {{-- Bloque del calendario, oculto hasta que se elija una pista --}}
                 <div id="calendar-section" class="mt-4 d-none">
                     <div class="seccionSubtitulo mb-3">
                         <i class="ti ti-calendar" aria-hidden="true"></i>
                         <div>
-                            <h2>Horarios de la pista <span id="selected-court-name"></span></h2>
+                            <h2>Horarios de la pista <span id="selected-court-name" class="fw-bold text-primary"></span></h2>
                             <small class="text-muted">Haz clic en un hueco libre para reservarlo</small>
                         </div>
+                    </div>
+                    {{-- Leyenda --}}
+                    <div class="calendar-legend d-flex align-items-center mt-3 mb-3" role="group" aria-label="Leyenda del calendario">
+                        <span class="legend-title">Leyenda:</span>
+                        <span class="legend-item"><span class="legend-dot legend-disponible"></span>Libre</span>
+                        <span class="legend-item"><span class="legend-dot legend-ocupada"></span>Ocupada</span>
                     </div>
 
                     {{-- El contenido será accesible desde un JavaScript --}}
@@ -117,7 +122,6 @@
                 </div>
             </div>
         </div>
-        
     </main>
 @endsection
 

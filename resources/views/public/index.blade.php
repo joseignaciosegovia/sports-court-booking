@@ -3,6 +3,7 @@
 @push('styles')
     @vite([
         'resources/css/public.css',
+        'resources/css/subtitle.css',
         'resources/css/form.css',
         'resources/css/responsive.css',
         'resources/css/calendar.css'
@@ -118,15 +119,16 @@
         </div>
     </div>
     {{-- Sección con las pistas y calendarios --}}
-    <div class="card shadow-sm border-0 text-center">
+    <div class="card shadow-sm border-0">
         <div class="p-3 py-4">
-            <div id="consultarPistas" class="row column-gap-3">
-                <h2 class="mb-4">Consultar pistas y sus horarios</h2>
-                {{-- Div en el que irá el título de la pista --}}
-            <div class="col-12 accordion accordion-flush" id="elegirPista">
-                @php
-                    $counter = 0;
-                @endphp
+            <div class="seccionSubtitulo">
+                <i class="ti ti-soccer-field"></i>
+                <div>
+                    <h2>Consultar pistas y sus horarios</h2>
+                    <small class="text-muted">Elige una pista para ver sus horarios disponibles y ocupados</small>
+                </div>
+            </div>
+            <div class="col-12 accordion accordion-flush mt-4" id="elegirPista">
                 @forelse($courtsByFacility as $courtsFacility)
                     @php
                         $facility = $courtsFacility->first()->location;
@@ -147,24 +149,23 @@
                         <div id="flush-collapse{{ $loop->index }}" class="accordion-collapse collapse {{ $isFirst ? 'show' : '' }}"  data-bs-parent="#elegirPista">
 
                         {{-- Recorremos las pistas de la instalación --}}
-                        @forelse($courtsFacility as $court)
-                            <div class="accordion-body py-1">
-                                <a href="#" class="nav-link court-link ms-3 my-1 d-flex align-items-center gap-2"
+                        <div class="accordion-body court-list">
+                            @forelse($courtsFacility as $court)
+                            
+                                <a href="#" class="nav-link court-link"
                                     data-court-id="{{ $court->id }}"
                                     data-court-name="{{ $court->name }}"
                                 >
                                     <span class="court-dot" aria-hidden="true"></span>
                                     {{ $court->name }}
                                 </a>
-                            </div>
-                        @empty
-                            <p>No hay pistas disponibles en esta instalación</p>
-                        @endforelse
+                            
+                            @empty
+                                <p class="text-muted mb-0">No hay pistas disponibles en esta instalación</p>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
-                    @php
-                        $counter++;
-                    @endphp
                 @empty
                     <p>No hay instalaciones disponibles</p>
                 @endforelse
@@ -174,16 +175,23 @@
     </div>
 {{-- Bloque del calendario, oculto hasta que se elija una pista --}}
 <div class="card shadow-sm border-0">
-    <div class="p-3 py-4">
+    <div class="p-3">
         <div id="calendar-section" class="mt-4 d-none"
             data-opening-time="{{ $openingTime }}"
             data-closing-time="{{ $closingTime }}"
-            data-schedule-url-template="{{ route('public.courts.schedule', ['court' => 'COURT_ID']) }}">
-            <h2 class="d-flex justify-content-center mb-3">
-                Horarios de la pista <span id="selected-court-name" class="ms-2 fw-bold"></span>
-            </h2>
+            data-schedule-url-template="{{ route('public.courts.schedule', ['court' => 'COURT_ID']) }}"
+        >
+            {{-- Subtítulo indicando la pista elegida --}}
+            <div class="seccionSubtitulo">
+                <i class="ti ti-soccer-field"></i>
+                <div>
+                    <h2>Horarios de la pista<span id="selected-court-name" class="ms-2 fw-bold text-primary"></span></h2>
+                    <small class="text-muted">Puedes ver los horarios disponibles y ocupados de la pista elegida</small>
+                </div>
+            </div>
             {{-- Leyenda --}}
-            <div class="calendar-legend d-flex justify-content-center gap-4 mb-3">
+            <div class="calendar-legend d-flex align-items-center mt-3 mb-3" role="group" aria-label="Leyenda del calendario">
+                <span class="legend-title">Leyenda:</span>
                 <span class="legend-item"><span class="legend-dot legend-disponible"></span>Libre</span>
                 <span class="legend-item"><span class="legend-dot legend-ocupada"></span>Ocupada</span>
             </div>
