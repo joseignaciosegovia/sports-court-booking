@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('menu')
-    {{-- Sección para que aparezca el botón del menú --}}
-    <div class="overlay" id="overlay" onclick="desplegarMenu()"></div>
+    {{-- Sección que hay que crear para que aparezca el botón del menú --}}
+    <div class="d-none"></div>
 @endsection
 
 @push('styles')

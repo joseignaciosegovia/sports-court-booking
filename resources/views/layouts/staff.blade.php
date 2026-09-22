@@ -2,7 +2,7 @@
 
 @section('menu')
     {{-- Sección que hay que crear para que aparezca el botón del menú --}}
-    <div class="overlay" id="overlay" onclick="desplegarMenu()"></div>
+    
 @endsection
 
 @section('title')

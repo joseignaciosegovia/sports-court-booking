@@ -57,13 +57,13 @@
                             </div>
                         @endif
                     </div>
-                    
-                    
                 </div>
             </div>
         </header>
         {{-- Contenido de la página --}}
         @yield('menu')
+        {{-- Sección para que aparezca el botón del menú --}}
+        <div class="overlay" id="overlay"></div>
         {{-- El segundo parámetro es en formato Volt para livewire/pages/auth --}}
         <div id="page-content">
             @yield('content', $slot ?? '')

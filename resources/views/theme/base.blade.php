@@ -43,7 +43,7 @@
                     {{-- Si estamos en una página que tiene la barra de navegación, mostramos el botón hamburguesa (solo en pantallas móviles) --}}
                     <?php if($_SERVER['PHP_SELF'] != "/" && $_SERVER['PHP_SELF'] != "/verificar.php" && $_SERVER['PHP_SELF'] != "/public/accesoCliente.php" && $_SERVER['PHP_SELF'] != "/servidor/accesoAdministrador.php") { ?>
                     <div class="col-auto">
-                        <button id="btnMenu" onclick="desplegarMenu()">
+                        <button id="btnMenu">
                             <i class="ti ti-menu-2"></i>
                         </button>
                     </div>
