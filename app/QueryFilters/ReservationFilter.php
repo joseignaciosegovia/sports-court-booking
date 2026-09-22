@@ -6,12 +6,26 @@ class ReservationFilter extends QueryFilter
 {
     protected function filterableFields(): array
     {
-        return ['court_id', 'status', 'date', 'date_range', 'canceled_by'];
+        return [
+            'court_id', 
+            'location', 
+            'status', 
+            'date', 
+            'date_range', 
+            'canceled_by'
+        ];
     }
 
     protected function court_id($value): void
     {
         $this->builder->where('reservations.court_id', $value);
+    }
+
+    protected function location($value): void
+    {
+        $this->builder->whereHas('court', function ($query) use ($value) {
+            $query->where('courts.location', $value);
+        });
     }
 
     protected function status($value): void

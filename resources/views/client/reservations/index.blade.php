@@ -9,10 +9,7 @@
 @section('titleHeader', 'Reservas · Moral de Calatrava')
 
 @push('styles')
-    @vite([
-        'resources/css/table.css',
-        'resources/js/countdown-timer.js'
-    ])
+    @vite('resources/css/table.css')
 @endpush
 
 @section('client-content')
@@ -46,6 +43,17 @@
                             @foreach($courts as $court)
                                 <option value="{{ $court->id }}" @selected($filters['court_id'] == $court->id)>
                                     {{ $court->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {{-- Localización --}}
+                    <div class="col-md-2">
+                        <select name="location" class="form-select">
+                            <option value="">Todas las localizaciones</option>
+                            @foreach($locations as $location)
+                                <option value="{{ $location }}" @selected(($filters['location'] ?? '') === $location)>
+                                    {{ $location }}
                                 </option>
                             @endforeach
                         </select>
@@ -94,6 +102,14 @@
                                     :remove-url="request()->fullUrlWithoutQuery('court_id')"
                                 />
                             @endif
+                        @endif
+
+                        {{-- Chip de localización --}}
+                        @if($filters['location'])
+                            <x-filters.filter-chip
+                                :label="'Localización: ' . ($filters['location'] ?? '')"
+                                :remove-url="request()->fullUrlWithoutQuery('location')"
+                            />
                         @endif
                     
                         {{-- Chip de estado de pago --}}
@@ -152,6 +168,13 @@
                                         {!! \App\Helpers\SortHelper::icon('court', $sortColumns) !!}
                                     </a>
                                 </th>
+                                {{-- Localización --}}
+                                <th>
+                                    <a href="{{ \App\Helpers\SortHelper::url('location', $sortColumns) }}" class="sort-link" title="Ordenar por localización">
+                                        <span>Localización</span>
+                                        {!! \App\Helpers\SortHelper::icon('location', $sortColumns) !!}
+                                    </a>
+                                </th>
                                 {{-- Fecha --}}
                                 <th>
                                     <a href="{{ \App\Helpers\SortHelper::url('start_time', $sortColumns) }}" class="sort-link" title="Ordenar por fecha y hora">
@@ -184,6 +207,13 @@
                                 <th>{{ $reservations->firstItem() + $index }}</th>
                                 {{-- Pista --}}
                                 <td>{{ $reservation->court->name }}</td>
+                                {{-- Localización --}}
+                                <td>
+                                    <span class="type-badge {{ $reservation->court->location === 'Polideportivo' ? 'blue' : 'green' }}">
+                                        <i class="ti {{ $reservation->court->location === 'Polideportivo' ? 'ti-soccer-field' : 'ti-building-stadium' }}" aria-hidden="true"></i>
+                                        {{ $reservation->court->location }}
+                                    </span>
+                                </td>
                                 {{-- Fecha --}}
                                 <td>{{ $reservation->start_time->format('Y-m-d · H:i') }} - {{ $reservation->end_time->format('H:i') }}</td>
                                 {{-- Precio --}}
@@ -242,3 +272,7 @@
         </div>
     </main>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/countdown-timer.js')
+@endpush

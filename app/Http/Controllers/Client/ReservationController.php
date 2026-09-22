@@ -27,10 +27,13 @@ class ReservationController extends Controller
 
         $sortColumns = [
             'court' => 'courts.name',
+            'location' => 'courts.location',
             'start_time' => 'reservations.start_time',
             'price' => 'courts.reservation_price',
             'status' => 'reservations.payment_status',
         ];
+
+        $locations = Court::all()->groupBy('location')->keys();
 
         $reservations = Reservation::with('court')
             ->where('reservations.user_id', auth()->id())
@@ -41,8 +44,10 @@ class ReservationController extends Controller
 
         return view('client.reservations.index', [
             'courts' => $courts,
+            'locations' => $locations,
             'filters' => [
                 'court_id' => $request->input('court_id', ''),
+                'location' => $request->input('location', ''),
                 'status' => $request->input('status', ''),
                 'date' => $request->input('date', ''),
                 'date_range' => $request->input('date_range', ''),
