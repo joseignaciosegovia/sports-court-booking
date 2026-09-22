@@ -69,8 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         slotLabelFormat: {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: true,
-            meridiem: 'short',
+            hour12: false,
         },
 
         headerToolbar: {
