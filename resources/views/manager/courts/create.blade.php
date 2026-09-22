@@ -4,6 +4,10 @@
 
 @section('titleHeader', 'Gestión de pistas · Moral de Calatrava')
 
+@push('styles')
+    @vite('resources/css/form.css')
+@endpush
+
 @section('manager-content')
 <main class="main">
     {{-- BIENVENIDA --}}

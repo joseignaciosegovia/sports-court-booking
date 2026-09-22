@@ -162,3 +162,13 @@
     color: #dc2626;
     font-weight: 600;
 }
+
+/* Botones de solo icono en las tablas */
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

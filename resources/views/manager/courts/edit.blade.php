@@ -4,6 +4,10 @@
 
 @section('titleHeader', 'Gestión de pistas · Moral de Calatrava')
 
+@push('styles')
+    @vite('resources/css/form.css')
+@endpush
+
 @section('manager-content')
 <main class="main">
     {{-- BIENVENIDA --}}
@@ -29,7 +33,7 @@
             <form method="POST" action="{{ route('manager.courts.update', $court) }}" class="needs-validation" name="editarPista" enctype="multipart/form-data" id="form-update-court" novalidate>
                 @csrf
                 @method('PUT')
-                <div class="p-3 py-5">
+                <div class="p-3 py-4">
                     <div class="row mt-3">
                         <div class="col-12 col-sm-6">
                             <label for="name" class="labels">Nombre</label>

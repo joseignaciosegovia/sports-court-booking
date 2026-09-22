@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Court;
 use App\Http\Requests\Manager\StoreCourtRequest;
 use App\Http\Requests\Manager\UpdateCourtRequest;
@@ -11,12 +12,14 @@ use App\QueryFilters\CourtFilter;
 
 class CourtController extends Controller
 {
-    public function index(CourtFilter $filters)
+    public function index(Request $request, CourtFilter $filters)
     {
         $sortColumns = [
             'name' => 'courts.name',
             'location' => 'courts.location',
         ];
+
+        $locations = Court::all()->groupBy('location')->keys();
 
         $courts = Court::query()
             ->filter($filters)
@@ -25,7 +28,11 @@ class CourtController extends Controller
             ->withQueryString();
 
         return view('manager.courts.index', [
+            'locations' => $locations,
             'courts' => $courts,
+            'filters' => [
+                'location' => $request->input('location', ''),
+            ],
             'sorts' => SortHelper::getSorts($sortColumns),
             'sortColumns' => $sortColumns,
         ]);
