@@ -186,10 +186,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                    <a href="{{ route('manager.reservations.index') }}" class="btn btn-outline-secondary">Volver atrás</a>
-                    {{ $cancellations->links() }}
-                </div>
+                {{ $cancellations->links() }}
             </div>
             @endif
         </div>
