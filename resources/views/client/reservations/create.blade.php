@@ -70,6 +70,7 @@
                     @empty
                         <p class="text-muted text-center my-3">No hay instalaciones disponibles</p>
                     @endforelse
+                </div>
 
                 {{-- Bloque del calendario, oculto hasta que se elija una pista --}}
                 <div id="calendar-section" class="mt-4 d-none">
@@ -121,7 +122,6 @@
                     @enderror
                 </div>
             </div>
-        </div>
     </main>
 @endsection
 
