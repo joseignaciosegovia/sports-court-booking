@@ -51,7 +51,7 @@
                     <a class="my-2 text-center w-auto" href="{{ route('login') }}"><u>¿Ya tienes cuenta? Inicia sesión aquí</u></a>
                 </div>
                 <div class="card-body" id="crearCuenta">
-                    <form method="POST" class="row needs-validation px-4" action="{{ route('register') }}" name="crearUsuario" novalidate>
+                    <form method="POST" class="row needs-validation px-4" action="{{ route('register') }}" name="crearUsuario" enctype="multipart/form-data" novalidate>
                         @csrf
                         <div class="row mt-3">
                             <div class="col-12 col-sm-6">
@@ -143,6 +143,7 @@
                                 aria-expanded="{{ $isFirst ? 'true' : 'false' }}"
                                 aria-controls="flush-collapse{{ $loop->index }}"
                             >
+                                <i class="ti {{ $facility === 'Polideportivo' ? 'ti-soccer-field' : 'ti-building-stadium' }} me-2" aria-hidden="true"></i>
                                 {{ $facility }}
                             </button>
                         </h2>

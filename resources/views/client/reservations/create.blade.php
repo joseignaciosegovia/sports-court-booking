@@ -45,6 +45,7 @@
                                     aria-expanded="{{ $isFirst ? 'true' : 'false' }}"
                                     aria-controls="flush-collapse{{ $loop->index }}"
                                 >
+                                    <i class="ti {{ $facility === 'Polideportivo' ? 'ti-soccer-field' : 'ti-building-stadium' }} me-2" aria-hidden="true"></i>
                                     {{ $facility }}
                                 </button>
                             </h2>
