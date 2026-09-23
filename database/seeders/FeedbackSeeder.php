@@ -13,20 +13,30 @@ class FeedbackSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('feedback')->insert([
-            'content' => 'Podríais añadir información de las pistas',
-            'type' => 'suggestion',
-            'user_id' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        DB::table('feedback')->updateOrInsert(
+            [
+                // Criterio para identificar si esta fila "ya existe"
+                'content' => 'Podríais añadir información de las pistas',
+                'user_id' => 1,
+            ],
+            [
+                // Campos que se insertan/actualizan si coincide (o no) el criterio anterior
+                'type' => 'suggestion',
+                'updated_at' => now(),
+                'created_at' => now(),
+            ]
+        );
 
-        DB::table('feedback')->insert([
-            'content' => 'La página va lenta',
-            'type' => 'incident',
-            'user_id' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        DB::table('feedback')->updateOrInsert(
+            [
+                'content' => 'La página va lenta',
+                'user_id' => 1,
+            ],
+            [
+                'type' => 'incident',
+                'updated_at' => now(),
+                'created_at' => now(),
+            ]
+        );
     }
 }

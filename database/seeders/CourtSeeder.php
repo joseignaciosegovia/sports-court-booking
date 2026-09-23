@@ -13,60 +13,30 @@ class CourtSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('courts')->insert([
-            'name' => 'Campo fútbol 7',
-            'location' => 'Ciudad Deportiva',
-            'reservation_price' => 8.25,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $courts = [
+            ['name' => 'Campo fútbol 7', 'location' => 'Ciudad Deportiva', 'reservation_price' => 8.25],
+            ['name' => 'Campo fútbol 11', 'location' => 'Ciudad Deportiva', 'reservation_price' => 9],
+            ['name' => 'Pádel', 'location' => 'Ciudad Deportiva', 'reservation_price' => 7.30],
+            ['name' => 'Atletismo', 'location' => 'Ciudad Deportiva', 'reservation_price' => 8],
+            ['name' => 'Multiusos', 'location' => 'Ciudad Deportiva', 'reservation_price' => 5],
+            ['name' => 'Pista interna', 'location' => 'Polideportivo', 'reservation_price' => 4],
+            ['name' => 'Pista externa', 'location' => 'Polideportivo', 'reservation_price' => 4],
+        ];
 
-        DB::table('courts')->insert([
-            'name' => 'Campo fútbol 11',
-            'location' => 'Ciudad Deportiva',
-            'reservation_price' => 9,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('courts')->insert([
-            'name' => 'Pádel',
-            'location' => 'Ciudad Deportiva',
-            'reservation_price' => 7.30,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('courts')->insert([
-            'name' => 'Atletismo',
-            'location' => 'Ciudad Deportiva',
-            'reservation_price' => 8,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('courts')->insert([
-            'name' => 'Multiusos',
-            'location' => 'Ciudad Deportiva',
-            'reservation_price' => 5,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('courts')->insert([
-            'name' => 'Pista interna',
-            'location' => 'Polideportivo',
-            'reservation_price' => 4,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('courts')->insert([
-            'name' => 'Pista externa',
-            'location' => 'Polideportivo',
-            'reservation_price' => 4,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        foreach ($courts as $court) {
+            DB::table('courts')->updateOrInsert(
+                [
+                    // Criterio para identificar si esta pista ya existe
+                    'name' => $court['name'],
+                    'location' => $court['location'],
+                ],
+                [
+                    // Se inserta/actualiza el precio y la fecha de modificación
+                    'reservation_price' => $court['reservation_price'],
+                    'updated_at' => now(),
+                    'created_at' => now(),
+                ]
+            );
+        }
     }
 }
