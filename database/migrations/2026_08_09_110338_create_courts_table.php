@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('location', 100);
             $table->decimal('reservation_price', 10, 2);
+            // No puede haber una pista con el mismo nombre en la misma localización
+            $table->unique(['name', 'location']);
             $table->timestamps();
             $table->softDeletes();
         });

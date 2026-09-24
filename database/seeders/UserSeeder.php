@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,49 +14,9 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $users = [
-            [
-                'email' => 'marLop@gmail.com',
-                'password' => Hash::make('marL1234'),
-                'name' => 'María López',
-                'dni' => '87182344I',
-                'phone' => '655871025',
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'email' => 'ferSan@gmail.com',
-                'password' => Hash::make('ferS1234'),
-                'name' => 'Fernando Sanz',
-                'dni' => '11298419O',
-                'phone' => '664788795',
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'email' => 'antGar@gmail.com',
-                'password' => Hash::make('antG1234'),
-                'name' => 'Antonio García',
-                'dni' => '74439120U',
-                'phone' => '697874169',
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'email' => 'ferLui@gmail.com',
-                'password' => Hash::make('ferL1234'),
-                'name' => 'Fernanda Luisa',
-                'dni' => '11298437H',
-                'phone' => '604975301',
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
+           [
                 'email' => 'adminMer@gmail.com',
-                'password' => Hash::make('admMer12'),
+                'password' => env('SEED_ADMIN_PASSWORD'),
                 'name' => 'Mercedes Puertas',
                 'dni' => '77319284T',
                 'phone' => '661281938',
@@ -68,7 +27,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'email' => 'adminAnton@gmail.com',
-                'password' => Hash::make('admAn123'),
+                'password' => env('SEED_MANAGER_PASSWORD'),
                 'name' => 'Antonio Castillo',
                 'dni' => '71822198U',
                 'phone' => '617291009',
@@ -80,14 +39,40 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            // Separamos el email (clave para buscar) del resto de campos a insertar/actualizar.
             $email = $user['email'];
-            unset($user['email']);
+            $password = $user['password'];
 
-            DB::table('users')->updateOrInsert(
-                ['email' => $email],
-                $user
-            );
+            if (empty($password)) {
+                throw new \RuntimeException(
+                    "No se ha configurado la contraseña para {$email}."
+                );
+            }
+
+            unset($user['email'], $user['password']);
+
+            $existingUser = DB::table('users')
+                ->where('email', $email)
+                ->first();
+
+            if ($existingUser) {
+                DB::table('users')
+                    ->where('email', $email)
+                    ->update([
+                        ...$user,
+                        'updated_at' => now(),
+                    ]);
+
+                continue;
+            }
+
+            DB::table('users')->insert([
+                ...$user,
+                'email' => $email,
+                'password' => Hash::make($password),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
     }
 }

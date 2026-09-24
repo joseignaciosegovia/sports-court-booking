@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
@@ -34,7 +33,6 @@ class CourtSeeder extends Seeder
                     // Se inserta/actualiza el precio y la fecha de modificación
                     'reservation_price' => $court['reservation_price'],
                     'updated_at' => now(),
-                    'created_at' => now(),
                 ]
             );
         }
