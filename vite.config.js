@@ -17,7 +17,8 @@ export default defineConfig({
                 'resources/js/countdown-timer.js',
                 'resources/js/court-reservation-calendar.js',
                 'resources/js/calendar-manager.js',
-                'resources/js/public-courts-calendar.js'
+                'resources/js/public-courts-calendar.js',
+                'resources/js/validation.js'
             ],
             refresh: true,
         }),
