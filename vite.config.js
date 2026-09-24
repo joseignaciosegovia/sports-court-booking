@@ -8,6 +8,10 @@ export default defineConfig({
                 'resources/css/app.css', 
                 'resources/css/public.css',
                 'resources/css/calendar.css',
+                'resources/css/subtitle.css',
+                'resources/css/form.css',
+                'resources/css/responsive.css',
+
                 'resources/js/app.js',
                 'resources/js/layout.js',
                 'resources/js/countdown-timer.js',
