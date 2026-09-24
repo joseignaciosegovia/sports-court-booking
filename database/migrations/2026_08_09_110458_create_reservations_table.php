@@ -38,7 +38,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('reservations', function (Blueprint $table) {
-            $table->dropColumn(['canceled_at', 'canceled_by', 'cancellation_reason', 'refunded_at', 'stripe_refund_id']);
+            Schema::dropIfExists('reservations');
         });
     }
 };
