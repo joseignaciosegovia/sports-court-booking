@@ -121,7 +121,7 @@
     {{-- Sección con las pistas y calendarios --}}
     <div class="card shadow-sm border-0">
         <div class="p-3 py-4">
-            <div class="seccionSubtitulo">
+            <div class="seccionSubtitulo" id="consultarPistas">
                 <i class="ti ti-soccer-field"></i>
                 <div>
                     <h2>Consultar pistas y sus horarios</h2>
