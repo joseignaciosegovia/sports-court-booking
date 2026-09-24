@@ -6,11 +6,11 @@ echo "Configurando Laravel..."
 chown -R www-data:www-data storage bootstrap/cache || true
 
 if [ "${SKIP_MIGRATIONS:-false}" != "true" ]; then
-    echo "Limpiando caché..."
-    php artisan optimize:clear
-
     echo "Ejecutando migraciones..."
     php artisan migrate --force
+
+    echo "Limpiando caché..."
+    php artisan optimize:clear
 
     echo "Ejecutando seeders..."
     php artisan db:seed --force
