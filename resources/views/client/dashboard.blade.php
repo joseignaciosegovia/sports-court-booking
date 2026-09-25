@@ -4,9 +4,9 @@
 
 @section('titleHeader', 'Página principal · Moral de Calatrava')
 
-@if (app()->environment('local'))
+@push('styles')
     @vite('resources/css/dashboard.css')
-@endif
+@endpush
 
 @section('client-content')
     <main class="main">
