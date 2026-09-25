@@ -24,6 +24,7 @@
             <div class="nav-usuario">
             {{-- Mostramos el nombre y la foto del usuario autenticado --}}
                 <div class="avatar">
+                    <p>photo_url: {{ $authUser->photo_url }}</p>
                     <img
                         class="rounded-circle"
                         src="{{ $authUser->photo_url }}"
