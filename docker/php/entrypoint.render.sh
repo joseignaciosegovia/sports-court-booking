@@ -30,6 +30,16 @@ find public/build/assets -name 'dashboard-*.css' -print || true
 
 echo "===== FIN COMPROBACIÓN VITE ====="
  
+echo "===== VITE EN RUNTIME ====="
+
+if [ -f public/build/manifest.json ]; then
+    echo "Manifest runtime encontrado"
+    grep -A 5 -B 1 '"resources/css/dashboard.css"' public/build/manifest.json || true
+else
+    echo "ERROR: NO EXISTE public/build/manifest.json"
+fi
+
+echo "===== FIN VITE RUNTIME ====="
 
 php artisan config:cache
 php artisan route:cache
