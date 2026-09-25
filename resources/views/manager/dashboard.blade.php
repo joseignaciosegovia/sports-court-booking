@@ -4,9 +4,18 @@
 
 @section('titleHeader', 'Panel de administración · Moral de Calatrava')
 
-@push('styles')
-    @vite('resources/css/dashboard.css')
-@endpush
+@php
+    $manifestPath = public_path('build/manifest.json');
+    $manifest = json_decode(file_get_contents($manifestPath), true);
+@endphp
+
+@if (isset($manifest['resources/css/dashboard.css']))
+    <link rel="stylesheet" href="{{ asset('build/' . $manifest['resources/css/dashboard.css']['file']) }}">
+@else
+    <p style="color:red">
+        DASHBOARD CSS NO ESTÁ EN EL MANIFEST
+    </p>
+@endif
 
 @section('manager-content')
 <main class="main">
