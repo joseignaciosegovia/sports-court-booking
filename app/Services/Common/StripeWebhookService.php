@@ -20,16 +20,15 @@ class StripeWebhookService
 
     private function handleCheckoutCompleted($session): void
     {
-        \Log::info('Stripe checkout.session.completed', [
-        'session_id' => $session->id,
-        'payment_intent' => $session->payment_intent,
-    ]);
+        error_log('========== STRIPE CHECKOUT COMPLETED ==========');
+    error_log('STRIPE SESSION ID: ' . $session->id);
         $reservation = Reservation::where('stripe_session_id', $session->id)->first();
 
-        \Log::info('Reserva encontrada', [
-        'reservation_id' => $reservation?->id,
-        'stripe_session_id' => $reservation?->stripe_session_id,
-    ]);
+        if (!$reservation) {
+        error_log('RESERVA NO ENCONTRADA');
+        return;
+    }
+    error_log('RESERVA ENCONTRADA: ' . $reservation->id);
 
         if ($reservation) {
             $reservation->update([
@@ -37,5 +36,6 @@ class StripeWebhookService
                 'payment_id' => $session->payment_intent,
             ]);
         }
+        error_log('RESERVA ACTUALIZADA A PAID');
     }
 }
