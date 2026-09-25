@@ -19,25 +19,16 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         /*
-         * Render actúa como proxy inverso:
+         * Render funciona como proxy inverso y termina HTTPS
+         * antes de enviar la petición al contenedor.
          *
-         * Navegador
-         *     HTTPS
-         *       ↓
-         * Render
-         *       ↓ HTTP
-         * Nginx/PHP
-         *
-         * Confiamos en las cabeceras X-Forwarded-* para que
-         * Laravel sepa que la petición original fue HTTPS.
+         * Permitimos que Laravel utilice las cabeceras X-Forwarded-*
+         * para detectar correctamente HTTPS.
          */
         $middleware->trustProxies(
             at: '*',
-            headers: Request::HEADER_X_FORWARDED_FOR
-                | Request::HEADER_X_FORWARDED_HOST
-                | Request::HEADER_X_FORWARDED_PORT
-                | Request::HEADER_X_FORWARDED_PROTO
         );
+
 
         $middleware->redirectGuestsTo(function (Request $request) {
             if (RoleMiddleware::isIntranetRequest($request)) {
