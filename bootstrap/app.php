@@ -18,16 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
         ]);
 
-        /*
-         * Render funciona como proxy inverso y termina HTTPS
-         * antes de enviar la petición al contenedor.
-         *
-         * Permitimos que Laravel utilice las cabeceras X-Forwarded-*
-         * para detectar correctamente HTTPS.
-         */
-        $middleware->trustProxies(
-            at: '*',
-        );
+        // Render termina HTTPS antes de enviar la petición al contenedor.
+        // Laravel debe confiar en ese proxy para detectar correctamente
+        // que la petición original utiliza HTTPS.
+        $middleware->trustProxies(at: '*');
 
 
         $middleware->redirectGuestsTo(function (Request $request) {
