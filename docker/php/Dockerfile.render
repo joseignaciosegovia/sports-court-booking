@@ -110,7 +110,12 @@ COPY . .
 # Assets de producción
 # ============================================================
 
-RUN npm run build
+RUN rm -rf public/build \
+    && npm run build \
+    && echo "===== DASHBOARD EN MANIFEST =====" \
+    && grep -n "resources/css/dashboard.css" public/build/manifest.json \
+    && echo "===== ARCHIVO DASHBOARD =====" \
+    && find public/build/assets -type f -name "*dashboard*"
 
 # ============================================================
 # Configuración Nginx
