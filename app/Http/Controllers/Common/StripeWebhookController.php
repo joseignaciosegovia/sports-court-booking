@@ -12,7 +12,6 @@ class StripeWebhookController extends Controller
 {
     public function handle(Request $request, StripeWebhookService $service)
     {
-        error_log('========== STRIPE WEBHOOK CONTROLLER ==========');
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
 
@@ -22,13 +21,11 @@ class StripeWebhookController extends Controller
                 $sigHeader,
                 config('services.stripe.webhook_secret')
             );
-            error_log('STRIPE EVENT TYPE: ' . $event->type);
         } catch (SignatureVerificationException $e) {
             return response('Firma inválida', 400);
         }
 
         $service->handleEvent($event);
-        error_log('STRIPE WEBHOOK SERVICE TERMINADO');
 
         return response('OK', 200);
     }
