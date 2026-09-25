@@ -16,6 +16,21 @@ if [ "${SKIP_MIGRATIONS:-false}" != "true" ]; then
     php artisan db:seed --force
 fi
 
+echo "===== COMPROBANDO VITE ====="
+
+if [ -f public/build/manifest.json ]; then
+    echo "Manifest encontrado"
+    grep -n "resources/css/dashboard.css" public/build/manifest.json || true
+else
+    echo "¡¡¡ NO EXISTE public/build/manifest.json !!!"
+fi
+
+echo "Archivos dashboard:"
+find public/build/assets -name 'dashboard-*.css' -print || true
+
+echo "===== FIN COMPROBACIÓN VITE ====="
+ 
+
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
