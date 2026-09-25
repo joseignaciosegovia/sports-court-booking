@@ -5,7 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use App\Enums\UserRole;
+use Illuminate\Http\Middleware\TrustProxies;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +17,27 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
         ]);
+
+        /*
+         * Render actúa como proxy inverso:
+         *
+         * Navegador
+         *     HTTPS
+         *       ↓
+         * Render
+         *       ↓ HTTP
+         * Nginx/PHP
+         *
+         * Confiamos en las cabeceras X-Forwarded-* para que
+         * Laravel sepa que la petición original fue HTTPS.
+         */
+        $middleware->trustProxies(
+            at: '*',
+            headers: Request::HEADER_X_FORWARDED_FOR
+                | Request::HEADER_X_FORWARDED_HOST
+                | Request::HEADER_X_FORWARDED_PORT
+                | Request::HEADER_X_FORWARDED_PROTO
+        );
 
         $middleware->redirectGuestsTo(function (Request $request) {
             if (RoleMiddleware::isIntranetRequest($request)) {
