@@ -186,6 +186,73 @@
 
 
     /* -----------------------------------------------------
+       CALENDARIO
+       ----------------------------------------------------- */
+
+    .fc-header-toolbar {
+        flex-wrap: wrap;
+        row-gap: 0.5rem;
+        justify-content: center !important;
+    }
+
+    .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        width: 100%;
+    }
+
+    .fc-toolbar-title {
+        font-size: 1rem;
+        text-align: center;
+        width: 100%;
+        order: -1; /* opcional: pone la fecha arriba del todo */
+    }
+
+    .fc-button {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    /* -----------------------------------------------------
+    TOOLBAR DE FULLCALENDAR
+    ----------------------------------------------------- */
+
+    #calendar .fc-header-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 0.5rem;
+        margin-bottom: 1rem !important;
+    }
+
+    #calendar .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+
+    /* El título pasa a ocupar toda la fila, arriba del todo */
+    #calendar .fc-toolbar-chunk:nth-child(2) {
+        order: -1;
+        width: 100%;
+        text-align: center;
+    }
+
+    #calendar .fc-toolbar-title {
+        font-size: 1rem;
+        margin: 0 0 0.25rem 0;
+    }
+
+    #calendar .fc-button {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+
+    /* -----------------------------------------------------
        FOOTER
        ----------------------------------------------------- */
 
@@ -299,6 +366,15 @@
 
     .welcome-text p {
         font-size: 12px;
+    }
+
+    .fc-toolbar-title {
+        font-size: 0.9rem;
+    }
+
+    .fc-button {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
     }
 
 
