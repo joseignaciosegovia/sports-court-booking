@@ -187,7 +187,7 @@
                                         {!! \App\Helpers\SortHelper::icon('payment_status', $sortColumns) !!}
                                     </a>
                                 </th>
-                                <th>Editar</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -211,16 +211,97 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td>
+                                    {{-- Acciones --}}
+                                    <td class="text-center">
                                         @if($reservation->payment_status->isCanceled())
                                             <span class="text-muted">Reserva cancelada</span>
                                         @elseif($reservation->start_time->isFuture())
-                                            <a href="{{ route('manager.reservations.edit', $reservation) }}" class="btn btn-sm btn-warning">Editar</a>
+                                            {{-- Editar reserva --}}
+                                            <a
+                                                href="{{ route('manager.reservations.edit', $reservation) }}"
+                                                class="btn btn-icon btn-outline-secondary btn-sm"
+                                                data-bs-toggle="tooltip"
+                                                title="Editar reserva"
+                                                aria-label="Editar {{ $reservation->name }}"
+                                            >
+                                                <i class="ti ti-edit" aria-hidden="true"></i>
+                                            </a>
+                                            {{-- Eliminar reserva --}}
+                                            <button
+                                                type="button"
+                                                class="btn btn-icon btn-outline-danger btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#cancelReservationModal-{{ $reservation->id }}"
+                                                title="Cancelar reserva"
+                                                aria-label="Cancelar {{ $reservation->name }}"
+                                            >
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                            </button>
                                         @else
                                             <span class="text-muted">Fecha pasada</span>
                                         @endif
                                     </td>
                                 </tr>
+                                {{-- Modal para la cancelación de una reserva --}}
+                                <div class="modal fade" id="cancelReservationModal-{{ $reservation->id }}" tabindex="-1"
+                                    aria-labelledby="cancelReservationLabel-{{ $reservation->id }}" aria-hidden="true">
+
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="cancelReservationLabel-{{ $reservation->id }}">
+                                                    Cancelar reserva
+                                                </h5>
+
+                                                <button type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Cerrar"></button>
+                                            </div>
+
+                                            <form method="POST" action="{{ route('manager.reservations.cancel', $reservation) }}">
+                                                @csrf
+                                                @method('PATCH')
+
+                                                <div class="modal-body">
+                                                    <p>¿Seguro que quieres cancelar esta reserva?</p>
+
+                                                    <p class="text-muted">
+                                                        {{ $reservation->court->name }} ·
+                                                        {{ $reservation->start_time->format('Y-m-d · H:i') }}
+                                                    </p>
+
+                                                    <div>
+                                                        <label for="reason-{{ $reservation->id }}" class="form-label">
+                                                            Motivo de la cancelación
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            name="reason"
+                                                            id="reason-{{ $reservation->id }}"
+                                                            class="form-control"
+                                                            placeholder="Ej.: Avería en la instalación"
+                                                            required
+                                                            maxlength="255"
+                                                        >
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                        Volver
+                                                    </button>
+
+                                                    <button type="submit" class="btn btn-danger">
+                                                        Cancelar reserva
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
                         </tbody>
                     </table>

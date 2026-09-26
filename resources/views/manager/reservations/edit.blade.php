@@ -108,7 +108,7 @@
                     @method('PATCH')
                     <label for="reason" class="form-label">Motivo de la cancelación</label>
                     <input type="text" name="reason" id="reason" class="form-control mb-2" placeholder="Ej.: Avería en la instalación" required>
-                    <button type="submit" class="btn btn-warning">Cancelar reserva {{ $reservation->user_id  === null ? '' : ' y reembolsar' }}</button>
+                    <button type="submit" class="btn btn-danger">Cancelar reserva {{ $reservation->user_id  === null ? '' : ' y reembolsar' }}</button>
                 </form>
 
                 <button type="submit" form="form-update-reservations" class="btn btn-success">Actualizar reserva</button>

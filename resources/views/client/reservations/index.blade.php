@@ -196,7 +196,7 @@
                                         {!! \App\Helpers\SortHelper::icon('status', $sortColumns) !!}
                                     </a>
                                 </th>
-                                <th>Editar reserva</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -233,24 +233,30 @@
                                     @endif
                                 </td>
                                 {{-- Acciones --}}
-                                <td>
+                                <td class="text-center">
                                     {{-- Si la fecha de la reserva no se ha pasado y la reserva se pagó o está pendiente de pagarse, permitimos que se pueda cancelar --}}
                                     @if(in_array($reservation->payment_status, [PaymentStatus::Paid, PaymentStatus::Pending,], true) && $reservation->start_time->isFuture())
-                                        <div class="d-flex gap-2">
-                                            {{-- Si la reserva está en estado pendiente y no ha expirado, se permite continuar el pago --}}
-                                            {{-- Continuar pago --}}
-                                            @if($reservation->payment_status->isPayable() && $reservation->expires_at && $reservation->expires_at->isFuture())
-                                                <a href="{{ route('client.reservations.payment.resume', $reservation) }}" class="btn btn-success">
-                                                    Continuar pago
-                                                </a>
-                                            @endif
-                                            {{-- Cancelar reserva --}}
-                                            <form method="POST" action="{{ route('client.reservations.cancel', $reservation) }}" onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva? Si faltan menos de 12 horas, no habrá devolución.');" style="display: inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-danger">Cancelar</button>
-                                            </form>
-                                        </div>
+                                        {{-- Si la reserva está en estado pendiente y no ha expirado, se permite continuar el pago --}}
+                                        {{-- Continuar pago --}}
+                                        @if($reservation->payment_status->isPayable() && $reservation->expires_at && $reservation->expires_at->isFuture())
+                                            <a href="{{ route('client.reservations.payment.resume', $reservation) }}" class="btn btn-success">
+                                                Continuar pago
+                                            </a>
+                                        @endif
+                                        {{-- Cancelar reserva --}}
+                                        <form method="POST" action="{{ route('client.reservations.cancel', $reservation) }}" onsubmit="return confirm('¿Seguro que quieres eliminar esta reserva? Si faltan menos de 12 horas, no habrá devolución.');" class="display: inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button
+                                                type="submit"
+                                                class="btn btn-icon btn-outline-danger btn-sm"
+                                                data-bs-toggle="tooltip"
+                                                title="Cancelar reserva"
+                                                aria-label="Cancelar"
+                                            >
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
                                     @elseif(in_array($reservation->payment_status, [PaymentStatus::Canceled, PaymentStatus::Refunded,], true))
                                         @if($reservation->canceled_by)
                                             <span class="text-muted">

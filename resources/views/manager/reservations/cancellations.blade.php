@@ -176,6 +176,7 @@
                             </td>
                             {{-- Fecha de cancelación --}}
                             <td>{{ $cancellation->canceled_at?->format('Y-m-d · H:i') ?? '-' }}</td>
+                            {{-- Estado de cancelación --}}
                             <td>
                                 <span class="type-badge {{ $cancellation->payment_status->badgeColor() }}">
                                     <i class="{{ $cancellation->payment_status->badgeIcon() }}" aria-hidden="true"></i>

@@ -108,6 +108,7 @@
                                 {{-- Acciones --}}
                                 <td class="text-center">
                                     <div class="d-inline-flex gap-1">
+                                        {{-- Añadir reserva --}}
                                         <a
                                             href="{{ route('manager.reservations.create', ['court_id' => $court->id]) }}"
                                             class="btn btn-icon btn-outline-success btn-sm"
@@ -117,6 +118,7 @@
                                         >
                                             <i class="ti ti-plus" aria-hidden="true"></i>
                                         </a>
+                                        {{-- Editar pista --}}
                                         <a
                                             href="{{ route('manager.courts.edit', $court) }}"
                                             class="btn btn-icon btn-outline-secondary btn-sm"
@@ -126,6 +128,7 @@
                                         >
                                             <i class="ti ti-edit" aria-hidden="true"></i>
                                         </a>
+                                        {{-- Eliminar pista --}}
                                         <form method="POST" action="{{ route('manager.courts.destroy', $court) }}" onsubmit="return confirm('¿Seguro que quieres eliminar la pista {{ $court->name }}? Esta acción no se puede deshacer.');" class="d-inline">
                                             @csrf
                                             @method('DELETE')

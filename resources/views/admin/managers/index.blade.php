@@ -106,7 +106,7 @@
                                     {!! \App\Helpers\SortHelper::icon('role', $sortColumns) !!}
                                 </a>
                             </th>
-                            <th>Editar gestor</th>
+                            <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,7 +128,38 @@
                                     {{ $manager->role->label() }}
                                 </span>
                             </td>
-                            <td><a href="{{ route('admin.managers.edit', $manager) }}" class="btn btn-warning btn-sm">Editar</a></td>
+                            {{-- Acciones --}}
+                            <td class="text-center">
+                                <div class="d-inline-flex gap-1">
+                                    {{-- Editar gestor --}}
+                                    <a
+                                        href="{{ route('admin.managers.edit', $manager) }}"
+                                        class="btn btn-icon btn-outline-secondary btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        title="Editar gestor"
+                                        aria-label="Editar {{ $manager->name }}"
+                                    >
+                                        <i class="ti ti-edit" aria-hidden="true"></i>
+                                    </a>
+                                    {{-- Eliminar gestor --}}
+                                    {{-- Solo aparecerá el botón de borrado si el administrador no se está editando a sí mismo --}}
+                                    @if($manager->id !== auth()->id())
+                                        <form method="POST" action="{{ route('admin.managers.destroy', $manager) }}" onsubmit="return confirm('¿Seguro que quieres eliminar el gestor {{ $manager->name }}? Esta acción no se puede deshacer.');" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button
+                                                type="submit"
+                                                class="btn btn-icon btn-outline-danger btn-sm"
+                                                data-bs-toggle="tooltip"
+                                                title="Eliminar gestor"
+                                                aria-label="Eliminar {{ $manager->name }}"
+                                            >
+                                                <i class="ti ti-trash" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>    
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
