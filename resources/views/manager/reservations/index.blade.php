@@ -216,6 +216,7 @@
                                         @if($reservation->payment_status->isCanceled())
                                             <span class="text-muted">Reserva cancelada</span>
                                         @elseif($reservation->start_time->isFuture())
+                                            <div class="d-inline-flex gap-1">
                                             {{-- Editar reserva --}}
                                             <a
                                                 href="{{ route('manager.reservations.edit', $reservation) }}"
@@ -237,6 +238,7 @@
                                             >
                                                 <i class="ti ti-trash" aria-hidden="true"></i>
                                             </button>
+                                            </div>
                                         @else
                                             <span class="text-muted">Fecha pasada</span>
                                         @endif

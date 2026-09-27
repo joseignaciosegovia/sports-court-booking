@@ -138,5 +138,19 @@
         @stack('scripts')
         {{-- Scripts de Livewire --}}
         @livewireScripts
+        {{-- Script que modifica el formato del mensaje aclaratorio de los iconos en las tablas --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Tooltips
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+                    new bootstrap.Tooltip(el);
+                });
+
+                // Modales
+                document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function (el) {
+                    new bootstrap.Tooltip(el);
+                });
+            });
+        </script>
     </body>
 </html>
