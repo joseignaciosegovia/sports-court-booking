@@ -26,6 +26,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'dni' => fake()->unique()->numerify('########') . fake()->randomLetter(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
@@ -33,13 +34,26 @@ class UserFactory extends Factory
         ];
     }
 
+    public function client(): static
+    {
+        return $this->state(fn () => ['role' => 'client']);
+    }
+
+    public function manager(): static
+    {
+        return $this->state(fn () => ['role' => 'manager']);
+    }
+
+    public function admin(): static
+    {
+        return $this->state(fn () => ['role' => 'admin']);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->state(fn () => ['email_verified_at' => null]);
     }
 }

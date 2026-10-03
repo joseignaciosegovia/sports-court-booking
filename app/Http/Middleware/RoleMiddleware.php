@@ -14,7 +14,7 @@ class RoleMiddleware
      */
     public static function isIntranetRequest(Request $request): bool
     {
-        return $request->is('gestion/*') || $request->is('admin/*');
+        return $request->routeIs('manager.*', 'admin.*');
     }
 
     /**
