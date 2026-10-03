@@ -36,7 +36,7 @@ new #[Layout('layouts.app')] class extends Component
 }; ?>
 
 <div class="livewire-wrapper">
-    <div class="card card-login border-0" style="max-width: 480px; width: 100%;">
+    <div class="card card-login border-0" style="max-width: 550px; width: 100%;">
         <div class="card-body p-4">
             <h1 class="h3 mb-4 text-center">Verifique su email</h1>
 
