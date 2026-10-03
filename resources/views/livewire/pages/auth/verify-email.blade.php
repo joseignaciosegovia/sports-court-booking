@@ -41,22 +41,22 @@ new #[Layout('layouts.app')] class extends Component
             <h1 class="h3 mb-4 text-center">Verifique su email</h1>
 
             <div class="mb-4 text-muted small">
-                {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+                {{ __('¡Gracias por registrarte! Antes de empezar, debes verificar tu dirección de correo pinchando en el enlace que te acabamos de enviar al correo. Si no recibiste un correo, te enviaremos otro.') }}
             </div>
 
             @if (session('status') == 'verification-link-sent')
                 <div class="alert alert-success">
-                    {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                    {{ __('Se ha enviado un nuevo enlace de verificación a la dirección de correo electrónico que facilitaste al registrarte.') }}
                 </div>
             @endif
 
             <div class="d-flex align-items-center justify-content-between mt-4">
                 <button wire:click="sendVerification" type="button" class="btn btn-primary">
-                    {{ __('Resend Verification Email') }}
+                    {{ __('Reenviar el correo electrónico de verificación') }}
                 </button>
 
                 <button wire:click="logout" type="button" class="btn btn-link text-decoration-underline text-muted">
-                    {{ __('Log Out') }}
+                    {{ __('Cerrar sesuñib') }}
                 </button>
             </div>
         </div>
