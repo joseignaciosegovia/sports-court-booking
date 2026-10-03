@@ -56,7 +56,7 @@ new #[Layout('layouts.app')] class extends Component
                 </button>
 
                 <button wire:click="logout" type="button" class="btn btn-link text-decoration-underline text-muted">
-                    {{ __('Cerrar sesuñib') }}
+                    {{ __('Cerrar sesión') }}
                 </button>
             </div>
         </div>
