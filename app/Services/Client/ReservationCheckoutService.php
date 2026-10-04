@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Enums\PaymentStatus;
+use Stripe\Exception\ApiErrorException;
 
 class ReservationCheckoutService
 {
@@ -43,9 +44,14 @@ class ReservationCheckoutService
             throw new SlotUnavailableException();
         }
 
-        $session = $this->createStripeSession($court, $startTime, $reservation);
-
-        $reservation->update(['stripe_session_id' => $session->id]);
+        // Si Stripe falla, no dejamos la reserva bloqueando el hueco
+        try {
+            $session = $this->createStripeSession($court, $startTime, $reservation);
+            $reservation->update(['stripe_session_id' => $session->id]);
+        } catch (\Throwable $e) {
+            $reservation->delete();
+            throw $e;
+        }
 
         return $session->url;
     }
@@ -59,7 +65,8 @@ class ReservationCheckoutService
             'end_time' => $endTime,
             'information' => 'Reserva creada por un cliente',
             'payment_status' => PaymentStatus::Pending,
-            'expires_at' => now()->addMinutes(15),
+            // La reserva debe durar lo mismo que la sesión de Stripe (30 min, su mínimo)
+            'expires_at' => now()->addMinutes(30),
         ]);
     }
 
