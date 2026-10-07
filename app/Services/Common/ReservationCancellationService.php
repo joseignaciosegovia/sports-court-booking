@@ -38,6 +38,8 @@ class ReservationCancellationService
                     'canceled_by'    => CanceledBy::Client,
                 ]);
 
+                $this->expireCheckoutSession($reservation);
+
                 return 'canceled_no_payment';
             }
 
@@ -72,6 +74,7 @@ class ReservationCancellationService
     {
         $hadRealPayment = DB::transaction(function () use (&$reservation, $reason) {
             $reservation = Reservation::whereKey($reservation->id)->lockForUpdate()->firstOrFail();
+            $eraPendiente = $reservation->payment_status === PaymentStatus::Pending;
 
             if (! $reservation->payment_status->canBeCanceled()) {
                 throw new ReservationNotCancellableException();
@@ -96,6 +99,10 @@ class ReservationCancellationService
                     'canceled_by'         => CanceledBy::Manager,
                     'cancellation_reason' => $reason,
                 ]);
+            }
+
+            if ($eraPendiente) {
+                $this->expireCheckoutSession($reservation);
             }
 
             return (bool) $hadRealPayment;
@@ -149,5 +156,29 @@ class ReservationCancellationService
             ['payment_intent' => $reservation->payment_id],
             ['idempotency_key' => 'refund-reservation-' . $reservation->id]
         );
+    }
+
+    private function expireCheckoutSession(Reservation $reservation): void
+    {
+        if (! $reservation->stripe_session_id) {
+            return;
+        }
+
+        try {
+            $this->stripeExpireSession($reservation->stripe_session_id);
+        } catch (\Throwable $e) {
+            // No bloqueamos la cancelación: el webhook reembolsa cualquier pago tardío
+            Log::warning('No se pudo expirar la sesión de Stripe', [
+                'reservation_id' => $reservation->id,
+                'error'          => $e->getMessage(),
+            ]);
+        }
+    }
+
+    protected function stripeExpireSession(string $sessionId): void
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        \Stripe\Checkout\Session::retrieve($sessionId)->expire();
     }
 }
