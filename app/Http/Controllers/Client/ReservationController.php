@@ -125,6 +125,8 @@ class ReservationController extends Controller
 
     public function paymentSuccess(Reservation $reservation)
     {
+        $this->authorize('view', $reservation);
+
         return view('client.reservations.payment-success', [
             'reservation' => $reservation,
         ]);
@@ -132,14 +134,14 @@ class ReservationController extends Controller
 
     public function paymentCancel(Reservation $reservation)
     {
+        $this->authorize('view', $reservation);
+
         return view('client.reservations.payment-cancel', compact('reservation'));
     }
 
     public function resumePayment(Reservation $reservation, ReservationCheckoutService $service)
     {
-        if ($reservation->user_id !== Auth::id()) {
-            abort(403);
-        }
+        $this->authorize('view', $reservation);
 
         try {
             $checkoutUrl = $service->resumeCheckout($reservation);

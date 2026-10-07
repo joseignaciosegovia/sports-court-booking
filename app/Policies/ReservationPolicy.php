@@ -12,4 +12,14 @@ class ReservationPolicy
     {
         return $reservation->user_id === $user->id;
     }
+
+    public function view(User $user, Reservation $reservation): bool
+    {
+        return $user->id === $reservation->user_id;
+    }
+
+    public function resume(User $user, Reservation $reservation): bool
+    {
+        return $user->id === $reservation->user_id;
+    }
 }

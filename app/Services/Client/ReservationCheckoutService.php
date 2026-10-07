@@ -108,15 +108,14 @@ class ReservationCheckoutService
     public function resumeCheckout(Reservation $reservation): string
     {
         if ($reservation->payment_status !== PaymentStatus::Pending
-            || !$reservation->expires_at
-            || $reservation->expires_at->isPast()) {
+            || ! $reservation->expires_at
+            || $reservation->expires_at->isPast()
+            || ! $reservation->stripe_session_id) {
             throw new \App\Exceptions\ReservationNotResumableException();
         }
 
-        Stripe::setApiKey(config('services.stripe.secret'));
-
         try {
-            $session = Session::retrieve($reservation->stripe_session_id);
+            $session = $this->stripeRetrieveSession($reservation->stripe_session_id);
         } catch (ApiErrorException $e) {
             Log::error('Error recuperando sesión de Stripe: ' . $e->getMessage(), [
                 'reservation_id' => $reservation->id,
@@ -124,11 +123,18 @@ class ReservationCheckoutService
             throw new \App\Exceptions\ReservationNotResumableException();
         }
 
-        // Por si el webhook ya la marcó como pagada justo en este instante (carrera improbable)
+        // Por si el webhook ya la marcó como pagada o la sesión caducó
         if ($session->status !== 'open') {
             throw new \App\Exceptions\ReservationNotResumableException();
         }
 
         return $session->url;
+    }
+
+    protected function stripeRetrieveSession(string $sessionId): Session
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        return Session::retrieve($sessionId);
     }
 }
