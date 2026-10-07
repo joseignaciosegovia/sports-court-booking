@@ -7,6 +7,11 @@ use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Exceptions\SlotUnavailableException;
+use App\Services\Client\ReservationCheckoutService;
+use App\Services\Validation\ReservationRulesValidator;
+use Mockery;
+use Stripe\Checkout\Session;
 
 class ClientReservationStoreTest extends TestCase
 {
@@ -90,7 +95,11 @@ class ClientReservationStoreTest extends TestCase
             'end_time'   => $datos['end_time'],
         ]);
 
-        $this->actingAs($client)->post(route('client.reservations.store'), $datos);
+        $this->fingirStripe();
+
+        $this->actingAs($client)
+            ->post(route('client.reservations.store'), $datos)
+            ->assertRedirect('https://checkout.stripe.test/x');
 
         $this->assertDatabaseCount('reservations', 2);
     }
@@ -142,7 +151,11 @@ class ClientReservationStoreTest extends TestCase
             'end_time'   => $datos['end_time'],
         ]);
 
-        $this->actingAs($client)->post(route('client.reservations.store'), $datos);
+        $this->fingirStripe();
+
+        $this->actingAs($client)
+            ->post(route('client.reservations.store'), $datos)
+            ->assertRedirect('https://checkout.stripe.test/x');
 
         $this->assertDatabaseCount('reservations', 2);
     }
@@ -166,5 +179,79 @@ class ClientReservationStoreTest extends TestCase
         ]);
 
         $this->assertDatabaseCount('reservations', 1);
+    }
+
+    public function test_una_reserva_valida_redirige_a_stripe_checkout(): void
+    {
+        $client = User::factory()->client()->create();
+        $court  = Court::factory()->create();
+        $inicio = now()->addDays(3)->setTime(18, 0, 0);
+
+        $this->mock(ReservationCheckoutService::class, function ($mock) use ($court, $client, $inicio) {
+            $mock->shouldReceive('createReservationWithCheckout')
+                ->once()
+                ->withArgs(fn ($c, $userId, $start) =>
+                    $c->is($court)
+                    && $userId === $client->id
+                    && $start->equalTo($inicio)
+                )
+                ->andReturn('https://checkout.stripe.test/sesion');
+        });
+
+        $this->actingAs($client)
+            ->post(route('client.reservations.store'), [
+                'court_id'   => $court->id,
+                'start_time' => $inicio->format('Y-m-d H:i:s'),
+            ])
+            ->assertRedirect('https://checkout.stripe.test/sesion');
+    }
+
+    public function test_si_el_horario_ya_no_esta_disponible_se_muestra_el_error(): void
+    {
+        $client = User::factory()->client()->create();
+        $court  = Court::factory()->create();
+
+        $this->mock(ReservationCheckoutService::class, function ($mock) {
+            $mock->shouldReceive('createReservationWithCheckout')
+                ->once()
+                ->andThrow(new SlotUnavailableException());
+        });
+
+        $this->actingAs($client)
+            ->from(route('client.reservations.create'))
+            ->post(route('client.reservations.store'), [
+                'court_id'   => $court->id,
+                'start_time' => now()->addDays(3)->setTime(18, 0)->format('Y-m-d H:i:s'),
+            ])
+            ->assertRedirect(route('client.reservations.create'))
+            ->assertSessionHasErrors('start_time');
+    }
+
+    public function test_un_invitado_no_puede_reservar(): void
+    {
+        $court = Court::factory()->create();
+
+        $this->post(route('client.reservations.store'), [
+            'court_id'   => $court->id,
+            'start_time' => now()->addDays(3)->format('Y-m-d H:i:s'),
+        ])->assertRedirect(route('login'));
+    }
+
+    /** Servicio real, salvo la llamada a Stripe, que devuelve una sesión falsa. */
+    private function fingirStripe(): void
+    {
+        $servicio = Mockery::mock(
+            ReservationCheckoutService::class,
+            [app(ReservationRulesValidator::class)]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $servicio->shouldReceive('createStripeSession')->andReturn(
+            Session::constructFrom([
+                'id'  => 'cs_test_123',
+                'url' => 'https://checkout.stripe.test/x',
+            ])
+        );
+
+        $this->app->instance(ReservationCheckoutService::class, $servicio);
     }
 }

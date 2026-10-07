@@ -11,9 +11,9 @@ class PasswordConfirmationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_confirm_password_screen_can_be_rendered(): void
+    public function test_pantalla_confirmar_contraseña_puede_mostrarse(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->client()->create();
 
         $response = $this->actingAs($user)->get('/confirm-password');
 
@@ -22,9 +22,9 @@ class PasswordConfirmationTest extends TestCase
             ->assertStatus(200);
     }
 
-    public function test_password_can_be_confirmed(): void
+    public function test_contraseña_puede_confirmarse(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->client()->create();
 
         $this->actingAs($user);
 
@@ -34,13 +34,13 @@ class PasswordConfirmationTest extends TestCase
         $component->call('confirmPassword');
 
         $component
-            ->assertRedirect('/dashboard')
+            ->assertRedirect(route('client.dashboard', absolute:false))
             ->assertHasNoErrors();
     }
 
-    public function test_password_is_not_confirmed_with_invalid_password(): void
+    public function test_contraseña_no_se_confirma_con_contraseña_invalida(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->client()->create();
 
         $this->actingAs($user);
 
