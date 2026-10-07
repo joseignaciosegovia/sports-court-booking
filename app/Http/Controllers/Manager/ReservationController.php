@@ -23,7 +23,9 @@ use App\Exceptions\SlotUnavailableException;
 use App\Exceptions\PastDateException;
 use App\Exceptions\ReservationNotCancellableException;
 use App\Exceptions\RefundException;
+use App\Exceptions\OutsideOpeningHoursException;
 use App\Enums\PaymentStatus;
+use App\Services\Validation\ReservationRuleResult;
 
 class ReservationController extends Controller
 {
@@ -240,6 +242,10 @@ class ReservationController extends Controller
     {
         $result = $service->reschedule($reservation, $request->validated());
 
+        if ($reservation->start_time->isPast()) {
+            return ReservationRuleResult::failure('No se puede reprogramar una reserva que ya ha tenido lugar.');
+        }
+
         if (!$result->success) {
             return response()->json(['message' => $result->message], 422);
         }
@@ -256,7 +262,10 @@ class ReservationController extends Controller
             return response()->json(['message' => 'No se puede crear una reserva en una fecha pasada.'], 422);
         } catch (SlotUnavailableException $e) {
             return response()->json(['message' => 'Ya existe otra reserva que se solapa con este horario.'], 422);
+        } catch (OutsideOpeningHoursException $e) {
+            return response()->json(['message' => 'La reserva debe estar dentro del horario de apertura y cierre.'], 422);
         }
+        
 
         return response()->json(['message' => 'Reserva creada correctamente.', 'id' => $reservation->id]);
     }
