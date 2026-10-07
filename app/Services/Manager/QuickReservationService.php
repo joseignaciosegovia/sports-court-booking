@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use App\Exceptions\SlotUnavailableException;
 use App\Services\Validation\ReservationRulesValidator;
 use App\Exceptions\PastDateException;
+use App\Exceptions\OutsideOpeningHoursException;
 use Carbon\Carbon;
 use App\Enums\PaymentStatus;
 
@@ -26,6 +27,10 @@ class QuickReservationService
             throw new PastDateException();
         }
 
+        if ($this->rules->checkWithinOpeningHours($startTime, $endTime)) {
+            throw new OutsideOpeningHoursException();
+        }
+
         if ($this->rules->checkOverlap($court->id, $startTime, $endTime)) {
             throw new SlotUnavailableException();
         }
@@ -35,7 +40,7 @@ class QuickReservationService
             'user_id' => null,
             'start_time' => $startTime,
             'end_time' => $endTime,
-            'information' => $data['information'] ?? null,
+            'information' => $data['information'] ?? 'Reserva interna',
             'payment_status' => PaymentStatus::Paid,
         ]);
     }

@@ -20,6 +20,17 @@ class ReservationCreateService
         $startTime = Carbon::parse($data['date'] . ' ' . $data['start_time_only']);
         $endTime = Carbon::parse($data['date'] . ' ' . $data['end_time_only']);
 
+        if ($startTime->isPast()) {
+            return ReservationRuleResult::failure(
+                'No se puede crear una reserva en una fecha pasada.',
+                'start_time_only'
+            );
+        }
+
+        if ($failure = $this->rules->checkWithinOpeningHours($startTime, $endTime)) {
+            return $failure;
+        }
+
         if ($failure = $this->rules->checkOverlap($data['court_id'], $startTime, $endTime)) {
             return $failure;
         }

@@ -49,7 +49,7 @@ class ReservationUpdateService
             return $failure;
         }
 
-        if ($failure = $this->rules->checkOverlap($reservation->court_id, $startTime, $endTime)) {
+        if ($failure = $this->rules->checkOverlap($reservation->court_id, $startTime, $endTime, $reservation->id)) {
             return $failure;
         }
 
