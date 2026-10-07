@@ -6,6 +6,10 @@ use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Enums\PaymentStatus;
+use App\Services\Common\ReservationCancellationService;
+use Mockery;
+use Stripe\Refund;
 
 class ClientReservationTest extends TestCase
 {
@@ -44,5 +48,87 @@ class ClientReservationTest extends TestCase
         ]);
 
         $this->assertNotNull($reserva->fresh()->canceled_at);
+    }
+
+    private function fingirReembolso(): void
+    {
+        $mock = Mockery::mock(ReservationCancellationService::class)
+            ->makePartial()->shouldAllowMockingProtectedMethods();
+        $mock->shouldReceive('createRefund')->andReturn(Refund::constructFrom(['id' => 're_test_1']));
+
+        $this->app->instance(ReservationCancellationService::class, $mock);
+    }
+
+    public function test_cancelar_con_antelacion_reembolsa_y_avisa(): void
+    {
+        $client = User::factory()->client()->create();
+        $reserva = Reservation::factory()->paid()->create([
+            'user_id'    => $client->id,
+            'start_time' => now()->addDays(2),
+            'end_time'   => now()->addDays(2)->addHour(),
+        ]);
+        $this->fingirReembolso();
+
+        $this->actingAs($client)
+            ->patch(route('client.reservations.cancel', $reserva))
+            ->assertRedirect(route('client.reservations.index'))
+            ->assertSessionHas('success', 'Reserva cancelada. Se le devolverá el dinero.');
+
+        $this->assertSame(PaymentStatus::Refunded, $reserva->fresh()->payment_status);
+    }
+
+    public function test_cancelar_tarde_no_reembolsa_y_lo_dice(): void
+    {
+        $client = User::factory()->client()->create();
+        $reserva = Reservation::factory()->paid()->create([
+            'user_id'    => $client->id,
+            'start_time' => now()->addHours(5),
+            'end_time'   => now()->addHours(6),
+        ]);
+
+        $this->actingAs($client)
+            ->patch(route('client.reservations.cancel', $reserva))
+            ->assertRedirect(route('client.reservations.index'))
+            ->assertSessionHas('success');
+
+        $this->assertSame(PaymentStatus::Canceled, $reserva->fresh()->payment_status);
+    }
+
+    public function test_si_el_reembolso_falla_se_muestra_el_error(): void
+    {
+        $client = User::factory()->client()->create();
+        $reserva = Reservation::factory()->paid()->create([
+            'user_id'    => $client->id,
+            'start_time' => now()->addDays(2),
+            'end_time'   => now()->addDays(2)->addHour(),
+        ]);
+
+        $mock = Mockery::mock(ReservationCancellationService::class)
+            ->makePartial()->shouldAllowMockingProtectedMethods();
+        $mock->shouldReceive('createRefund')->andThrow(new \RuntimeException('Stripe caído'));
+        $this->app->instance(ReservationCancellationService::class, $mock);
+
+        $this->actingAs($client)
+            ->from(route('client.reservations.index'))
+            ->patch(route('client.reservations.cancel', $reserva))
+            ->assertRedirect(route('client.reservations.index'))
+            ->assertSessionHasErrors('reservation');
+
+        $this->assertSame(PaymentStatus::Paid, $reserva->fresh()->payment_status);
+    }
+
+    public function test_no_se_puede_cancelar_una_reserva_ya_reembolsada(): void
+    {
+        $client = User::factory()->client()->create();
+        $reserva = Reservation::factory()->create([
+            'user_id'        => $client->id,
+            'payment_status' => PaymentStatus::Refunded,
+        ]);
+
+        $this->actingAs($client)
+            ->patch(route('client.reservations.cancel', $reserva))
+            ->assertForbidden(); // si tu Policy no lo impide, el servicio lanzará la excepción y será un redirect con error
+
+        $this->assertSame(PaymentStatus::Refunded, $reserva->fresh()->payment_status);
     }
 }
