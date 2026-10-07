@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Mail;
 use Stripe\Refund;
 use Stripe\Stripe;
 use App\Enums\PaymentStatus;
+use App\Enums\CanceledBy;
+use Illuminate\Support\Facades\DB;
 
 class ReservationCancellationService
 {
@@ -20,37 +22,46 @@ class ReservationCancellationService
      */
     public function cancelByClient(Reservation $reservation): string
     {
-        // Si nunca hubo pago real, no hay nada que reembolsar
-        if ($reservation->payment_status !== PaymentStatus::Paid) {
+        return DB::transaction(function () use ($reservation) {
+            // Releemos la fila bloqueada: el modelo recibido puede estar desfasado
+            $reservation = Reservation::whereKey($reservation->id)->lockForUpdate()->firstOrFail();
+
+            if (! $reservation->payment_status->canBeCanceled()) {
+                throw new ReservationNotCancellableException();
+            }
+
+            // Si nunca hubo pago real, no hay nada que reembolsar
+            if ($reservation->payment_status !== PaymentStatus::Paid) {
+                $reservation->update([
+                    'payment_status' => PaymentStatus::Canceled,
+                    'canceled_at'    => now(),
+                    'canceled_by'    => CanceledBy::Client,
+                ]);
+
+                return 'canceled_no_payment';
+            }
+
+            if ($reservation->start_time->gt(now()->addHours(12))) {
+                $this->issueRefund($reservation);
+
+                $reservation->update([
+                    'payment_status' => PaymentStatus::Refunded,
+                    'canceled_at'    => now(),
+                    'canceled_by'    => CanceledBy::Client,
+                    'refunded_at'    => now(),
+                ]);
+
+                return 'refunded';
+            }
+
             $reservation->update([
                 'payment_status' => PaymentStatus::Canceled,
-                'canceled_at' => now(),
-                'canceled_by' => 'client',
+                'canceled_at'    => now(),
+                'canceled_by'    => CanceledBy::Client,
             ]);
 
-            return 'canceled_no_payment';
-        }
-
-        $eligibleForRefund = $reservation->start_time->gt(now()->addHours(12));
-
-        if ($eligibleForRefund) {
-            $this->issueRefund($reservation);
-            $reservation->update([
-                'payment_status' => PaymentStatus::Refunded,
-                'canceled_at' => now(),
-                'canceled_by' => 'client',
-                'refunded_at' => now(),
-            ]);
-
-            return 'refunded';
-        } 
-        $reservation->update([
-            'payment_status' => PaymentStatus::Canceled,
-            'canceled_at' => now(),
-            'canceled_by' => 'client',
-        ]);
-
-        return 'canceled_late';
+            return 'canceled_late';
+        });
     }
 
     /**
@@ -59,34 +70,38 @@ class ReservationCancellationService
      */
     public function cancelByManager(Reservation $reservation, string $reason): bool
     {
+        $hadRealPayment = DB::transaction(function () use (&$reservation, $reason) {
+            $reservation = Reservation::whereKey($reservation->id)->lockForUpdate()->firstOrFail();
 
-        if (!in_array($reservation->payment_status, [PaymentStatus::Paid, PaymentStatus::Pending])) {
-            throw new ReservationNotCancellableException();
-        }
+            if (! $reservation->payment_status->canBeCanceled()) {
+                throw new ReservationNotCancellableException();
+            }
 
-        $hadRealPayment = $reservation->payment_status === PaymentStatus::Paid && $reservation->user_id;
+            $hadRealPayment = $reservation->payment_status === PaymentStatus::Paid && $reservation->user_id;
 
-        // Si se pagó la reserva y la realizó un cliente, se realiza el desembolso y se actualiza la reserva
-        if ($hadRealPayment && !empty($reservation->user_id)) {
-            $this->issueRefund($reservation);
+            if ($hadRealPayment) {
+                $this->issueRefund($reservation);
 
-            $reservation->update([
-                'payment_status' => PaymentStatus::Refunded,
-                'canceled_at' => now(),
-                'canceled_by' => 'manager',
-                'cancellation_reason' => $reason,
-                'refunded_at' => now(),
-            ]);
-        // Si no se pagó la reserva o la realizó un gestor, no se realiza el desembolso
-        } else {
-            $reservation->update([
-                'payment_status' => PaymentStatus::Canceled,
-                'canceled_at' => now(),
-                'canceled_by' => 'manager',
-                'cancellation_reason' => $reason,
-            ]);
-        }
-        // Si la reserva la hizo un cliente, le enviamos un email informándole de la cancelación
+                $reservation->update([
+                    'payment_status'      => PaymentStatus::Refunded,
+                    'canceled_at'         => now(),
+                    'canceled_by'         => CanceledBy::Manager,
+                    'cancellation_reason' => $reason,
+                    'refunded_at'         => now(),
+                ]);
+            } else {
+                $reservation->update([
+                    'payment_status'      => PaymentStatus::Canceled,
+                    'canceled_at'         => now(),
+                    'canceled_by'         => CanceledBy::Manager,
+                    'cancellation_reason' => $reason,
+                ]);
+            }
+
+            return (bool) $hadRealPayment;
+        });
+
+        // Fuera de la transacción: el job no debe ejecutarse antes del commit
         if ($reservation->user_id && $reservation->user) {
             Mail::to($reservation->user->email)
                 ->queue(new ReservationCanceledByManagerMail($reservation, $reason));
@@ -104,7 +119,7 @@ class ReservationCancellationService
             ->update([
                 'payment_status' => PaymentStatus::Canceled,
                 'canceled_at' => now(),
-                'canceled_by' => 'system',
+                'canceled_by' => CanceledBy::System->value,
             ]);
     }
 
@@ -112,17 +127,11 @@ class ReservationCancellationService
     {
         if (!$reservation->payment_id) {
             Log::warning('Intento de reembolso sin payment_id', ['reservation_id' => $reservation->id]);
-            
             throw new RefundException('No se puede realizar el reembolso.');
         }
 
-        Stripe::setApiKey(config('services.stripe.secret'));
-
         try {
-            $refund = Refund::create([
-                'payment_intent' => $reservation->payment_id,
-            ]);
-
+            $refund = $this->createRefund($reservation);
             $reservation->stripe_refund_id = $refund->id;
         } catch (\Exception $e) {
             Log::error('Error al crear reembolso en Stripe: ' . $e->getMessage(), [
@@ -130,5 +139,15 @@ class ReservationCancellationService
             ]);
             throw new RefundException('No se pudo procesar la devolución. Inténtelo de nuevo o contacta con soporte.');
         }
+    }
+
+    protected function createRefund(Reservation $reservation): Refund
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        return Refund::create(
+            ['payment_intent' => $reservation->payment_id],
+            ['idempotency_key' => 'refund-reservation-' . $reservation->id]
+        );
     }
 }
