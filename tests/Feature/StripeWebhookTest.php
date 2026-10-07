@@ -70,4 +70,13 @@ class StripeWebhookTest extends TestCase
             ->assertOk()
             ->assertSee('OK');
     }
+
+        public function test_si_el_servicio_falla_el_webhook_devuelve_500_para_que_stripe_reintente(): void
+    {
+        $this->mock(StripeWebhookService::class)
+            ->shouldReceive('handleEvent')
+            ->andThrow(new \RuntimeException('Stripe caído'));
+
+        $this->enviar($this->evento())->assertStatus(500);
+    }
 }

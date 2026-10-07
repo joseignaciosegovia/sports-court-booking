@@ -10,6 +10,8 @@ use App\Enums\PaymentStatus;
 use App\Services\Common\ReservationCancellationService;
 use Mockery;
 use Stripe\Refund;
+use App\Services\Client\ReservationCheckoutService; 
+use App\Exceptions\ReservationNotResumableException;
 
 class ClientReservationTest extends TestCase
 {
@@ -132,5 +134,77 @@ class ClientReservationTest extends TestCase
             ->assertSessionHasErrors('reservation');
 
         $this->assertSame(PaymentStatus::Refunded, $reserva->fresh()->payment_status);
+    }
+
+    public function test_un_client_no_ve_las_pantallas_de_pago_de_otro(): void
+    {
+        $dueno = User::factory()->client()->create();
+        $otro  = User::factory()->client()->create();
+        $reserva = Reservation::factory()->create(['user_id' => $dueno->id]);
+
+        $this->actingAs($otro)
+            ->get(route('client.reservations.payment.success', $reserva))
+            ->assertForbidden();
+
+        $this->actingAs($otro)
+            ->get(route('client.reservations.payment.cancel', $reserva))
+            ->assertForbidden();
+    }
+
+    public function test_un_client_ve_las_pantallas_de_pago_de_su_reserva(): void
+    {
+        $client = User::factory()->client()->create();
+        $reserva = Reservation::factory()->create(['user_id' => $client->id]);
+
+        $this->actingAs($client)
+            ->get(route('client.reservations.payment.success', $reserva))
+            ->assertOk();
+
+        $this->actingAs($client)
+            ->get(route('client.reservations.payment.cancel', $reserva))
+            ->assertOk();
+    }
+
+    public function test_un_client_no_puede_retomar_el_pago_de_otro(): void
+    {
+        $dueno = User::factory()->client()->create();
+        $otro  = User::factory()->client()->create();
+        $reserva = Reservation::factory()->create(['user_id' => $dueno->id]);
+
+        $this->mock(ReservationCheckoutService::class)->shouldNotReceive('resumeCheckout');
+
+        $this->actingAs($otro)
+            ->get(route('client.reservations.payment.resume', $reserva))
+            ->assertForbidden();
+    }
+
+    public function test_retomar_el_pago_redirige_a_stripe(): void
+    {
+        $client = User::factory()->client()->create();
+        $reserva = Reservation::factory()->create(['user_id' => $client->id]);
+
+        $this->mock(ReservationCheckoutService::class)
+            ->shouldReceive('resumeCheckout')
+            ->once()
+            ->andReturn('https://checkout.stripe.test/retomar');
+
+        $this->actingAs($client)
+            ->get(route('client.reservations.payment.resume', $reserva))
+            ->assertRedirect('https://checkout.stripe.test/retomar');
+    }
+
+    public function test_si_no_se_puede_retomar_el_pago_se_muestra_el_error(): void
+    {
+        $client = User::factory()->client()->create();
+        $reserva = Reservation::factory()->canceled()->create(['user_id' => $client->id]);
+
+        $this->mock(ReservationCheckoutService::class)
+            ->shouldReceive('resumeCheckout')
+            ->andThrow(new ReservationNotResumableException());
+
+        $this->actingAs($client)
+            ->get(route('client.reservations.payment.resume', $reserva))
+            ->assertRedirect(route('client.reservations.index'))
+            ->assertSessionHasErrors('reservation');
     }
 }

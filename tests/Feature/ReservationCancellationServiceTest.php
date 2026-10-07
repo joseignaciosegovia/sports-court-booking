@@ -274,4 +274,61 @@ class ReservationCancellationServiceTest extends TestCase
         $this->assertSame(PaymentStatus::Pending, $vigente->fresh()->payment_status);
         $this->assertSame(PaymentStatus::Paid, $pagada->fresh()->payment_status);
     }
+
+    public function test_cancelar_una_reserva_pendiente_expira_la_sesion_de_stripe(): void
+    {
+        $reserva = Reservation::factory()->create(['stripe_session_id' => 'cs_test_123']);
+
+        $servicio = $this->servicio(fn ($m) => $m->shouldReceive('stripeExpireSession')
+            ->once()
+            ->with('cs_test_123'));
+
+        $servicio->cancelByClient($reserva);
+
+        $this->assertSame(PaymentStatus::Canceled, $reserva->fresh()->payment_status);
+    }
+
+    public function test_si_stripe_falla_al_expirar_la_reserva_se_cancela_igualmente(): void
+    {
+        $reserva = Reservation::factory()->create(['stripe_session_id' => 'cs_test_123']);
+
+        $servicio = $this->servicio(fn ($m) => $m->shouldReceive('stripeExpireSession')
+            ->andThrow(new \RuntimeException('Stripe caído')));
+
+        $servicio->cancelByClient($reserva);
+
+        $this->assertSame(PaymentStatus::Canceled, $reserva->fresh()->payment_status);
+    }
+
+    public function test_cancelar_una_reserva_sin_sesion_no_llama_a_stripe(): void
+    {
+        $reserva = Reservation::factory()->create(['stripe_session_id' => null]);
+
+        $servicio = $this->servicio(fn ($m) => $m->shouldNotReceive('stripeExpireSession'));
+
+        $servicio->cancelByClient($reserva);
+
+        $this->assertSame(PaymentStatus::Canceled, $reserva->fresh()->payment_status);
+    }
+
+    public function test_cancelar_tarde_una_reserva_pagada_no_expira_ninguna_sesion(): void
+    {
+        $reserva = $this->pagada(5, ['stripe_session_id' => 'cs_test_123']);
+
+        $servicio = $this->servicio(fn ($m) => $m->shouldNotReceive('stripeExpireSession'));
+
+        $servicio->cancelByClient($reserva);
+    }
+
+    public function test_el_manager_cancelando_una_pendiente_expira_la_sesion(): void
+    {
+        Mail::fake();
+        $reserva = Reservation::factory()->create(['stripe_session_id' => 'cs_test_456']);
+
+        $servicio = $this->servicio(fn ($m) => $m->shouldReceive('stripeExpireSession')
+            ->once()
+            ->with('cs_test_456'));
+
+        $servicio->cancelByManager($reserva, 'Motivo');
+    }
 }
