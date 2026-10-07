@@ -70,7 +70,7 @@ class ReservationCheckoutService
         ]);
     }
 
-    private function createStripeSession(Court $court, Carbon $startTime, Reservation $reservation): Session
+    protected function createStripeSession(Court $court, Carbon $startTime, Reservation $reservation): Session
     {
         Stripe::setApiKey(config('services.stripe.secret'));
 
