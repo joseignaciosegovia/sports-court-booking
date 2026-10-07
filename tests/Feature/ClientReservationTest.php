@@ -126,8 +126,10 @@ class ClientReservationTest extends TestCase
         ]);
 
         $this->actingAs($client)
+            ->from(route('client.reservations.index'))
             ->patch(route('client.reservations.cancel', $reserva))
-            ->assertForbidden(); // si tu Policy no lo impide, el servicio lanzará la excepción y será un redirect con error
+            ->assertRedirect(route('client.reservations.index'))
+            ->assertSessionHasErrors('reservation');
 
         $this->assertSame(PaymentStatus::Refunded, $reserva->fresh()->payment_status);
     }
