@@ -291,4 +291,56 @@ class ReservationCheckoutServiceTest extends TestCase
             ])
         );
     }
+
+    public function test_una_reserva_pendiente_bloquea_el_horario(): void
+    {
+        $user = User::factory()->client()->create();
+        $court = Court::factory()->create();
+
+        Reservation::factory()->create([
+            'court_id' => $court->id,
+            'start_time' => $this->inicio(),
+            'end_time' => $this->inicio()->addHour(),
+            'payment_status' => PaymentStatus::Pending,
+        ]);
+
+        $servicio = $this->servicio(
+            fn ($m) => $m->shouldNotReceive('createStripeSession')
+        );
+
+        $this->expectException(SlotUnavailableException::class);
+
+        $servicio->createReservationWithCheckout(
+            $court,
+            $user->id,
+            $this->inicio()
+        );
+
+        $this->assertDatabaseCount('reservations', 1);
+    }
+
+    public function test_una_reserva_en_otro_horario_no_bloquea_la_reserva(): void
+    {
+        $user = User::factory()->client()->create();
+        $court = Court::factory()->create();
+
+        Reservation::factory()->paid()->create([
+            'court_id' => $court->id,
+            'start_time' => $this->inicio()->addHour(),
+            'end_time' => $this->inicio()->addHours(2),
+        ]);
+
+        $url = $this->servicio()->createReservationWithCheckout(
+            $court,
+            $user->id,
+            $this->inicio()
+        );
+
+        $this->assertSame(
+            'https://checkout.stripe.test/x',
+            $url
+        );
+
+        $this->assertDatabaseCount('reservations', 2);
+    }
 }
