@@ -8,6 +8,7 @@ use App\Enums\UserRole;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 new #[Layout('layouts.app')] class extends Component
 {
@@ -54,7 +55,7 @@ new #[Layout('layouts.app')] class extends Component
         }
 
         RateLimiter::clear($key);
-        request()->session()->regenerate();
+        Session::regenerate();
 
         $this->redirect(route('manager.dashboard'), navigate: true);
     }
