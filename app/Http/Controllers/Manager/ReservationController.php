@@ -136,7 +136,7 @@ class ReservationController extends Controller
 
         // Respuesta normal
         return redirect()
-            ->route('manager.reservations.index', $reservation->court_id)
+            ->route('manager.reservations.index', ['court_id' => $reservation->court_id])
             ->with('success', 'Reserva actualizada correctamente.');
     }
 

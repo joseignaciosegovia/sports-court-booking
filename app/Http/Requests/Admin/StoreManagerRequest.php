@@ -12,7 +12,7 @@ class StoreManagerRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'dni' => ['required', 'string', 'max:20'],
+            'dni' => ['required', 'string', 'max:20', 'unique:users,dni'],
             'phone' => ['nullable', 'string', 'max:20'],
             'role' => ['required', 'in:manager,admin'],
             'photo' => ['nullable', 'image', 'max:4096'],

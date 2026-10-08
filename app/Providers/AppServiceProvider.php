@@ -8,6 +8,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Route::bind('manager', fn (string $value) =>
+            User::whereIn('role', ['manager', 'admin'])->findOrFail($value)
+        );
+
         // La paginación usará el sistema de Bootstrap 5
         Paginator::useBootstrapFive();
 

@@ -27,7 +27,12 @@ class UpdateManagerRequest extends FormRequest
                 'confirmed',
             ],
 
-            'dni' => ['required', 'string', 'max:20'],
+            'dni' => [
+                'required', 
+                'string', 
+                'max:20',
+                Rule::unique('users', 'dni')->ignore($this->manager->id)
+            ],
             'phone' => ['nullable', 'string', 'max:20'],
             'role' => ['required', 'in:manager,admin'],
             'photo' => ['nullable', 'image', 'max:4096'],

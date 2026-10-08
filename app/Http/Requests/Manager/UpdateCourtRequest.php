@@ -21,7 +21,9 @@ class UpdateCourtRequest extends FormRequest
                 // No tenemos en cuentra la propia pista que se está modificando
                 Rule::unique('courts')
                     ->where(
-                        fn ($query) => $query->where('location', $this->location)
+                        fn ($query) => $query
+                            ->where('location', $this->location)
+                            ->whereNull('deleted_at')
                     )
                     ->ignore($court->id),
             ],

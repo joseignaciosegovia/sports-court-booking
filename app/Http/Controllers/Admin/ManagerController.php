@@ -70,6 +70,10 @@ class ManagerController extends Controller
 
     public function update(UpdateManagerRequest $request, User $manager, ManagerUpdateService $managerService)
     {
+        if ($manager->is(auth()->user()) && $request->validated('role') !== 'admin') {
+            return back()->withErrors(['role' => 'No puedes quitarte a ti mismo el rol de administrador.']);
+        }
+
         $managerService->update($manager, $request->validated());
 
         return redirect()
@@ -79,6 +83,10 @@ class ManagerController extends Controller
 
     public function destroy(User $manager)
     {
+        if ($manager->is(auth()->user())) {
+            return back()->withErrors(['manager' => 'No puedes eliminar tu propia cuenta.']);
+        }
+
         $manager->delete();
 
         return redirect()

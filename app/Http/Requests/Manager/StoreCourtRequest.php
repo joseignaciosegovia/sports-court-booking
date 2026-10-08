@@ -16,7 +16,9 @@ class StoreCourtRequest extends FormRequest
                 'max:100',
                 // No puede haber una pista con el mismo nombre en la misma localización
                 Rule::unique('courts')->where(
-                    fn ($query) => $query->where('location', $this->location)
+                    fn ($query) => $query
+                        ->where('location', $this->location)
+                        ->whereNull('deleted_at')
                 ),
             ],
             'reservation_price' => [
