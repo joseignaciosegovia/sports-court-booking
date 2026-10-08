@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\SortHelper;
 use App\Http\Requests\Client\StoreFeedbackRequest;
 use App\QueryFilters\FeedbackFilter;
+use App\Enums\FeedbackType;
 
 class FeedbackController extends Controller
 {
     public function index(Request $request, FeedbackFilter $filters)
     {
-        $types = Feedback::TYPES;
+        $types = array_column(FeedbackType::cases(), 'value');
 
         $sortColumns = [
             'type' => 'feedback.type',

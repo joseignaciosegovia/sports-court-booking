@@ -20,6 +20,7 @@ class FeedbackController extends Controller
         ];
 
         $feedback = Feedback::query()
+            ->with(['user' => fn ($q) => $q->withTrashed()])
             ->filter($filters)
             ->sort($sortColumns, 'feedback.created_at', 'desc')
             ->paginate(10)
