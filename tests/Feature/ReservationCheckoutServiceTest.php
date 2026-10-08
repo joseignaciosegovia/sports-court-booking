@@ -258,4 +258,37 @@ class ReservationCheckoutServiceTest extends TestCase
 
         $servicio->resumeCheckout($this->reservaRetomable(['stripe_session_id' => null]));
     }
+
+    public function test_si_el_cliente_tiene_restricciones_no_se_crea_la_reserva(): void
+    {
+        $user = User::factory()->client()->create();
+        $court = Court::factory()->create();
+
+        $servicio = $this->servicio(
+            fn ($m) => $m->shouldNotReceive('createStripeSession')
+        );
+
+        $this->expectException(SlotUnavailableException::class);
+
+        try {
+            $servicio->createReservationWithCheckout(
+                $court,
+                $user->id,
+                now()->addDays(3)->setTime(18, 30, 0)
+            );
+        } finally {
+            $this->assertDatabaseCount('reservations', 0);
+        }
+    }
+
+    public function test_una_reserva_sin_fecha_de_expiracion_no_se_puede_retomar(): void
+    {
+        $this->expectException(ReservationNotResumableException::class);
+
+        $this->servicio()->resumeCheckout(
+            $this->reservaRetomable([
+                'expires_at' => null,
+            ])
+        );
+    }
 }
