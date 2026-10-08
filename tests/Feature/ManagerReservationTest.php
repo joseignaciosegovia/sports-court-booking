@@ -770,4 +770,66 @@ class ManagerReservationTest extends TestCase
 
         Mail::assertNothingQueued();
     }
+
+    public function test_actualizar_a_una_fecha_pasada_se_rechaza(): void
+    {
+        $court   = Court::factory()->create();
+        $inicio  = $this->inicio();
+        $reserva = $this->interna($court, $inicio);
+
+        $ayer = now()->subDay()->format('Y-m-d');
+
+        $this->actingAs($this->manager())
+            ->from(route('manager.reservations.edit', $reserva))
+            ->put(route('manager.reservations.update', $reserva), [
+                'date'            => $ayer,
+                'start_time_only' => '18:00',
+                'end_time_only'   => '19:00',
+                'information'     => 'Intento',
+            ])
+            ->assertSessionHasErrors('start_time_only');
+
+        $this->assertTrue($reserva->fresh()->start_time->equalTo($inicio));
+    }
+
+    public function test_actualizar_fuera_del_horario_de_apertura_se_rechaza(): void
+    {
+        $court   = Court::factory()->create();
+        $inicio  = $this->inicio();
+        $reserva = $this->interna($court, $inicio);
+
+        $this->actingAs($this->manager())
+            ->from(route('manager.reservations.edit', $reserva))
+            ->put(route('manager.reservations.update', $reserva), [
+                'date'            => $inicio->format('Y-m-d'),
+                'start_time_only' => '21:30',
+                'end_time_only'   => '22:30',
+                'information'     => 'Intento',
+            ])
+            ->assertSessionHasErrors('start_time_only');
+
+        $this->assertSame('18:00', $reserva->fresh()->start_time->format('H:i'));
+    }
+
+    public function test_actualizar_una_reserva_de_cliente_a_media_hora_se_rechaza(): void
+    {
+        $court   = Court::factory()->create();
+        $inicio  = $this->inicio();
+        $reserva = Reservation::factory()->paid()->create([
+            'court_id'   => $court->id,
+            'start_time' => $inicio,
+            'end_time'   => $inicio->copy()->addHour(),
+        ]);
+
+        $this->actingAs($this->manager())
+            ->from(route('manager.reservations.edit', $reserva))
+            ->put(route('manager.reservations.update', $reserva), [
+                'date'            => $inicio->format('Y-m-d'),
+                'start_time_only' => '18:30',
+                'end_time_only'   => '19:30',
+            ])
+            ->assertSessionHasErrors('start_time_only');
+
+        $this->assertSame('18:00', $reserva->fresh()->start_time->format('H:i'));
+    }
 }
