@@ -21,7 +21,8 @@ Route::get('/', [HomeController::class, 'index'])
     ->name('home');
 
 Route::post('/crearUsuario', [HomeController::class, 'register'])
-    ->name('register');
+    ->name('register')
+    ->middleware('guest');
 
 // Consulta pública de horarios (solo lectura, sin reservar)
 Route::get('/horarios/{court}', [HomeController::class, 'schedule'])

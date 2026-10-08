@@ -51,15 +51,26 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-12 col-sm-6">
+                            <label for="current_password" class="labels">Contraseña actual</label>
+                            <input type="password"
+                                class="form-control @error('current_password') is-invalid @enderror"
+                                id="current_password" name="current_password"
+                                placeholder="Solo si vas a cambiar la contraseña"
+                                autocomplete="current-password">
+                            <div class="invalid-feedback">
+                                {{ $errors->first('current_password') ?: 'Introduce tu contraseña actual para cambiarla.' }}
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
                             <label for="password" class="labels">Contraseña</label>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Mínimo 8 caracteres" pattern=".{8,}" value="">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Mínimo 8 caracteres" pattern=".{8,}" value="" autocomplete="new-password">
                             <div class="invalid-feedback">
                                 {{ $errors->first('password') ?: 'La contraseña debe tener al menos 8 caracteres.' }}
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 mt-3 mt-sm-0">
                             <label for="password_confirmation" class="labels @error('password_confirmation') is-invalid @enderror">Confirmar contraseña</label>
-                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Repite la contraseña" value="">
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Repite la contraseña" value="" autocomplete="new-password">
                             <div class="invalid-feedback">
                                 {{ $errors->first('password_confirmation') ?: 'Las contraseñas no coinciden.' }}
                             </div>

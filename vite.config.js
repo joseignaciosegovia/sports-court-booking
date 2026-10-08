@@ -29,6 +29,7 @@ export default defineConfig({
                 'resources/js/layout.js',
                 'resources/js/countdown-timer.js',
                 'resources/js/court-reservation-calendar.js',
+                'resources/js/reservation-edit.js',
                 'resources/js/calendar-manager.js',
                 'resources/js/public-courts-calendar.js',
                 'resources/js/validation.js',

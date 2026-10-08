@@ -26,7 +26,10 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'dni' => fake()->unique()->numerify('########') . fake()->randomLetter(),
+            'dni' => (function () {
+                $n = fake()->unique()->numberBetween(10000000, 99999999);
+                return $n . substr('TRWAGMYFPDXBNJZSQVHLCKE', $n % 23, 1);
+            })(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
