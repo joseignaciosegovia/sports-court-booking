@@ -88,7 +88,7 @@ class CourtController extends Controller
             return back()->withErrors(['court' => 'No se puede eliminar una pista con reservas asociadas.']);
         }
 
-        $court->delete();
+        $court->forceDelete();
 
         return redirect()
             ->route('manager.courts.index')
