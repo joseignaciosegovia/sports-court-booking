@@ -5,6 +5,9 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use App\Enums\UserRole;
+use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 new #[Layout('layouts.app')] class extends Component
 {
@@ -19,7 +22,21 @@ new #[Layout('layouts.app')] class extends Component
             'password' => ['required', 'string'],
         ]);
 
+        $key = Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
+
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            event(new Lockout(request()));
+
+            $seconds = RateLimiter::availableIn($key);
+
+            throw ValidationException::withMessages([
+                'email' => "Demasiados intentos. Inténtalo de nuevo en {$seconds} segundos.",
+            ]);
+        }
+
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+            RateLimiter::hit($key);
+
             throw ValidationException::withMessages([
                 'email' => 'Las credenciales son incorrectas.',
             ]);
@@ -29,12 +46,14 @@ new #[Layout('layouts.app')] class extends Component
 
         if (! in_array($user->role, [UserRole::Manager, UserRole::Admin])) {
             Auth::logout();
+            RateLimiter::hit($key);
 
             throw ValidationException::withMessages([
                 'email' => 'Esta zona es solo para gestores y administradores.',
             ]);
         }
 
+        RateLimiter::clear($key);
         request()->session()->regenerate();
 
         $this->redirect(route('manager.dashboard'), navigate: true);
@@ -72,7 +91,7 @@ new #[Layout('layouts.app')] class extends Component
                {{-- Recordarme y "Olvidaste tu contraseña" --}}
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="form-check">
-                        <input wire:model="form.remember" id="remember" type="checkbox" name="remember" class="form-check-input">
+                        <input wire:model="remember" id="remember" type="checkbox" name="remember" class="form-check-input">
                         <label for="remember" class="form-check-label">{{ __('Recordar cuenta') }}</label>
                     </div>
                     @if (Route::has('password.request'))
