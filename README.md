@@ -1,59 +1,51 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+[![Tests](https://github.com/joseignaciosegovia/sports-court-booking/actions/workflows/tests.yml/badge.svg)](https://github.com/joseignaciosegovia/sports-court-booking/actions/workflows/tests.yml)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Testing
 
-## About Laravel
+La aplicación tiene una suite automatizada de **359 tests (más de 1000 aserciones) con un 93,6 % de cobertura de líneas**, que se ejecuta en GitHub Actions en cada push y pull request.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```bash
+php artisan test                      # toda la suite
+php artisan test --filter=NombreTest  # un archivo o test concreto
+php artisan test --coverage           # cobertura (requiere Xdebug o PCOV)
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Los tests usan SQLite en memoria y **no llaman nunca a servicios externos**: Stripe se sustituye con dobles de prueba (Mockery) y los correos con `Mail::fake()`, así que no hacen falta claves.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Qué se prueba
 
-## Learning Laravel
+| Área | Qué cubren los tests |
+|---|---|
+| **Roles y acceso** | Matriz de permisos para invitado, client, manager y admin; redirecciones al login correcto de cada zona |
+| **Reservas (client)** | Validación, solapamientos totales y parciales, horario de apertura y cierre (incluidos los límites 08:00 y 21:00-22:00), reservas caducadas y canceladas |
+| **Pagos con Stripe** | Creación de la sesión de Checkout, webhook con firma válida e inválida, idempotencia, pagos tardíos, reanudación del pago |
+| **Cancelaciones y reembolsos** | Reembolso con más de 12 h de antelación, cancelación tardía, fallo de Stripe, protección contra el doble clic |
+| **Panel del manager** | Crear, editar, reprogramar y cancelar reservas; calendario y endpoints JSON; CRUD de pistas |
+| **Administración** | CRUD de gestores, protección del último admin, alcance limitado a manager y admin |
+| **Usuarios** | Registro (DNI válido y único, rol forzado a client), perfil, cambio de contraseña, login con límite de intentos |
+| **Infraestructura** | Comando de caducidad de reservas y su programación, renderizado de los correos |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Bugs reales encontrados gracias a los tests
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Escribir los tests destapó fallos que no se veían a simple vista. Estos son los más relevantes:
 
-## Laravel Sponsors
+1. **Reserva huérfana si Stripe fallaba.** Se creaba la reserva `pending` y, si Stripe daba error, quedaba bloqueando el hueco. Ahora se borra al fallar.
+2. **Pagos tardíos que resucitaban reservas canceladas.** Si el cliente pagaba desde una pestaña de Stripe abierta después de cancelar, el webhook marcaba la reserva como `paid` y podía haber dos reservas pagadas en la misma franja. Ahora el webhook solo acepta pagos sobre reservas `pending` y reembolsa automáticamente el resto.
+3. **Doble reembolso y reservas ya reembolsadas.** Cancelar una reserva reembolsada la dejaba como cancelada y perdía su estado. La cancelación ahora usa transacción, `lockForUpdate()` y una clave de idempotencia en Stripe.
+4. **Solapamientos sin comprobar.** El servicio de creación de reservas del manager perdió la comprobación de solapamiento al añadir otras reglas, y permitía dos reservas en la misma pista y hora. Además, editar o reprogramar una reserva chocaba consigo misma.
+5. **Desajuste de tiempos.** La reserva caducaba a los 15 minutos, pero la sesión de Stripe duraba 30, lo que permitía pagar un hueco ya liberado a otro cliente.
+6. **Errores 500 por datos de entrada.** DNI duplicado, tipo de comentario inventado (el cast del enum lanzaba `ValueError`), creación rápida sin texto en una columna `NOT NULL`, o reutilizar el nombre de una pista borrada con soft delete.
+7. **Permisos incompletos.** Un admin podía editar o borrar clientes desde la zona de gestores y borrarse a sí mismo; un cliente podía ver las pantallas de pago de otro.
+8. **Redirección de login incorrecta.** Las rutas `/administrador/*` enviaban a los invitados al login de clientes, porque el middleware comprobaba `admin/*` en vez del prefijo real.
+9. **Login de la intranet sin límite de intentos** y con el checkbox «Recordar cuenta» enlazado a una propiedad inexistente.
+10. **Autores dados de baja.** El listado de comentarios del manager daba un 500 si el cliente había sido borrado (soft delete).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Decisiones de diseño relacionadas con los tests
 
-### Premium Partners
+- Las llamadas estáticas a Stripe (`Session::create`, `Refund::create`) se aíslan en métodos `protected` para poder sustituirlas sin tocar el resto del servicio.
+- Las reglas de negocio viven en servicios (`ReservationCheckoutService`, `ReservationCancellationService`, `StripeWebhookService`), de modo que se prueban por separado de los controladores.
+- Las factories incluyen estados con nombre (`paid()`, `canceled()`, `expired()`, `withoutUser()`) para que los tests se lean como reglas de negocio.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Fuera del alcance de la suite
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+No se prueban el JavaScript del calendario (FullCalendar), las llamadas reales a la API de Stripe ni la ejecución del scheduler en un servidor.
