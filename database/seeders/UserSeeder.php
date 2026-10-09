@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
             unset($user['email'], $user['password']);
 
             $existingUser = DB::table('users')
-                ->where('email', $email)
+                ->where('dni', $user['dni'])
                 ->first();
 
             if ($existingUser) {
