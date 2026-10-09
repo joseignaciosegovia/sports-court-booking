@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
            [
                 'email' => 'adminMer@gmail.com',
                 'password' => env('SEED_ADMIN_PASSWORD'),
-                'name' => 'Mercedes Puertas',
+                'name' => 'Mercedes Administradora',
                 'dni' => '77319284T',
                 'phone' => '661281938',
                 'role' => 'admin',
@@ -28,8 +28,8 @@ class UserSeeder extends Seeder
             [
                 'email' => 'adminAnton@gmail.com',
                 'password' => env('SEED_MANAGER_PASSWORD'),
-                'name' => 'Antonio Castillo',
-                'dni' => '71822198U',
+                'name' => 'Antonio Mánager',
+                'dni' => '71822198Y',
                 'phone' => '617291009',
                 'role' => 'manager',
                 'email_verified_at' => now(),
