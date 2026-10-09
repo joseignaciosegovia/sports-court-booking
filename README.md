@@ -82,7 +82,7 @@ Tras `php artisan migrate --seed` (credenciales de demostración):
 
 ## Testing
 
-La aplicación tiene una suite automatizada de **359 tests (más de 1000 aserciones) con un 93,6 % de cobertura de líneas**, que se ejecuta en GitHub Actions en cada push y pull request.
+La aplicación tiene una suite automatizada de **367 tests (más de 1000 aserciones) con un 94,2 % de cobertura de líneas**, que se ejecuta en GitHub Actions en cada push y pull request.
 
 ```bash
 php artisan test                      # toda la suite
