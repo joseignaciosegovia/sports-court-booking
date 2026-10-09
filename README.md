@@ -63,6 +63,8 @@ php artisan storage:link
 php artisan serve
 ```
 
+Si usas [Laravel Herd](https://herd.laravel.com), basta con clonar el proyecto dentro de la carpeta de Herd y abrir `http://nombre-carpeta.test`, sin necesidad de `php artisan serve`.
+
 Para probar los pagos, rellena en `.env` las claves de **modo test** de Stripe (`STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_WEBHOOK_SECRET`) y reenvía los eventos con `stripe listen --forward-to localhost:8000/stripe/webhook`.
 
 El comando `php artisan reservations:cancel-expired` cancela las reservas pendientes caducadas y está programado cada minuto (`php artisan schedule:work` en local).
