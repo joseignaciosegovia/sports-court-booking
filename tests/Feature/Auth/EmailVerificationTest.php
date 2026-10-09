@@ -57,4 +57,17 @@ class EmailVerificationTest extends TestCase
 
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
     }
+
+    public function test_un_usuario_ya_verificado_que_abre_el_enlace_no_da_error(): void
+    {
+        $user = User::factory()->client()->create(); // la factory ya lo crea verificado
+
+        $url = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->id, 'hash' => sha1($user->email)]
+        );
+
+        $this->actingAs($user)->get($url)->assertRedirect();
+    }
 }

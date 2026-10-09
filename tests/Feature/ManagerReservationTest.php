@@ -832,4 +832,26 @@ class ManagerReservationTest extends TestCase
 
         $this->assertSame('18:00', $reserva->fresh()->start_time->format('H:i'));
     }
+
+    public function test_actualizar_una_reserva_de_cliente_a_dos_horas_se_rechaza(): void
+    {
+        $court   = Court::factory()->create();
+        $inicio  = $this->inicio();
+        $reserva = Reservation::factory()->paid()->create([
+            'court_id'   => $court->id,
+            'start_time' => $inicio,
+            'end_time'   => $inicio->copy()->addHour(),
+        ]);
+
+        $this->actingAs($this->manager())
+            ->from(route('manager.reservations.edit', $reserva))
+            ->put(route('manager.reservations.update', $reserva), [
+                'date'            => $inicio->format('Y-m-d'),
+                'start_time_only' => '18:00',
+                'end_time_only'   => '20:00',
+            ])
+            ->assertSessionHasErrors('end_time_only');
+
+        $this->assertSame('19:00', $reserva->fresh()->end_time->format('H:i'));
+    }
 }
