@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         $users = [
            [
-                'email' => 'adminMer@gmail.com',
+                'email' => 'adminMer@example.com',
                 'password' => env('SEED_ADMIN_PASSWORD'),
                 'name' => 'Mercedes Administradora',
                 'dni' => '77319284T',
@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'email' => 'adminAnton@gmail.com',
+                'email' => 'adminAnton@example.com',
                 'password' => env('SEED_MANAGER_PASSWORD'),
                 'name' => 'Antonio Mánager',
                 'dni' => '71822198Y',
