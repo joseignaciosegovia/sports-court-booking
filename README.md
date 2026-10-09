@@ -49,3 +49,34 @@ Escribir los tests destapó fallos que no se veían a simple vista. Estos son lo
 ### Fuera del alcance de la suite
 
 No se prueban el JavaScript del calendario (FullCalendar), las llamadas reales a la API de Stripe ni la ejecución del scheduler en un servidor.
+
+## Capturas
+
+<table>
+  <tr>
+    <td><img src="docs/inicio.png" width="400"><br><sub>Inicio y registro</sub></td>
+    <td><img src="docs/cliente-panel.png" width="400"><br><sub>Panel del cliente</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/cliente-historial.png" width="400"><br><sub>Historial de reservas del cliente</sub></td>
+    <td><img src="docs/gestor-panel.png" width="400"><br><sub>Panel del gestor</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/admin-gestores.png" width="400"><br><sub>Administración de gestores</sub></td>
+    <td><img src="docs/admin-pistas.png" width="400"><br><sub>Gestión de pistas</sub></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/calendario-pista.png" width="400"><br><sub>Calendario de una pista</sub></td>
+  </tr>
+</table>
+
+
+## Usuarios de prueba
+
+Tras `php artisan migrate --seed`:
+
+| Rol | Email | Contraseña |
+|---|---|---|
+| Administrador | (el de tu seeder) | (la de tu seeder) |
+
+Los clientes se crean desde el formulario de la página de inicio; los gestores, desde "Administrar gestores".
