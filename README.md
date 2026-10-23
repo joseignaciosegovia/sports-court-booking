@@ -2,7 +2,8 @@
 
 [![Tests](https://github.com/joseignaciosegovia/sports-court-booking/actions/workflows/tests.yml/badge.svg)](https://github.com/joseignaciosegovia/sports-court-booking/actions/workflows/tests.yml)
 
-Aplicación web para reservar pistas deportivas de un municipio (Moral de Calatrava). Los clientes reservan y pagan online, y el personal gestiona pistas, reservas y cancelaciones desde una intranet. Es un proyecto de portfolio: no está desplegado en producción.
+Aplicación web para reservar pistas deportivas de un municipio (Moral de Calatrava). Los clientes reservan y pagan online, y el personal gestiona pistas, reservas y cancelaciones desde una intranet. 
+Es un proyecto de fin de ciclo: hay una demo en Render, con Stripe en modo test.
 
 ## Funcionalidades
 
