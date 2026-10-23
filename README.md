@@ -5,6 +5,14 @@
 Aplicación web para reservar pistas deportivas de un municipio (Moral de Calatrava). Los clientes reservan y pagan online, y el personal gestiona pistas, reservas y cancelaciones desde una intranet. 
 Es un proyecto de fin de ciclo: hay una demo en Render, con Stripe en modo test.
 
+## Demo
+
+🔗 [sports-court-booking-1.onrender.com](https://sports-court-booking-1.onrender.com/)
+
+- La primera carga puede tardar unos segundos (el servidor gratuito se «duerme» si no se usa).
+- Los pagos funcionan con **Stripe en modo test**: no se cobra nada real. Para probar una reserva, usa la tarjeta `4242 4242 4242 4242`, con cualquier fecha futura y cualquier CVC.
+- Para acceder a la intranet, usa los usuarios de prueba de la sección [Usuarios de prueba](#usuarios-de-prueba).
+
 ## Funcionalidades
 
 **Cliente**
