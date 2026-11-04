@@ -23,18 +23,18 @@ Es un proyecto de fin de ciclo: hay una demo en Render, con Stripe en modo test.
 
 **Gestor**
 - Calendario por pista con creación rápida de reservas y reprogramación arrastrando.
-- Alta, edición y cancelación de reservas, con reembolso y aviso por correo al cliente.
+- Creación de horarios ocupados, edición y cancelación de reservas, con reembolso y aviso por correo al cliente.
 - CRUD de pistas y consulta de comentarios de los clientes.
 
 **Administrador**
-- Todo lo del gestor, más el alta, edición y baja de gestores y administradores.
+- Todo lo del gestor, más la creación, edición y borrado de gestores y administradores.
 
 ## Tecnologías
 
 - PHP y Laravel, con Livewire y Volt para la autenticación
 - Blade, Bootstrap 5 y Vite; FullCalendar para los calendarios
 - Stripe (Checkout, webhooks y reembolsos)
-- SQLite (por defecto) o MySQL
+- MySQL
 - PHPUnit, Mockery y GitHub Actions
 
 ## Capturas
@@ -108,9 +108,9 @@ Los tests usan SQLite en memoria y **no llaman nunca a servicios externos**: Str
 | Área | Qué cubren los tests |
 |---|---|
 | **Roles y acceso** | Matriz de permisos para invitado, cliente, gestor y administrador; redirecciones al login correcto de cada zona |
-| **Reservas (cliente)** | Validación, solapamientos totales y parciales, horario de apertura y cierre (incluidos los límites 08:00 y 21:00-22:00), reservas caducadas y canceladas |
+| **Reservas (cliente)** | Validación, solapamientos totales y parciales, horario de apertura y cierre (incluidos los límites 08:00 y 22:00), reservas caducadas y canceladas |
 | **Pagos con Stripe** | Creación de la sesión de Checkout, webhook con firma válida e inválida, idempotencia, pagos tardíos, reanudación del pago |
-| **Cancelaciones y reembolsos** | Reembolso con más de 12 h de antelación, cancelación tardía, fallo de Stripe, protección contra el doble clic |
+| **Cancelaciones y reembolsos** | Reembolso con más de 12 horas de antelación, cancelación tardía, fallo de Stripe, protección contra el doble clic |
 | **Panel del gestor** | Crear, editar, reprogramar y cancelar reservas; calendario y endpoints JSON; CRUD de pistas |
 | **Administración** | CRUD de gestores, un admin no puede borrarse ni quitarse su propio rol, alcance limitado a gestores y administradores |
 | **Usuarios** | Registro (DNI válido y único, rol forzado a cliente), perfil, cambio de contraseña, login con límite de intentos |
