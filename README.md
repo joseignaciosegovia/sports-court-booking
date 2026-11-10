@@ -39,8 +39,8 @@ Es un proyecto de fin de ciclo: hay una demo en Render, con Stripe en modo test.
 
 ## Documentación
 
-- Documento de requisitos: especifica los requisitos funcionales y no funcionales, así como las restricciones y necesidades del sistema. Se encuentra en docs/requirements/requirements-sports-court-booking.pdf.
-- Documentación de arquitectura: elaborada siguiendo el estándar arc42, describe la estructura de la solución, las decisiones arquitectónicas, las vistas del sistema y sus requisitos de calidad. Se encuentra en docs/architecture/arc42-sports-court-booking.pdf.
+- Documento de requisitos: especifica los requisitos funcionales y no funcionales, así como las restricciones y necesidades del sistema. [Consultar PDF](docs/requirements/requirements-sports-court-booking.pdf)
+- Documentación de arquitectura: elaborada siguiendo el estándar arc42, describe la estructura de la solución, las decisiones arquitectónicas, las vistas del sistema y sus requisitos de calidad. [Consultar PDF](docs/architecture/arc42-sports-court-booking.pdf)
 
 ## Capturas
 
